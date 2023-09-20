@@ -20,7 +20,7 @@ export const errorHandler = (
     res.status(error.code).json({ error: error.message });
   }
 
-  res.status(500).json({ error });
+  res.status(500).json({ error: error.message });
 };
 
 export const notFoundError = (req: Request, res: Response) => {

@@ -39,3 +39,13 @@ export class ForbiddenError extends CustomError {
     this.name = "ForbiddenError";
   }
 }
+
+export class InternalServerError extends CustomError {
+  message: string;
+
+  constructor(message: string) {
+    super(500, message);
+    this.message = message;
+    this.name = "InternalServerError";
+  }
+}

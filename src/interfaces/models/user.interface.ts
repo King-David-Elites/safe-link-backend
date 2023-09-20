@@ -1,8 +1,23 @@
 export interface IAuth {
   email: string;
-  verifyPassword(password: string): void;
+  verifyPassword(password: string): boolean;
   password: string;
+  confirmPassword: string;
   isVerified: boolean;
+  _id: string;
+}
+
+export enum ITokenTypes {
+  passwordResetToken = "passwordResetToken",
+  accountVerificationToken = "accountVerificationToken",
+}
+
+export interface IToken {
+  value: string;
+  type: ITokenTypes;
+  createdAt: Date;
+  expireAt: Date;
+  email: string;
   _id: string;
 }
 

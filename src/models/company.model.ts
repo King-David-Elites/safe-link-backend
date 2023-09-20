@@ -19,3 +19,7 @@ const CompanySchema = new mongoose.Schema<ICompany>({
   coverPicture: { type: String, required: true },
   ownedBy: { type: Types.ObjectId, ref: Collections.user, required: true },
 });
+
+const Company = mongoose.model(Collections.company, CompanySchema);
+
+export default Company;
