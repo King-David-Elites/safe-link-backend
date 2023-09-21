@@ -18,9 +18,12 @@ const mailer_1 = __importDefault(require("../helpers/mailer"));
 const user_interface_1 = require("../interfaces/models/user.interface");
 const user_auth_model_1 = __importDefault(require("../models/user.auth.model"));
 const user_model_1 = __importDefault(require("../models/user.model"));
-const emails_1 = require("../templates/emails");
+const verifyEmail_1 = require("../templates/verifyEmail");
 const token_service_1 = __importDefault(require("./token.service"));
 const jwt_1 = __importDefault(require("../helpers/jwt"));
+const requestPasswordEmail_1 = require("../templates/requestPasswordEmail");
+const user_service_1 = __importDefault(require("./user.service"));
+const argon2_1 = __importDefault(require("argon2"));
 const getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const auth = yield user_auth_model_1.default.findById(id);
     if (!auth) {
@@ -84,7 +87,7 @@ const createAccount = (body) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, mailer_1.default)({
         to: email,
         subject: "CREAM CARD ACCOUNT VERIFICATION",
-        html: (0, emails_1.verifyEmailHTML)(user, token.value),
+        html: (0, verifyEmail_1.verifyEmailHTML)(user, token.value),
     });
 });
 const verifyAccount = (token) => __awaiter(void 0, void 0, void 0, function* () {
@@ -119,7 +122,7 @@ const login = (body) => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, mailer_1.default)({
             to: email,
             subject: "Verify Account Before Login",
-            html: (0, emails_1.verifyEmailHTML)(user, token),
+            html: (0, verifyEmail_1.verifyEmailHTML)(user, token),
         });
         throw new errors_1.BadRequestError("Your account is not yet verified, kindly check your email for a new verification link");
     }
@@ -134,9 +137,62 @@ const login = (body) => __awaiter(void 0, void 0, void 0, function* () {
         user: user,
     };
 });
+const requestForgotPasswordLink = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    /**
+     * Request their email
+     * Check if there's already a token attached to their email, if yes update it, if not create a new one and send them the link
+     */
+    const tokenInDb = yield token_service_1.default.getToken({
+        email,
+        type: user_interface_1.ITokenTypes.passwordResetToken,
+    });
+    const user = yield user_service_1.default.getByEmail(email);
+    if (tokenInDb) {
+        const newToken = (0, crypto_1.randomBytes)(32).toString();
+        yield token_service_1.default.updateToken({ email, type: user_interface_1.ITokenTypes.passwordResetToken }, newToken);
+        yield (0, mailer_1.default)({
+            to: email,
+            subject: "Forgot Password Verification Link",
+            html: (0, requestPasswordEmail_1.resetPasswordHTML)(user, newToken),
+        });
+    }
+    else {
+        const newToken = yield token_service_1.default.createToken({
+            email,
+            type: user_interface_1.ITokenTypes.passwordResetToken,
+        });
+        yield (0, mailer_1.default)({
+            to: email,
+            subject: "Forgot Password Verification Link",
+            html: (0, requestPasswordEmail_1.resetPasswordHTML)(user, newToken.value),
+        });
+    }
+});
+const resetPassword = (token, body) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, confirmPassword } = body;
+    if (password !== confirmPassword) {
+        throw new errors_1.BadRequestError("Passwords do not match");
+    }
+    /**
+     * Get the user from the token and update their password
+     */
+    const tokenInDb = yield token_service_1.default.getToken({
+        value: token,
+        type: user_interface_1.ITokenTypes.passwordResetToken,
+    });
+    if (!tokenInDb) {
+        throw new errors_1.NotFoundError("Token does not exist or has expired, kindly request the link again");
+    }
+    const newPassword = yield argon2_1.default.hash(password);
+    yield user_auth_model_1.default.findOneAndUpdate({ email: tokenInDb.email }, { password: newPassword });
+});
 const authService = {
+    getById,
+    getByEmail,
     createAccount,
     verifyAccount,
     login,
+    requestForgotPasswordLink,
+    resetPassword,
 };
 exports.default = authService;

@@ -2,11 +2,20 @@ import { Query } from "mongoose";
 import { IToken, ITokenTypes } from "../interfaces/models/user.interface";
 import Token from "../models/user.token.model";
 import { NotFoundError } from "../constants/errors";
+import { randomBytes } from "crypto";
 
 const createToken = async (body: Partial<IToken>): Promise<IToken> => {
-  const { email, type } = body;
+  body = {
+    email: body.email,
+    type: body.type,
+  };
 
-  const token = await Token.create({ email, type });
+  // use crypto bytes for reset password
+  if (body.type === ITokenTypes.passwordResetToken) {
+    body.value = randomBytes(32).toString();
+  }
+
+  const token = await Token.create(body);
 
   return token;
 };
@@ -21,12 +30,8 @@ const updateToken = async (query: Object, token: string): Promise<IToken> => {
   return tokenInDb;
 };
 
-const getToken = async (query: Object): Promise<IToken> => {
+const getToken = async (query: Object): Promise<IToken | null> => {
   const token = await Token.findOne(query);
-
-  if (!token) {
-    throw new NotFoundError("Token does not exist");
-  }
 
   return token;
 };

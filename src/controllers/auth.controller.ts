@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import authService from "../services/auth.service";
 import { IAuth } from "../interfaces/models/user.interface";
+import { IResetPasswordReq } from "../interfaces/responses/auth.response";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -63,10 +64,49 @@ const login = async (
   }
 };
 
+const requestForgotPasswordLink = async (
+  req: Request<{}, {}, { email: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+
+    await authService.requestForgotPasswordLink(email);
+
+    res.status(200).json({
+      message: "Password reset link sent successfully",
+      data: null,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const resetPassword = async (
+  req: Request<{}, {}, IResetPasswordReq>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { password, confirmPassword, token } = req.body;
+
+    await authService.resetPassword(token, { password, confirmPassword });
+
+    res
+      .status(200)
+      .json({ message: "Password reset successfully", data: null });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const authController = {
   register,
   verifyAccount,
   login,
+  requestForgotPasswordLink,
+  resetPassword,
 };
 
 export default authController;

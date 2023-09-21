@@ -22,8 +22,8 @@ app.use((0, express_rate_limit_1.default)({
 }));
 app.use(express_1.default.json({ limit: "50mb" }));
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use("/", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(doc));
 app.use("/api/v1/auth/", routes_1.default.auth);
+app.use("/", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(doc));
 app.use(error_handlers_1.errorHandler);
 app.all("*", error_handlers_1.notFoundError);
 (0, server_entry_1.default)(app);

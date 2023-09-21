@@ -18,6 +18,12 @@ class JWT {
 
     return token;
   };
+
+  public verifyJWT = async <T>(token: string): Promise<T> => {
+    const decodedToken = await jwt.verify(token, await this.decodeSecret());
+
+    return decodedToken as T;
+  };
 }
 
 const JWTHelper = new JWT();

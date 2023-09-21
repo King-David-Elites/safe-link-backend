@@ -52,9 +52,36 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         return next(error);
     }
 });
+const requestForgotPasswordLink = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.body;
+        yield auth_service_1.default.requestForgotPasswordLink(email);
+        res.status(200).json({
+            message: "Password reset link sent successfully",
+            data: null,
+        });
+    }
+    catch (error) {
+        return next(error);
+    }
+});
+const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { password, confirmPassword, token } = req.body;
+        yield auth_service_1.default.resetPassword(token, { password, confirmPassword });
+        res
+            .status(200)
+            .json({ message: "Password reset successfully", data: null });
+    }
+    catch (error) {
+        return next(error);
+    }
+});
 const authController = {
     register,
     verifyAccount,
     login,
+    requestForgotPasswordLink,
+    resetPassword,
 };
 exports.default = authController;

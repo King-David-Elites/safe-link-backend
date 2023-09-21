@@ -26,6 +26,10 @@ class JWT {
             });
             return token;
         });
+        this.verifyJWT = (token) => __awaiter(this, void 0, void 0, function* () {
+            const decodedToken = yield jsonwebtoken_1.default.verify(token, yield this.decodeSecret());
+            return decodedToken;
+        });
     }
 }
 const JWTHelper = new JWT();
