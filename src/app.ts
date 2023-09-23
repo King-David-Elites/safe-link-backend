@@ -6,6 +6,7 @@ import serverEntry from "./entry/server.entry";
 import { errorHandler, notFoundError } from "./handlers/error.handlers";
 import routes from "./routes";
 import swagger from "swagger-ui-express";
+import handleMediaUpload from "./controllers/media.controller";
 const doc = require("./constants/doc.json");
 
 const app = express();
@@ -23,7 +24,9 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: false }));
 
+app.post("/api/v1/media", handleMediaUpload);
 app.use("/api/v1/auth/", routes.auth);
+app.use("/api/v1/questions/", routes.questions);
 
 app.use("/", swagger.serve, swagger.setup(doc));
 app.use(errorHandler);

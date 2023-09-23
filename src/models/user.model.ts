@@ -6,8 +6,7 @@ import Collections from "../interfaces/collections";
 const UserSchema = new mongoose.Schema<IUser>(
   {
     email: { type: String, required: true, unique: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    name: { type: String },
     about: { type: String },
     facebookUrl: { type: String },
     instagramUrl: { type: String },
@@ -20,7 +19,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     state: { type: String },
     city: { type: String },
     zipCode: { type: String },
-    phoneNumber1: { type: Number, unique: true },
+    phoneNumber1: { type: Number },
     phoneNumber2: { type: Number },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }

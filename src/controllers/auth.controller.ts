@@ -5,20 +5,10 @@ import { IResetPasswordReq } from "../interfaces/responses/auth.response";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {
-      email,
-      firstName,
-      lastName,
-
-      phoneNumber1,
-      password,
-      confirmPassword,
-    } = req.body;
+    const { email, password, confirmPassword } = req.body;
 
     await authService.createAccount({
       email,
-      firstName,
-      lastName,
       password,
       confirmPassword,
     });

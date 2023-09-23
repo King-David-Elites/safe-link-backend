@@ -5,6 +5,7 @@ enum Collections {
   questionnaire = "questionnaire",
   answer = "answer",
   company = "company",
+  inventory = "inventory",
 }
 
 export default Collections;

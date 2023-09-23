@@ -7,6 +7,7 @@ export interface IQuestionnaire {
 }
 
 export interface IAnswerToQuestionnaire {
+  _id: string;
   userId: string | Types.ObjectId | IUser;
   questionId: string | Types.ObjectId | IQuestionnaire;
   answer: string;

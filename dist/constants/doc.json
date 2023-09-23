@@ -216,9 +216,11 @@
     "/api/v1/auth/change-password": {
       "post": {
         "tags": ["Auth"],
-        "security": {
-          "bearer": []
-        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
         "description": "Change Password, requires access token",
         "requestBody": {
           "required": true,
@@ -282,13 +284,12 @@
           "phoneNumber2": { "type": "number", "example": 8023720580 }
         }
       }
-    }
-  },
-
-  "securitySchemes": {
-    "bearer": {
-      "type": "http",
-      "scheme": "bearer"
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
     }
   },
 

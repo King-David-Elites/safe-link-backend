@@ -55,10 +55,61 @@ const changePassword = async (body: IChangePasswordReq) => {
   await userAuth.save();
 };
 
+const editUser = async (body: Partial<IUser>): Promise<IUser> => {
+  const {
+    name,
+    about,
+    profilePicture,
+    professionalPictures,
+    workPictures,
+    leisurePictures,
+    address,
+    city,
+    zipCode,
+    state,
+    country,
+    phoneNumber1,
+    phoneNumber2,
+    _id,
+  } = body;
+
+  const user = await User.findById(_id);
+
+  if (!user) {
+    throw new NotFoundError("User does not exist");
+  }
+
+  user.name = name || user.name;
+  user.about = about || user.about;
+  user.profilePicture = profilePicture || user.profilePicture;
+  user.professionalPictures = professionalPictures || user.professionalPictures;
+  user.workPictures = workPictures || user.workPictures;
+  user.leisurePictures = leisurePictures || user.leisurePictures;
+  user.address = address || user.address;
+  user.city = city || user.city;
+  user.zipCode = zipCode || user.zipCode;
+  user.state = state || user.state;
+  user.country = country || user.country;
+  user.phoneNumber1 = phoneNumber1 || user.phoneNumber1;
+  user.phoneNumber2 = phoneNumber2 || user.phoneNumber2;
+
+  return await user.save();
+};
+
+const deleteUser = async (userId: string) => {
+  const user = await User.findByIdAndDelete<IUser>(userId);
+
+  if (!user) throw new NotFoundError("User does not exist");
+
+  await Auth.findOneAndDelete({ email: user?.email });
+};
+
 const userService = {
   getById,
   getByEmail,
   changePassword,
+  editUser,
+  deleteUser,
 };
 
 export default userService;

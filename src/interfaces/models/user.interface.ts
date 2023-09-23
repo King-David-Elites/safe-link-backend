@@ -24,8 +24,7 @@ export interface IToken {
 export interface IUser {
   _id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   about: string;
   websiteUrl: string;
   facebookUrl: string;

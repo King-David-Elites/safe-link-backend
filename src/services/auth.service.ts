@@ -33,28 +33,7 @@ const getByEmail = async (email: string): Promise<IAuth> => {
 };
 
 const createAccount = async (body: Partial<IUser & IAuth>) => {
-  const {
-    email,
-    firstName,
-    lastName,
-    // about,
-    // websiteUrl,
-    // facebookUrl,
-    // profilePicture,
-    // professionalPictures,
-    // workPictures,
-    // leisurePictures,
-    // address,
-    // state,
-    // city,
-    // zipCode,
-    phoneNumber1,
-    // phoneNumber2,
-    // instagramUrl,
-    // country,
-    password,
-    confirmPassword,
-  } = body;
+  const { email, password, confirmPassword } = body;
 
   if (password != confirmPassword) {
     throw new BadRequestError("Passwords do not match");
@@ -64,23 +43,6 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
 
   const user = await User.create({
     email,
-    firstName,
-    lastName,
-    // about,
-    // websiteUrl,
-    // facebookUrl,
-    // instagramUrl,
-    // profilePicture,
-    // professionalPictures,
-    // workPictures,
-    // leisurePictures,
-    // address,
-    // country,
-    // state,
-    // city,
-    // zipCode,
-    phoneNumber1,
-    // phoneNumber2,
   });
 
   const token = await tokenService.createToken({
