@@ -278,7 +278,7 @@ const resetPasswordHTML = (user, token) => {
                               <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
   
                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
-                                  <p style="line-height: 160%;">Your Password Reset Token, Hi ${user.firstName}, You are receiving this email because you (or someone else) has requested a password reset for your account. Please click on the button below, please ignore this email and
+                                  <p style="line-height: 160%;">Your Password Reset Token, Hi ${user.name}, You are receiving this email because you (or someone else) has requested a password reset for your account. Please click on the button below, please ignore this email and
                                     your password will remain unchanged.</p>
                                   <p style="line-height: 160%;"> </p>
                                   <p style="line-height: 160%;"> </p>

@@ -48,9 +48,38 @@ const changePassword = (body) => __awaiter(void 0, void 0, void 0, function* () 
     userAuth.password = newPasswordHash;
     yield userAuth.save();
 });
+const editUser = (body) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, about, profilePicture, professionalPictures, workPictures, leisurePictures, address, city, zipCode, state, country, phoneNumber1, phoneNumber2, _id, } = body;
+    const user = yield user_model_1.default.findById(_id);
+    if (!user) {
+        throw new errors_1.NotFoundError("User does not exist");
+    }
+    user.name = name || user.name;
+    user.about = about || user.about;
+    user.profilePicture = profilePicture || user.profilePicture;
+    user.professionalPictures = professionalPictures || user.professionalPictures;
+    user.workPictures = workPictures || user.workPictures;
+    user.leisurePictures = leisurePictures || user.leisurePictures;
+    user.address = address || user.address;
+    user.city = city || user.city;
+    user.zipCode = zipCode || user.zipCode;
+    user.state = state || user.state;
+    user.country = country || user.country;
+    user.phoneNumber1 = phoneNumber1 || user.phoneNumber1;
+    user.phoneNumber2 = phoneNumber2 || user.phoneNumber2;
+    return yield user.save();
+});
+const deleteUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.default.findByIdAndDelete(userId);
+    if (!user)
+        throw new errors_1.NotFoundError("User does not exist");
+    yield user_auth_model_1.default.findOneAndDelete({ email: user === null || user === void 0 ? void 0 : user.email });
+});
 const userService = {
     getById,
     getByEmail,
     changePassword,
+    editUser,
+    deleteUser,
 };
 exports.default = userService;

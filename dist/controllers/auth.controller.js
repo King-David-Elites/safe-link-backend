@@ -15,11 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const auth_service_1 = __importDefault(require("../services/auth.service"));
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, firstName, lastName, phoneNumber1, password, confirmPassword, } = req.body;
+        const { email, password, confirmPassword } = req.body;
         yield auth_service_1.default.createAccount({
             email,
-            firstName,
-            lastName,
             password,
             confirmPassword,
         });

@@ -23,7 +23,7 @@ const createToken = (body) => __awaiter(void 0, void 0, void 0, function* () {
     };
     // use crypto bytes for reset password
     if (body.type === user_interface_1.ITokenTypes.passwordResetToken) {
-        body.value = (0, crypto_1.randomBytes)(32).toString();
+        body.value = (0, crypto_1.randomBytes)(32).toString("hex");
     }
     const token = yield user_token_model_1.default.create(body);
     return token;

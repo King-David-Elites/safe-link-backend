@@ -623,7 +623,7 @@ const verifyEmailHTML = (user, token) => {
                                         "
                                       >
                                         <p style="line-height: 160%">
-                                          Hi ${user.firstName}, your account as been
+                                          Hi ${user.name}, your account as been
                                           created but is currently inactive. Please
                                           click on the button below to verify your
                                           account. Ignore if you didn't initiate this

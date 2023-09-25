@@ -39,46 +39,13 @@ const getByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return auth;
 });
 const createAccount = (body) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, firstName, lastName, 
-    // about,
-    // websiteUrl,
-    // facebookUrl,
-    // profilePicture,
-    // professionalPictures,
-    // workPictures,
-    // leisurePictures,
-    // address,
-    // state,
-    // city,
-    // zipCode,
-    phoneNumber1, 
-    // phoneNumber2,
-    // instagramUrl,
-    // country,
-    password, confirmPassword, } = body;
+    const { email, password, confirmPassword } = body;
     if (password != confirmPassword) {
         throw new errors_1.BadRequestError("Passwords do not match");
     }
     const auth = yield user_auth_model_1.default.create({ email, password });
     const user = yield user_model_1.default.create({
         email,
-        firstName,
-        lastName,
-        // about,
-        // websiteUrl,
-        // facebookUrl,
-        // instagramUrl,
-        // profilePicture,
-        // professionalPictures,
-        // workPictures,
-        // leisurePictures,
-        // address,
-        // country,
-        // state,
-        // city,
-        // zipCode,
-        phoneNumber1,
-        // phoneNumber2,
     });
     const token = yield token_service_1.default.createToken({
         email,
@@ -107,6 +74,7 @@ const verifyAccount = (token) => __awaiter(void 0, void 0, void 0, function* () 
     }
     auth.isVerified = true;
     yield auth.save();
+    yield token_service_1.default.deleteToken({ _id: tokenInDb._id });
 });
 const login = (body) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = body;
@@ -148,7 +116,8 @@ const requestForgotPasswordLink = (email) => __awaiter(void 0, void 0, void 0, f
     });
     const user = yield user_service_1.default.getByEmail(email);
     if (tokenInDb) {
-        const newToken = (0, crypto_1.randomBytes)(32).toString();
+        const newToken = (0, crypto_1.randomBytes)(32).toString("hex");
+        console.log(newToken);
         yield token_service_1.default.updateToken({ email, type: user_interface_1.ITokenTypes.passwordResetToken }, newToken);
         yield (0, mailer_1.default)({
             to: email,
@@ -185,6 +154,7 @@ const resetPassword = (token, body) => __awaiter(void 0, void 0, void 0, functio
     }
     const newPassword = yield argon2_1.default.hash(password);
     yield user_auth_model_1.default.findOneAndUpdate({ email: tokenInDb.email }, { password: newPassword });
+    yield token_service_1.default.deleteToken({ _id: tokenInDb._id });
 });
 const authService = {
     getById,

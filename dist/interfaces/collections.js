@@ -8,5 +8,6 @@ var Collections;
     Collections["questionnaire"] = "questionnaire";
     Collections["answer"] = "answer";
     Collections["company"] = "company";
+    Collections["inventory"] = "inventory";
 })(Collections || (Collections = {}));
 exports.default = Collections;

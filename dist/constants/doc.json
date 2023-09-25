@@ -13,6 +13,36 @@
     { "url": "http://localhost:3001" }
   ],
   "paths": {
+    "/api/v1/media": {
+      "post": {
+        "tags": ["Misc"],
+        "security": [],
+        "description": "Upload all kinds of media files",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/formdata": {
+              "schema": {
+                "type": "object",
+                "properties": { "media": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "data": { "type": "string" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/register": {
       "post": {
         "security": [],
@@ -216,11 +246,7 @@
     "/api/v1/auth/change-password": {
       "post": {
         "tags": ["Auth"],
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "description": "Change Password, requires access token",
         "requestBody": {
           "required": true,
@@ -232,6 +258,503 @@
                   "token": { "type": "string" },
                   "password": { "type": "string" },
                   "confirmPassword": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/": {
+      "get": {
+        "description": "Get User Info",
+        "tags": ["User"],
+        "security": [{ "bearer": [] }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update User Info",
+        "security": [{ "bearer": [] }],
+        "tags": ["User"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "description": "Delete User Account",
+        "security": [{ "bearer": [] }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{email}": {
+      "get": {
+        "tags": ["User"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Email",
+            "required": true,
+            "description": "The User Email",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/questions/": {
+      "post": {
+        "tags": ["Questions"],
+        "description": "Add Question (Admin)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Question" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "get": {
+        "tags": ["Questions"],
+        "description": "Get Question",
+
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Question" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/questions/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "description": "The Question Id",
+          "name": "id",
+          "schema": { "type": "string" }
+        }
+      ],
+      "put": {
+        "tags": ["Questions"],
+        "description": "Add Question (Admin)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Question" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Questions"],
+        "description": "Add Question (Admin)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/questions/answer": {
+      "get": {
+        "security": [{ "bearer": [] }],
+        "tags": ["Questions"],
+        "description": "Get User Answers",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Answer" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/questions/{id}/answer": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "description": "The Question Id",
+          "name": "id",
+          "schema": { "type": "string" }
+        }
+      ],
+      "post": {
+        "tags": ["Questions"],
+        "description": "Answer A Question",
+        "security": [{ "security": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": { "answer": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Answer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/inventory/": {
+      "post": {
+        "description": "Add to inventory",
+        "tags": ["Inventory"],
+        "security": [{ "bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/formdata": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "media": {
+                    "type": "string",
+                    "exammple": "file(image/video)"
+                  },
+                  "title": { "type": "string" },
+                  "currency": { "type": "string" },
+                  "price": { "type": "number" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Inventory" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Get My Inventories",
+        "tags": ["Inventory"],
+        "security": [{ "bearer": [] }],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Inventory" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inventory/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The inventory id"
+        }
+      ],
+      "get": {
+        "tags": ["Inventory"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Inventory" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [{ "bearer": [] }],
+        "tags": ["Inventory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/formdata": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "media": {
+                    "type": "string",
+                    "exammple": "file(image/video)"
+                  },
+                  "title": { "type": "string" },
+                  "currency": { "type": "string" },
+                  "price": { "type": "number" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/Inventory" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Inventory"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/inventory/user/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The  userid"
+        }
+      ],
+      "get": {
+        "tags": ["Inventory"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Inventory" }
+                    }
+                  }
                 }
               }
             }
@@ -283,15 +806,78 @@
           "phoneNumber1": { "type": "number", "example": 8023720580 },
           "phoneNumber2": { "type": "number", "example": 8023720580 }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearer": {
-        "type": "http",
-        "scheme": "bearer"
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Answer": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/User"
+          },
+          "questionId": {
+            "$ref": "#/components/schemas/Question"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "Inventory": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "example": "NGN"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "videos": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "owner": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
       }
     }
   },
 
-  "tags": [{ "name": "Auth" }]
+  "securitySchemes": {
+    "bearer": {
+      "type": "http",
+      "scheme": "bearer"
+    }
+  },
+
+  "tags": [
+    { "name": "Auth" },
+    { "name": "User" },
+    { "name": "Questions" },
+    { "name": "Inventory" },
+    { "name": "Misc" }
+  ]
 }

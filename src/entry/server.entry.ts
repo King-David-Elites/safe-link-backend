@@ -6,16 +6,19 @@ import logger from "../helpers/logger";
 const port = 3001;
 
 const serverEntry = (app: Application) => {
-  mongoose
-    .connect(settings.mongoDbUrl)
-    .then(() => {
-      app.listen(port, () => {
-        logger.info(`Server is listening on port ${port}`);
-      });
-    })
-    .catch((error) => {
-      logger.error(error);
-    });
+  app.listen(port, () => {
+    logger.info(`Server is listening on port ${port}`);
+  });
+  // mongoose
+  //   .connect(settings.mongoDbUrl)
+  //   .then(() => {
+  //     app.listen(port, () => {
+  //       logger.info(`Server is listening on port ${port}`);
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     logger.error(error);
+  //   });
 };
 
 export default serverEntry;
