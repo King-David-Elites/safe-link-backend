@@ -78,6 +78,8 @@ const verifyAccount = async (token: string) => {
 
   auth.isVerified = true;
   await auth.save();
+
+  await tokenService.deleteToken({ _id: tokenInDb._id });
 };
 
 const login = async (body: Partial<IAuth>): Promise<LoginRes> => {
@@ -137,7 +139,8 @@ const requestForgotPasswordLink = async (email: string) => {
   const user = await userService.getByEmail(email);
 
   if (tokenInDb) {
-    const newToken = randomBytes(32).toString();
+    const newToken = randomBytes(32).toString("hex");
+    console.log(newToken);
 
     await tokenService.updateToken(
       { email, type: ITokenTypes.passwordResetToken },
@@ -190,6 +193,8 @@ const resetPassword = async (token: string, body: Partial<IAuth>) => {
     { email: tokenInDb.email },
     { password: newPassword }
   );
+
+  await tokenService.deleteToken({ _id: tokenInDb._id });
 };
 
 const authService = {

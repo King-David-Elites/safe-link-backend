@@ -70,6 +70,7 @@ const editInventory = async (
 ) => {
   try {
     const owner = <string>req.userId;
+    const inventoryId = req.params.id;
 
     const { title, description, price, currency } = req.body;
 
@@ -120,6 +121,7 @@ const editInventory = async (
       description,
       price,
       currency,
+      _id: inventoryId,
     });
 
     res.status(200).json({ message: "Inventory edited successfully", data });

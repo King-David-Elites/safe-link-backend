@@ -41,6 +41,8 @@ const editQuestion = async (
       question,
       _id: questionId,
     });
+
+    res.status(200).json({ message: "Question edited successfully", data });
   } catch (error) {
     return next(error);
   }
@@ -96,7 +98,9 @@ const getUserAnswers = async (
 
     const data = await questionService.getUserAnswers(userId);
 
-    res.status(200).json({ message: "User's answers fetched successfully" });
+    res
+      .status(200)
+      .json({ message: "User's answers fetched successfully", data });
   } catch (error) {
     return next(error);
   }

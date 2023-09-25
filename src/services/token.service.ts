@@ -12,7 +12,7 @@ const createToken = async (body: Partial<IToken>): Promise<IToken> => {
 
   // use crypto bytes for reset password
   if (body.type === ITokenTypes.passwordResetToken) {
-    body.value = randomBytes(32).toString();
+    body.value = randomBytes(32).toString("hex");
   }
 
   const token = await Token.create(body);

@@ -26,10 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post("/api/v1/media", handleMediaUpload);
 app.use("/api/v1/auth/", routes.auth);
+app.use("/api/v1/user/", routes.user);
+app.use("/api/v1/inventory", routes.inventory);
 app.use("/api/v1/questions/", routes.questions);
 
-app.use("/", swagger.serve, swagger.setup(doc));
 app.use(errorHandler);
 app.all("*", notFoundError);
+app.use("/", swagger.serve, swagger.setup(doc));
 
 serverEntry(app);

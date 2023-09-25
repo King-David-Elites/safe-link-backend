@@ -6,6 +6,7 @@ import {
 } from "../validations/inventory.validation";
 import validate from "../validations";
 import inventoryControllers from "../controllers/inventory.controller";
+import { multerUploader } from "../helpers/upload";
 
 const router = Router();
 
@@ -13,6 +14,7 @@ router
   .route("/")
   .post(
     isAuth,
+    multerUploader.array("media"),
     validate(CreateInventoryInput),
     inventoryControllers.addToInventory
   )
@@ -20,7 +22,12 @@ router
 
 router
   .route("/:id")
-  .put(isAuth, validate(EditInventoryInput), inventoryControllers.editInventory)
+  .put(
+    isAuth,
+    validate(EditInventoryInput),
+    multerUploader.array("media"),
+    inventoryControllers.editInventory
+  )
   .delete(isAuth, inventoryControllers.deleteInventory)
   .get(inventoryControllers.getSingleInventory);
 

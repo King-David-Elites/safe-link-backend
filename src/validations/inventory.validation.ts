@@ -11,9 +11,9 @@ export const CreateInventoryInput = object({
 
 export const EditInventoryInput = object({
   body: object({
-    price: number().required(),
-    currency: string().required(),
-    title: string().required(),
-    description: string().required(),
+    price: number().notRequired(),
+    currency: string().notRequired(),
+    title: string().notRequired(),
+    description: string().notRequired(),
   }),
 });

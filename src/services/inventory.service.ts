@@ -27,7 +27,7 @@ const deleteInventory = async (userId: string, inventoryId: string) => {
 
   if (!inventory) throw new NotFoundError("Inventory does not exist");
 
-  if (inventory._id.toString() != userId.toString())
+  if (inventory.owner.toString() != userId.toString())
     throw new ForbiddenError("Inventory does not belong to you");
 
   await inventory.deleteOne();
@@ -43,7 +43,7 @@ const editInventory = async (
 
   if (!inventory) throw new NotFoundError("Inventory does not exist");
 
-  if (inventory._id.toString() != userId.toString())
+  if (inventory.owner.toString() != userId.toString())
     throw new ForbiddenError("Inventory does not belong to you");
 
   inventory.title = title || inventory.title;

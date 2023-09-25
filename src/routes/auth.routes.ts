@@ -10,6 +10,7 @@ import {
   VerifyEmailInput,
 } from "../validations/auth.validation";
 import userController from "../controllers/user.controller";
+import isAuth from "../middleware/isAuth";
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.patch(
 );
 router.patch(
   "/change-password",
+  isAuth,
   validate(ChangePasswordInput),
   userController.changePassword
 );
