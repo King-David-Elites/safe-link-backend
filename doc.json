@@ -57,15 +57,6 @@
                   "email": {
                     "type": "string"
                   },
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
-                  "phoneNumber1": {
-                    "type": "number"
-                  },
                   "password": {
                     "type": "string",
                     "min": 8

@@ -8,7 +8,7 @@ import routes from "./routes";
 import swagger from "swagger-ui-express";
 import handleMediaUpload from "./controllers/media.controller";
 import { multerUploader } from "./helpers/upload";
-const doc = require("./constants/doc.json");
+const doc = require("../doc.json");
 
 const app = express();
 

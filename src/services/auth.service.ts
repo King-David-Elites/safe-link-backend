@@ -39,6 +39,11 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
     throw new BadRequestError("Passwords do not match");
   }
 
+  const authInDb = await Auth.findOne({ email });
+
+  if (authInDb)
+    throw new BadRequestError("User with this email already exists");
+
   const auth = await Auth.create({ email, password });
 
   const user = await User.create({

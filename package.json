@@ -35,7 +35,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "node ./dist/app.js",
+    "start": "tsc -p . && node ./dist/app.js",
     "dev": "nodemon ./src/app.ts"
   },
   "keywords": [],
