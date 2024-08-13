@@ -8,8 +8,8 @@ export interface IAuth {
 }
 
 export enum ITokenTypes {
-  passwordResetToken = "passwordResetToken",
-  accountVerificationToken = "accountVerificationToken",
+  passwordResetToken = 'passwordResetToken',
+  accountVerificationToken = 'accountVerificationToken',
 }
 
 export interface IToken {
@@ -26,9 +26,6 @@ export interface IUser {
   email: string;
   name: string;
   about: string;
-  websiteUrl: string;
-  facebookUrl: string;
-  instagramUrl: string;
   profilePicture: string;
   professionalPictures: string[];
   workPictures: string[];
@@ -38,6 +35,5 @@ export interface IUser {
   state: string;
   city: string;
   zipCode: string;
-  phoneNumber1: number;
-  phoneNumber2: number;
+  phoneNumber: string;
 }

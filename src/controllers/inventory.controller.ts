@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import { IRequest } from "../interfaces/expressRequest";
-import { upload } from "../helpers/upload";
-import { BadRequestError } from "../constants/errors";
-import inventoryService from "../services/inventory.service";
+import { NextFunction, Request, Response } from 'express';
+import { IRequest } from '../interfaces/expressRequest';
+import { upload } from '../helpers/upload';
+import { BadRequestError } from '../constants/errors';
+import inventoryService from '../services/inventory.service';
 
 const addToInventory = async (
   req: IRequest,
@@ -11,38 +11,16 @@ const addToInventory = async (
 ) => {
   try {
     const owner = <string>req.userId;
-    const { price, currency, title, description } = req.body;
+    let { price, currency, title, description, cover, images, videos } =
+      req.body;
 
-    req.files = [...((req.files || []) as Express.Multer.File[])];
-
-    const imagesUpload = req.files?.filter((file) =>
-      file.mimetype.includes("image")
-    );
-    const videosUpload = req.files?.filter((file) =>
-      file.mimetype.includes("video")
+    videos = await Promise.all(
+      videos.map((video: string) => upload(video, { resource_type: 'video' }))
     );
 
-    if (imagesUpload.length === 0 || videosUpload.length === 0) {
-      return next(new BadRequestError("Provide at lease one image & video"));
-    }
+    images = await Promise.all(images.map((image: string) => upload(image)));
 
-    let images: string[] = [];
-    let videos: string[] = [];
-
-    for (const image of imagesUpload) {
-      const url = await upload(image.path);
-
-      images.push(url);
-    }
-
-    for (const video of videosUpload) {
-      const url = await upload(video.path, {
-        format: "mp4",
-        resource_type: "video",
-      });
-
-      videos.push(url);
-    }
+    cover = await upload(cover);
 
     const data = await inventoryService.createInventory({
       title,
@@ -52,10 +30,11 @@ const addToInventory = async (
       images,
       videos,
       owner,
+      cover,
     });
 
     res.status(201).json({
-      message: "Inventory created successfully",
+      message: 'Inventory created successfully',
       data,
     });
   } catch (error) {
@@ -72,59 +51,28 @@ const editInventory = async (
     const owner = <string>req.userId;
     const inventoryId = req.params.id;
 
-    const { title, description, price, currency } = req.body;
-
-    // set them to undefined first instead of empty array so an empty array  won't be added to the DB
-
-    let images: string[] | undefined;
-    let videos: string[] | undefined;
-
-    if ((req.files?.length as number) > 0) {
-      req.files = [...((req.files || []) as Express.Multer.File[])];
-
-      const imagesUpload = req.files?.filter((file) =>
-        file.mimetype.includes("image")
+    if (req.body.images && req.body.images.length > 0) {
+      req.body.images = await Promise.all(
+        req.body.images.map((img: string) => upload(img))
       );
-      const videosUpload = req.files?.filter((file) =>
-        file.mimetype.includes("video")
+    }
+
+    if (req.body.videos && req.body.videos.length > 0) {
+      req.body.videos = await Promise.all(
+        req.body.videos.map((vid: string) => upload(vid))
       );
+    }
 
-      //  initialize the arrays
-      if (imagesUpload.length > 0) {
-        images = [];
-
-        for (const image of imagesUpload) {
-          const url = await upload(image.path);
-
-          images.push(url);
-        }
-      }
-
-      if (videosUpload.length > 0) {
-        videos = [];
-
-        for (const video of videosUpload) {
-          const url = await upload(video.path, {
-            format: "mp4",
-            resource_type: "video",
-          });
-
-          videos.push(url);
-        }
-      }
+    if (req.body.cover) {
+      req.body.cover = await upload(req.body.cover);
     }
 
     const data = await inventoryService.editInventory(owner, {
-      images,
-      videos,
-      title,
-      description,
-      price,
-      currency,
+      ...req.body,
       _id: inventoryId,
     });
 
-    res.status(200).json({ message: "Inventory edited successfully", data });
+    res.status(200).json({ message: 'Inventory edited successfully', data });
   } catch (error) {
     return next(error);
   }
@@ -143,7 +91,7 @@ const deleteInventory = async (
 
     res
       .status(200)
-      .json({ message: "Inventory deleted successfully", data: null });
+      .json({ message: 'Inventory deleted successfully', data: null });
   } catch (error) {
     return next(error);
   }
@@ -159,7 +107,7 @@ const getMyInventories = async (
 
     const data = await inventoryService.getUserInventories(userId);
 
-    res.status(200).json({ message: "Inventories fetched successfully", data });
+    res.status(200).json({ message: 'Inventories fetched successfully', data });
   } catch (error) {
     return next(error);
   }
@@ -175,7 +123,7 @@ const getUserInventories = async (
 
     const data = await inventoryService.getUserInventories(userId);
 
-    res.status(200).json({ message: "Inventories fetched successfully", data });
+    res.status(200).json({ message: 'Inventories fetched successfully', data });
   } catch (error) {
     return next(error);
   }
@@ -191,7 +139,7 @@ const getSingleInventory = async (
   try {
     const data = await inventoryService.getSingleInventory(inventoryId);
 
-    res.status(200).json({ message: "Inventory fetched successfully", data });
+    res.status(200).json({ message: 'Inventory fetched successfully', data });
   } catch (error) {
     return next(error);
   }

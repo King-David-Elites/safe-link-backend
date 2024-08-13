@@ -574,18 +574,17 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/formdata": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "media": {
-                    "type": "string",
-                    "exammple": "file(image/video)"
-                  },
                   "title": { "type": "string" },
                   "currency": { "type": "string" },
                   "price": { "type": "number" },
-                  "description": { "type": "string" }
+                  "description": { "type": "string" },
+                  "cover": { "type": "string" },
+                  "images": { "type": "array", "items": { "type": "string" } },
+                  "videos": { "type": "array", "items": { "type": "string" } }
                 }
               }
             }
@@ -666,14 +665,13 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/formdata": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "media": {
-                    "type": "string",
-                    "exammple": "file(image/video)"
-                  },
+                  "images": { "type": "array", "items": { "type": "string" } },
+                  "videos": { "type": "array", "items": { "type": "string" } },
+                  "cover": { "type": "string" },
                   "title": { "type": "string" },
                   "currency": { "type": "string" },
                   "price": { "type": "number" },
