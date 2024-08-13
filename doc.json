@@ -762,8 +762,6 @@
           "lastName": { "type": "string" },
           "_id": { "type": "string" },
           "about": { "type": "string" },
-          "facebookUrl": { "type": "string" },
-          "instagramUrl": { "type": "string" },
           "profilePicture": { "type": "string" },
           "professionalPictures": {
             "type": "array",
@@ -792,8 +790,7 @@
           "zipCode": {
             "type": "string"
           },
-          "phoneNumber1": { "type": "number", "example": 8023720580 },
-          "phoneNumber2": { "type": "number", "example": 8023720580 }
+          "phoneNumber": { "type": "number", "example": 8023720580 }
         }
       },
       "Question": {

@@ -1,9 +1,9 @@
-import { ForbiddenError, NotFoundError } from "../constants/errors";
-import { IInventory } from "../interfaces/models/inventory.interface";
-import Inventory from "../models/inventory.model";
+import { ForbiddenError, NotFoundError } from '../constants/errors';
+import { IInventory } from '../interfaces/models/inventory.interface';
+import Inventory from '../models/inventory.model';
 
 const createInventory = async (
-  body: Omit<IInventory, "_id">
+  body: Omit<IInventory, '_id'>
 ): Promise<IInventory> => {
   const { title, description, price, currency, owner, images, videos } = body;
 
@@ -25,10 +25,10 @@ const getUserInventories = async (userId: string): Promise<IInventory[]> => {
 const deleteInventory = async (userId: string, inventoryId: string) => {
   const inventory = await Inventory.findById(inventoryId);
 
-  if (!inventory) throw new NotFoundError("Inventory does not exist");
+  if (!inventory) throw new NotFoundError('Inventory does not exist');
 
   if (inventory.owner.toString() != userId.toString())
-    throw new ForbiddenError("Inventory does not belong to you");
+    throw new ForbiddenError('Inventory does not belong to you');
 
   await inventory.deleteOne();
 };
@@ -41,10 +41,10 @@ const editInventory = async (
 
   const inventory = await Inventory.findById(body._id);
 
-  if (!inventory) throw new NotFoundError("Inventory does not exist");
+  if (!inventory) throw new NotFoundError('Inventory does not exist');
 
   if (inventory.owner.toString() != userId.toString())
-    throw new ForbiddenError("Inventory does not belong to you");
+    throw new ForbiddenError('Inventory does not belong to you');
 
   inventory.title = title || inventory.title;
   inventory.description = description || inventory.description;
@@ -58,7 +58,7 @@ const editInventory = async (
 const getSingleInventory = async (inventoryId: string): Promise<IInventory> => {
   const inventory = await Inventory.findById(inventoryId);
 
-  if (!inventory) throw new NotFoundError("Inventory does not exist");
+  if (!inventory) throw new NotFoundError('Inventory does not exist');
 
   return inventory;
 };
