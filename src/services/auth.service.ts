@@ -14,6 +14,8 @@ import argon2 from 'argon2';
 import PlanModel from '../models/plans.model';
 import { PlansEnum } from '../interfaces/models/subscription.interface';
 import UserSubscriptionModel from '../models/user.subscription.model';
+import Token from '../models/user.token.model';
+import { v4 } from 'uuid';
 
 const getById = async (id: string): Promise<IAuth> => {
   const auth = await Auth.findById(id);
@@ -64,6 +66,7 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
   const token = await tokenService.createToken({
     email,
     type: ITokenTypes.accountVerificationToken,
+    value: v4(),
   });
 
   await sendMail({
@@ -148,29 +151,13 @@ const requestForgotPasswordLink = async (email: string) => {
    * Check if there's already a token attached to their email, if yes update it, if not create a new one and send them the link
    */
 
-  const tokenInDb = await tokenService.getToken({
-    email,
-    type: ITokenTypes.passwordResetToken,
-  });
   const user = await userService.getByEmail(email);
 
-  if (tokenInDb) {
-    const newToken = randomBytes(32).toString('hex');
-    console.log(newToken);
-
-    await tokenService.updateToken(
-      { email, type: ITokenTypes.passwordResetToken },
-      newToken
-    );
-    await sendMail({
-      to: email,
-      subject: 'Forgot Password Verification Link',
-      html: resetPasswordHTML(user, newToken),
-    });
-  } else {
-    const newToken = await tokenService.createToken({
+  if (user) {
+    const newToken = await tokenService.upsertToken({
       email,
       type: ITokenTypes.passwordResetToken,
+      value: randomBytes(32).toString('hex'),
     });
 
     await sendMail({
@@ -178,6 +165,8 @@ const requestForgotPasswordLink = async (email: string) => {
       subject: 'Forgot Password Verification Link',
       html: resetPasswordHTML(user, newToken.value),
     });
+  } else {
+    throw new NotFoundError('User with this email does not exist');
   }
 };
 

@@ -1,5 +1,5 @@
-import settings from "../constants/settings";
-import { IUser } from "../interfaces/models/user.interface";
+import settings from '../constants/settings';
+import { IUser } from '../interfaces/models/user.interface';
 
 export const verifyEmailHTML = (user: IUser, token: string) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -619,7 +619,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                         "
                                       >
                                         <p style="line-height: 160%">
-                                          Hi ${user.name}, your account as been
+                                          Hi ${user.email}, your account as been
                                           created but is currently inactive. Please
                                           click on the button below to verify your
                                           account. Ignore if you didn't initiate this
