@@ -1,3 +1,6 @@
+import { Relations } from '.';
+import { ISubscriptionPlan } from './subscription.interface';
+
 export interface IAuth {
   email: string;
   verifyPassword(password: string): boolean;

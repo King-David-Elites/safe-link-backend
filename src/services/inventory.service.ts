@@ -1,11 +1,31 @@
-import { ForbiddenError, NotFoundError } from '../constants/errors';
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+} from '../constants/errors';
 import { IInventory } from '../interfaces/models/inventory.interface';
+import { ISubscriptionPlan } from '../interfaces/models/subscription.interface';
 import Inventory from '../models/inventory.model';
+import UserSubscriptionModel from '../models/user.subscription.model';
 
 const createInventory = async (
   body: Omit<IInventory, '_id'>
 ): Promise<IInventory> => {
   const { title, description, price, currency, owner, images, videos } = body;
+
+  const plan = await UserSubscriptionModel.findOne({
+    user: owner,
+  })
+    .populate('plan')
+    .then((subscription) => subscription?.plan as ISubscriptionPlan);
+
+  const usersListings = await Inventory.find({ owner });
+
+  if (usersListings.length >= plan.listingsCap) {
+    throw new BadRequestError(
+      `Oops! the plan you're subscribed to only allows ${plan.listingsCap} listings`
+    );
+  }
 
   return await Inventory.create({
     title,

@@ -1,3 +1,4 @@
+import { FilterQuery } from 'mongoose';
 import { BadRequestError, NotFoundError } from '../constants/errors';
 import { IUser } from '../interfaces/models/user.interface';
 import { IChangePasswordReq } from '../interfaces/responses/auth.response';
@@ -102,12 +103,65 @@ const deleteUser = async (userId: string) => {
   await Auth.findOneAndDelete({ email: user?.email });
 };
 
+const getUsers = async (search?: string) => {
+  const query: FilterQuery<IUser> = {};
+
+  if (search) {
+    query.name = { $regex: search, $options: 'i' };
+  }
+
+  const users = await User.aggregate([
+    {
+      $match: query,
+    },
+    {
+      $lookup: {
+        from: 'usersubscriptions',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'subscription',
+        pipeline: [
+          {
+            $lookup: {
+              from: 'subscriptionplans',
+              localField: 'plan',
+              foreignField: '_id',
+              as: 'plan',
+            },
+          },
+          {
+            $unwind: {
+              path: '$plan',
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: {
+        path: '$subscription',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $sort: {
+        'subscription.plan.price': -1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  return users;
+};
+
 const userService = {
   getById,
   getByEmail,
   changePassword,
   editUser,
   deleteUser,
+  getUsers,
 };
 
 export default userService;

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { IUser } from '../interfaces/models/user.interface';
 import { string } from 'yup';
 import Collections from '../interfaces/collections';
