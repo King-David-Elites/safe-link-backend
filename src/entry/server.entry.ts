@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import settings from '../constants/settings';
 import logger from '../helpers/logger';
 import seedDb from '../seeders';

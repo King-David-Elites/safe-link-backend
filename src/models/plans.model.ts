@@ -22,6 +22,11 @@ const PlanSchema = new mongoose.Schema<ISubscriptionPlan>({
   planCode: {
     type: String,
   },
+  benefits: [
+    {
+      type: String,
+    },
+  ],
 });
 
 const PlanModel = mongoose.model(Collections.subscriptionPlan, PlanSchema);

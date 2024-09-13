@@ -11,6 +11,7 @@ export interface ISubscriptionPlan {
   listingsCap: number;
   duration: number; // months
   planCode: string;
+  benefits: string[];
 }
 
 export enum PlansEnum {
@@ -18,6 +19,7 @@ export enum PlansEnum {
   BASIC = 'basic',
   PLUS = 'plus',
   PREMIUM = 'premium',
+  PLATINUM = 'platinum',
 }
 
 export enum PaymentStatus {

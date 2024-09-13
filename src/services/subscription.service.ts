@@ -111,6 +111,10 @@ export async function cancelSubscription(userId: string) {
   }
 }
 
+export async function getPlans() {
+  return await PlanModel.find({}).sort({ price: 1 });
+}
+
 export function verifyWebhook(signature: string, body: WebhookResponse) {
   const secret = process.env.PAYSTACK_SECRET!;
 

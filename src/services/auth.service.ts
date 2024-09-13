@@ -38,7 +38,7 @@ const getByEmail = async (email: string): Promise<IAuth> => {
 };
 
 const createAccount = async (body: Partial<IUser & IAuth>) => {
-  const { email, password, confirmPassword } = body;
+  const { email, password, confirmPassword, name } = body;
 
   if (password != confirmPassword) {
     throw new BadRequestError('Passwords do not match');
@@ -55,6 +55,7 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
 
   const user = await User.create({
     email,
+    name,
   });
 
   await UserSubscriptionModel.create({
