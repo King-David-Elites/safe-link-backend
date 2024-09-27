@@ -7,11 +7,21 @@ import { IInventory } from '../interfaces/models/inventory.interface';
 import { ISubscriptionPlan } from '../interfaces/models/subscription.interface';
 import Inventory from '../models/inventory.model';
 import UserSubscriptionModel from '../models/user.subscription.model';
+import { uploaderListOfMedia, uploadVideos } from '../utils/uploader';
 
 const createInventory = async (
   body: Omit<IInventory, '_id'>
 ): Promise<IInventory> => {
-  const { title, description, price, currency, owner, images, videos } = body;
+  let { title, description, price, currency, owner, images, videos } = body;
+
+  if(images){
+    images = await uploaderListOfMedia(images)
+  }
+
+  if(videos){
+    videos = await uploadVideos(videos)
+  }
+
 
   const plan = await UserSubscriptionModel.findOne({
     user: owner,
