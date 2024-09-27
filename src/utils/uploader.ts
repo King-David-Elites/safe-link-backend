@@ -1,11 +1,13 @@
 import { v2 as cloudinary } from "cloudinary";
+import settings from "../constants/settings";
 
 require("dotenv").config()
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET
+    cloud_name: settings.cloudinary.cloudName,
+    api_key: settings.cloudinary.apiKey,
+    api_secret: settings.cloudinary.apiSecret,
+    
   });
 
 export const uploader = async (data: string) => {
