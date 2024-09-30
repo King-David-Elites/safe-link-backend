@@ -14,27 +14,29 @@ const createInventory = async (
 ): Promise<IInventory> => {
   let { title, description, price, currency, owner, images, videos } = body;
 
+  const plan = await UserSubscriptionModel.findOne({
+    user: owner,
+  })
+    .populate('plan')
+    .then((subscription) => subscription?.plan as ISubscriptionPlan);
+    console.log(plan)
+
+  let cap = plan?.listingsCap || 10
+
+  const usersListings = await Inventory.find({ owner });
+
+  if (usersListings.length >= cap) {
+    throw new BadRequestError(
+      `Oops! the plan you're subscribed to only allows ${cap} listings`
+    );
+  }
+
   if(images){
     images = await uploaderListOfMedia(images)
   }
 
   if(videos){
     videos = await uploadVideos(videos)
-  }
-
-
-  const plan = await UserSubscriptionModel.findOne({
-    user: owner,
-  })
-    .populate('plan')
-    .then((subscription) => subscription?.plan as ISubscriptionPlan);
-
-  const usersListings = await Inventory.find({ owner });
-
-  if (usersListings.length >= plan.listingsCap) {
-    throw new BadRequestError(
-      `Oops! the plan you're subscribed to only allows ${plan.listingsCap} listings`
-    );
   }
 
   return await Inventory.create({

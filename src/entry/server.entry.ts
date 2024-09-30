@@ -14,8 +14,8 @@ const serverEntry = (app: Application) => {
       app.listen(port, () => {
         logger.info(`Server is listening on port ${port}`);
       });
-      await seedDb();
-      await runJobs();
+      // await seedDb();
+      // await runJobs();
     })
     .catch((error) => {
       logger.error(error);
