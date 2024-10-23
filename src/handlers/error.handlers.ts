@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from 'express';
 
 export class CustomError extends Error {
   code: number;
@@ -25,5 +25,6 @@ export const errorHandler = (
 };
 
 export const notFoundError = (req: Request, res: Response) => {
-  res.status(404).json({ error: "Route does not exist" });
+  console.log(req.url);
+  res.status(404).json({ error: 'Route does not exist' });
 };

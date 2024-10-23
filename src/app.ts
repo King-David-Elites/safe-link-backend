@@ -28,7 +28,6 @@ app.use('/api/v1/auth/', routes.auth);
 app.use('/api/v1/user/', routes.user);
 app.use('/api/v1/inventory/', routes.inventory);
 app.use('/api/v1/questions/', routes.questions);
-app.use('/api/v1/subscription/', routes.subscription);
 app.use('/api/v1/doc', swagger.serve, swagger.setup(doc));
 
 app.use(errorHandler);
