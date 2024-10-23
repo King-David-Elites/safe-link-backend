@@ -7,24 +7,36 @@ import { IInventory } from '../interfaces/models/inventory.interface';
 import { ISubscriptionPlan } from '../interfaces/models/subscription.interface';
 import Inventory from '../models/inventory.model';
 import UserSubscriptionModel from '../models/user.subscription.model';
+import { uploaderListOfMedia, uploadVideos } from '../utils/uploader';
 
 const createInventory = async (
   body: Omit<IInventory, '_id'>
 ): Promise<IInventory> => {
-  const { title, description, price, currency, owner, images, videos } = body;
+  let { title, description, price, currency, owner, images, videos } = body;
 
   const plan = await UserSubscriptionModel.findOne({
     user: owner,
   })
     .populate('plan')
     .then((subscription) => subscription?.plan as ISubscriptionPlan);
+    console.log(plan)
+
+  let cap = plan?.listingsCap || 10
 
   const usersListings = await Inventory.find({ owner });
 
-  if (usersListings.length >= plan.listingsCap) {
+  if (usersListings.length >= cap) {
     throw new BadRequestError(
-      `Oops! the plan you're subscribed to only allows ${plan.listingsCap} listings`
+      `Oops! the plan you're subscribed to only allows ${cap} listings`
     );
+  }
+
+  if(images){
+    images = await uploaderListOfMedia(images)
+  }
+
+  if(videos){
+    videos = await uploadVideos(videos)
   }
 
   return await Inventory.create({

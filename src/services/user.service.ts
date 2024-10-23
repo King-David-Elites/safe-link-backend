@@ -5,6 +5,7 @@ import { IChangePasswordReq } from '../interfaces/responses/auth.response';
 import Auth from '../models/user.auth.model';
 import User from '../models/user.model';
 import argon2 from 'argon2';
+import { uploader, uploaderListOfMedia } from '../utils/uploader';
 
 const getById = async (id: string): Promise<IUser> => {
   const user = await User.findById(id);
@@ -57,7 +58,7 @@ const changePassword = async (body: IChangePasswordReq) => {
 };
 
 const editUser = async (body: Partial<IUser>): Promise<IUser> => {
-  const {
+  let {
     name,
     about,
     profilePicture,
@@ -77,6 +78,22 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
 
   if (!user) {
     throw new NotFoundError('User does not exist');
+  }
+
+  if(profilePicture){
+    profilePicture = await uploader(profilePicture)
+  }
+
+  if(workPictures){
+    workPictures = await uploaderListOfMedia(workPictures)
+  }
+
+  if(professionalPictures){
+    professionalPictures = await uploaderListOfMedia(professionalPictures)
+  }
+
+  if(leisurePictures){
+    leisurePictures = await uploaderListOfMedia(leisurePictures)
   }
 
   user.name = name || user.name;
