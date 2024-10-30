@@ -2,26 +2,26 @@ import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
-} from '../constants/errors';
-import { IInventory } from '../interfaces/models/inventory.interface';
-import { ISubscriptionPlan } from '../interfaces/models/subscription.interface';
-import Inventory from '../models/inventory.model';
-import UserSubscriptionModel from '../models/user.subscription.model';
-import { uploaderListOfMedia, uploadVideos } from '../utils/uploader';
+} from "../constants/errors";
+import { IInventory } from "../interfaces/models/inventory.interface";
+import { ISubscriptionPlan } from "../interfaces/models/subscription.interface";
+import Inventory from "../models/inventory.model";
+import UserSubscriptionModel from "../models/user.subscription.model";
+import { uploaderListOfMedia, uploadVideos } from "../utils/uploader";
 
 const createInventory = async (
-  body: Omit<IInventory, '_id'>
+  body: Omit<IInventory, "_id">
 ): Promise<IInventory> => {
   let { title, description, price, currency, owner, images, videos } = body;
 
   const plan = await UserSubscriptionModel.findOne({
     user: owner,
   })
-    .populate('plan')
+    .populate("plan")
     .then((subscription) => subscription?.plan as ISubscriptionPlan);
-    console.log(plan)
+  console.log(plan);
 
-  let cap = plan?.listingsCap || 10
+  let cap = plan?.listingsCap || 10;
 
   const usersListings = await Inventory.find({ owner });
 
@@ -31,12 +31,12 @@ const createInventory = async (
     );
   }
 
-  if(images){
-    images = await uploaderListOfMedia(images)
+  if (images) {
+    images = await uploaderListOfMedia(images);
   }
 
-  if(videos){
-    videos = await uploadVideos(videos)
+  if (videos) {
+    videos = await uploadVideos(videos);
   }
 
   return await Inventory.create({
@@ -57,10 +57,10 @@ const getUserInventories = async (userId: string): Promise<IInventory[]> => {
 const deleteInventory = async (userId: string, inventoryId: string) => {
   const inventory = await Inventory.findById(inventoryId);
 
-  if (!inventory) throw new NotFoundError('Inventory does not exist');
+  if (!inventory) throw new NotFoundError("Inventory does not exist");
 
   if (inventory.owner.toString() != userId.toString())
-    throw new ForbiddenError('Inventory does not belong to you');
+    throw new ForbiddenError("Inventory does not belong to you");
 
   await inventory.deleteOne();
 };
@@ -73,10 +73,10 @@ const editInventory = async (
 
   const inventory = await Inventory.findById(body._id);
 
-  if (!inventory) throw new NotFoundError('Inventory does not exist');
+  if (!inventory) throw new NotFoundError("Inventory does not exist");
 
   if (inventory.owner.toString() != userId.toString())
-    throw new ForbiddenError('Inventory does not belong to you');
+    throw new ForbiddenError("Inventory does not belong to you");
 
   inventory.title = title || inventory.title;
   inventory.description = description || inventory.description;
@@ -88,9 +88,12 @@ const editInventory = async (
 };
 
 const getSingleInventory = async (inventoryId: string): Promise<IInventory> => {
-  const inventory = await Inventory.findById(inventoryId);
+  const inventory = await Inventory.findById(inventoryId).populate({
+    path: "owner",
+    select: "email name profilePicture phoneNumber _id",
+  });
 
-  if (!inventory) throw new NotFoundError('Inventory does not exist');
+  if (!inventory) throw new NotFoundError("Inventory does not exist");
 
   return inventory;
 };
