@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import { IRequest } from '../interfaces/expressRequest';
+import { NextFunction, Request, Response } from "express";
+import { IRequest } from "../interfaces/expressRequest";
 import {
   cancelSubscription,
   getPlans,
   handleWebhooks,
   subscribeForPlan,
   verifyWebhook,
-} from '../services/subscription.service';
-import { BadRequestError } from '../constants/errors';
+} from "../services/subscription.service";
+import { BadRequestError } from "../constants/errors";
 
 const subscribe = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
@@ -29,7 +29,7 @@ const cancelSubscriptionController = async (
   try {
     await cancelSubscription(req.userId!);
 
-    res.status(200).json({ message: 'cancelled' });
+    res.status(200).json({ message: "cancelled" });
   } catch (error) {
     return next(error);
   }
@@ -56,15 +56,15 @@ const webhookHandler = async (
 ) => {
   try {
     const valid = verifyWebhook(
-      req.headers['x-paystack-signature'] as string,
+      req.headers["x-paystack-signature"] as string,
       req.body
     );
 
-    if (!valid) throw new BadRequestError('webhook is not from paystack');
+    if (!valid) throw new BadRequestError("webhook is not from paystack");
 
     await handleWebhooks(req.body);
 
-    res.status(200).json({ message: 'processed' });
+    res.status(200).json({ message: "processed" });
   } catch (error) {
     return next(error);
   }

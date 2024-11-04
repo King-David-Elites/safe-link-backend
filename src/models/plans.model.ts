@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import {
   ISubscriptionPlan,
   PlansEnum,
-} from '../interfaces/models/subscription.interface';
-import Collections from '../interfaces/collections';
+} from "../interfaces/models/subscription.interface";
+import Collections from "../interfaces/collections";
 
 const PlanSchema = new mongoose.Schema<ISubscriptionPlan>({
   name: {
@@ -21,6 +21,7 @@ const PlanSchema = new mongoose.Schema<ISubscriptionPlan>({
   },
   planCode: {
     type: String,
+    //unique: true
   },
   benefits: [
     {
