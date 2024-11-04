@@ -2,15 +2,15 @@
  * @flow - create subscription, disable subscription.
  */
 
-import { v4 } from 'uuid';
-import { BadRequestError, NotFoundError } from '../constants/errors';
-import { CustomError, notFoundError } from '../handlers/error.handlers';
-import PaymentAttemptModel from '../models/payment-attempt.model';
-import PlanModel from '../models/plans.model';
-import User from '../models/user.model';
-import UserSubscriptionModel from '../models/user.subscription.model';
-import { Paystack } from 'paystack-sdk';
-import { config } from 'dotenv';
+import { v4 } from "uuid";
+import { BadRequestError, NotFoundError } from "../constants/errors";
+import { CustomError, notFoundError } from "../handlers/error.handlers";
+import PaymentAttemptModel from "../models/payment-attempt.model";
+import PlanModel from "../models/plans.model";
+import User from "../models/user.model";
+import UserSubscriptionModel from "../models/user.subscription.model";
+import { Paystack } from "paystack-sdk";
+import { config } from "dotenv";
 import {
   ChargeResponse,
   ISubscriptionPlan,
@@ -18,21 +18,24 @@ import {
   PlansEnum,
   WebhookEvents,
   WebhookResponse,
-} from '../interfaces/models/subscription.interface';
-import * as crypto from 'crypto';
-import { SubscriptionCreated } from 'paystack-sdk/dist/subscription';
-import { add } from 'date-fns';
+} from "../interfaces/models/subscription.interface";
+import * as crypto from "crypto";
+import { SubscriptionCreated } from "paystack-sdk/dist/subscription";
+import { add } from "date-fns";
 
 config();
 
 const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY!);
 
 export async function subscribeForPlan(userId: string, planId: string) {
+  console.log({ userId });
+
   const plan = await PlanModel.findById(planId);
-  if (!plan) throw new NotFoundError('Plan does not exist');
+
+  if (!plan) throw new NotFoundError("Plan does not exist");
 
   const user = await User.findById(userId);
-  if (!user) throw new NotFoundError('user does not exist');
+  if (!user) throw new NotFoundError("user does not exist");
 
   const userPlan = await UserSubscriptionModel.findOne({
     user: userId,
@@ -40,7 +43,7 @@ export async function subscribeForPlan(userId: string, planId: string) {
     isActive: true,
   });
   if (userPlan)
-    throw new NotFoundError('You are already subscribed to this plan');
+    throw new NotFoundError("You are already subscribed to this plan");
 
   const transaction_reference = v4();
 
@@ -52,26 +55,30 @@ export async function subscribeForPlan(userId: string, planId: string) {
   });
 
   let customer = await paystack.customer.fetch(user.email);
+  console.log(user.email, customer);
 
-  if (!customer) {
+  if (customer.status === false) {
     customer = await paystack.customer.create({
       email: user.email,
-      first_name: user.name.split(' ')[0],
-      last_name: user.name.split(' ')[1] ?? '',
+      first_name: user.name.split(" ")[0],
+      last_name: user.name.split(" ")[1] ?? "",
       phone: user.phoneNumber,
     });
+    console.log({ customer });
 
     if (!customer) {
       throw new BadRequestError(
-        'unable to process subscription now, try again later'
+        "unable to process subscription now, try again later"
       );
     }
+    customer = await paystack.customer.fetch(user.email);
+    console.log(user.email, customer);
   }
 
   const response = await paystack.transaction.initialize({
     amount: JSON.stringify(plan.price * 100),
     email: customer.data?.email!,
-    currency: 'NGN',
+    currency: "NGN",
     reference: transaction_reference,
     plan: plan.planCode,
   });
@@ -95,7 +102,7 @@ export async function cancelSubscription(userId: string) {
 
   const userPlan = await UserSubscriptionModel.findOne({ user: userId });
 
-  if (!userPlan) throw new NotFoundError('user is not subscribed to any plan');
+  if (!userPlan) throw new NotFoundError("user is not subscribed to any plan");
 
   if (String(userPlan._id) != String(freemiumPlan?._id) && userPlan.code) {
     await paystack.subscription.disable({
@@ -119,9 +126,9 @@ export function verifyWebhook(signature: string, body: WebhookResponse) {
   const secret = process.env.PAYSTACK_SECRET!;
 
   const hash = crypto
-    .createHmac('sha512', secret)
+    .createHmac("sha512", secret)
     .update(JSON.stringify(body))
-    .digest('hex');
+    .digest("hex");
   return hash === signature;
 }
 
@@ -132,11 +139,11 @@ export async function handleWebhooks(body: WebhookResponse) {
 
       const paymentLog = await PaymentAttemptModel.findOne({
         transaction_reference: response.reference,
-      }).populate([{ path: 'plan' }]);
+      }).populate([{ path: "plan" }]);
 
       if (paymentLog) {
         const user = await User.findById(paymentLog.user);
-        if (!user) throw new NotFoundError('user not found');
+        if (!user) throw new NotFoundError("user not found");
 
         const plan = paymentLog.plan as ISubscriptionPlan;
 
@@ -159,7 +166,7 @@ export async function handleWebhooks(body: WebhookResponse) {
 
       const paymentLog = await PaymentAttemptModel.findOne({
         transaction_reference: response.reference,
-      }).populate([{ path: 'plan' }]);
+      }).populate([{ path: "plan" }]);
 
       if (paymentLog) {
         paymentLog.status = PaymentStatus.FAILED;
@@ -167,13 +174,13 @@ export async function handleWebhooks(body: WebhookResponse) {
       }
     }
     case WebhookEvents.TRANSFER_SUCCESS:
-      throw new CustomError(503, 'Method not implemented');
+      throw new CustomError(503, "Method not implemented");
     case WebhookEvents.TRANSFER_FAILED:
-      throw new CustomError(503, 'Method not implemented');
+      throw new CustomError(503, "Method not implemented");
     case WebhookEvents.TRANSFER_REVERSED:
-      throw new CustomError(503, 'Method not implemented');
+      throw new CustomError(503, "Method not implemented");
     case WebhookEvents.SUBSCRIPTION_CREATED: {
-      const response = body.data as SubscriptionCreated['data'];
+      const response = body.data as SubscriptionCreated["data"];
 
       const email = response.customer.email;
       const user = await User.findOne({ email });
@@ -200,6 +207,6 @@ export async function handleWebhooks(body: WebhookResponse) {
       break;
     }
     case WebhookEvents.SUBSCRIPTION_DISABLED:
-      throw new CustomError(503, 'Method not implemented');
+      throw new CustomError(503, "Method not implemented");
   }
 }

@@ -98,6 +98,7 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
     const { token } = req.body;
 
     const payload = await googleAuthService.verifyGoogleToken(token);
+
     if (!payload?.name || !payload?.email) return;
 
     const { email, name } = payload;
@@ -106,9 +107,14 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
 
     const accessToken = googleAuthService.generateJWT(user._id);
 
-    return res.status(200).json({ accessToken, user });
+    return res
+      .status(200)
+      .json({ message: "Login successful", accessToken, user });
   } catch (error) {
-    return res.status(400).json({ message: "Google Authentication failed" });
+    console.log("Google Authentication failed", error);
+    return res
+      .status(400)
+      .json({ message: "Google Authentication failed", error });
   }
 };
 
