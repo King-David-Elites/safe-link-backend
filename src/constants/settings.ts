@@ -15,6 +15,8 @@ const settings = {
   },
   frontendUrl: <string>process.env.FRONTEND_URL,
   accessTokenSecret: <string>process.env.ACCESS_TOKEN_SECRET,
+  backendUrl: <string>process.env.SERVER_URL,
 };
+console.log("MongoDB URL:", process.env.MONGODB_URL);
 
 export default settings;

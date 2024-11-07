@@ -7,6 +7,7 @@ import routes from './routes';
 import swagger from 'swagger-ui-express';
 import handleMediaUpload from './controllers/media.controller';
 import { multerUploader } from './helpers/upload';
+import { runJobs } from './jobs';
 const doc = require('../doc.json');
 
 const app = express();
@@ -33,4 +34,7 @@ app.use('/api/v1/doc', swagger.serve, swagger.setup(doc));
 app.use(errorHandler);
 app.all('*', notFoundError);
 
+//Running Cron Jobs on Server
+runJobs();
+//Staring the Server
 serverEntry(app);
