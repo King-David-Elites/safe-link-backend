@@ -19,8 +19,8 @@ POST http://localhost:3001/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "email": "testuser4@gmail.com",
-    "password": "testuser4"
+    "email": "kolaiwalewa@gmail.com",
+    "password": "kola0522"
 }
 
 ####
@@ -44,7 +44,7 @@ GET http://localhost:3001/api/v1/inventory/6722512f61a01729e67bc375
 
 POST http://localhost:3001/api/v1/subscription/subscribe
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmYmI1YzNlMzVhNGViZTAyNGEiLCJpYXQiOjE3MjU2MTAzNjYsImV4cCI6MTc1NzE2Nzk2Nn0.veClhI62nfrzqc9EgCafrSOhxoWBdaIUa08iovFXlms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmYmI1YzNlMzVhNGViZTAyNGEiLCJpYXQiOjE3MzA3MTE0NDYsImV4cCI6MTc2MjI2OTA0Nn0.6jDN--Nr6MyOa-OqVVzD0oPWH7E2Ajus40HqShZcjO8
 
 {
     "planId": "65dc534815ce9430aa0ab115"

@@ -6,7 +6,6 @@ import seedDb from "../seeders";
 import { runJobs } from "../jobs";
 
 const port = 3001;
-console.log("mongo db url", process.env.MONGODB_URL);
 
 const serverEntry = (app: Application) => {
   mongoose
