@@ -13,6 +13,9 @@ const PlanSchema = new mongoose.Schema<ISubscriptionPlan>({
   price: {
     type: Number,
   },
+  slashedPrice: {
+    type: Number,
+  },
   listingsCap: {
     type: Number,
   },
