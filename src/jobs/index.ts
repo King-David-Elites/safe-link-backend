@@ -8,7 +8,7 @@ import axios from 'axios'
 
 export async function runJobs() {
   cron.schedule('0 0 * * *', handleSubscriptionJob);
-  cron.schedule('14 * * * *', pingServer); //Make the Server Active every 14 minutes
+  cron.schedule('1 * * * *', pingServer); //Make the Server Active every 14 minutes
 }
 
 async function handleSubscriptionJob() {
