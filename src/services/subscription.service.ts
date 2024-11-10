@@ -31,11 +31,10 @@ export async function subscribeForPlan(userId: string, planId: string) {
   console.log({ userId });
 
   const plan = await PlanModel.findById(planId);
-
   if (!plan) throw new NotFoundError("Plan does not exist");
 
   const user = await User.findById(userId);
-  if (!user) throw new NotFoundError("user does not exist");
+  if (!user) throw new NotFoundError("User does not exist");
 
   const userPlan = await UserSubscriptionModel.findOne({
     user: userId,
@@ -43,7 +42,7 @@ export async function subscribeForPlan(userId: string, planId: string) {
     isActive: true,
   });
   if (userPlan)
-    throw new NotFoundError("You are already subscribed to this plan");
+    throw new BadRequestError("You are already subscribed to this plan");
 
   const transaction_reference = v4();
 
@@ -54,30 +53,34 @@ export async function subscribeForPlan(userId: string, planId: string) {
     plan: plan._id,
   });
 
-  let customer = await paystack.customer.fetch(user.email);
-  console.log(user.email, customer);
+  let customer;
+  try {
+    customer = await paystack.customer.fetch(user.email);
+  } catch (error) {
+    console.error(`Error fetching customer: ${error}`);
+  }
 
-  if (customer.status === false) {
-    customer = await paystack.customer.create({
-      email: user.email,
-      first_name: user.name.split(" ")[0],
-      last_name: user.name.split(" ")[1] ?? "",
-      phone: user.phoneNumber,
-    });
-    console.log({ customer });
-
-    if (!customer) {
+  if (!customer?.status) {
+    // Create customer if fetching failed
+    try {
+      customer = await paystack.customer.create({
+        email: user.email,
+        first_name: user.name.split(" ")[0],
+        last_name: user.name.split(" ")[1] ?? "",
+        phone: user.phoneNumber,
+      });
+      if (!customer.status) throw new Error("Failed to create customer");
+    } catch (error) {
+      console.error(`Error creating customer: ${error}`);
       throw new BadRequestError(
-        "unable to process subscription now, try again later"
+        "Unable to process subscription now, try again later"
       );
     }
-    customer = await paystack.customer.fetch(user.email);
-    console.log(user.email, customer);
   }
 
   const response = await paystack.transaction.initialize({
-    amount: JSON.stringify(plan.price * 100),
-    email: customer.data?.email!,
+    amount: JSON.stringify(plan.price * 100), // Converting to kobo
+    email: customer?.data?.email ?? "",
     currency: "NGN",
     reference: transaction_reference,
     plan: plan.planCode,
@@ -87,14 +90,7 @@ export async function subscribeForPlan(userId: string, planId: string) {
     throw new BadRequestError(response.message);
   }
 
-  await PaymentAttemptModel.create({
-    user: userId,
-    amount: plan.price,
-    transaction_reference,
-    plan: plan._id,
-  });
-
-  return response.data?.authorization_url;
+  return response?.data?.authorization_url;
 }
 
 export async function cancelSubscription(userId: string) {
