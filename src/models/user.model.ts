@@ -18,6 +18,9 @@ const UserSchema = new mongoose.Schema<IUser>(
     city: { type: String },
     zipCode: { type: String },
     phoneNumber: { type: String },
+    otp: { type: String },
+    otpExpiresAt: { type: Date },
+    isVerified: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
