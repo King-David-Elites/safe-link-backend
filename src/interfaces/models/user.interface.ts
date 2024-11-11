@@ -39,4 +39,8 @@ export interface IUser {
   city: string;
   zipCode: string;
   phoneNumber: string;
+  otp: string;
+  otpExpiresAt?: Date;
+  isVerified: boolean;
 }
+ 

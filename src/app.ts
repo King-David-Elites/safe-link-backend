@@ -7,6 +7,7 @@ import routes from "./routes";
 import swagger from "swagger-ui-express";
 import handleMediaUpload from "./controllers/media.controller";
 import { multerUploader } from "./helpers/upload";
+import { runJobs } from "./jobs";
 const doc = require("../doc.json");
 
 const app = express();
@@ -26,6 +27,13 @@ app.get("/", (req, res, next) => {
 app.post("/api/v1/media", multerUploader.single("media"), handleMediaUpload);
 app.use("/api/v1/auth/", routes.auth);
 app.use("/api/v1/user/", routes.user);
+app.use("/api/v1/otp", routes.otp);
+app.use("/api/v1/inventory/", routes.inventory);
+app.use("/api/v1/questions/", routes.questions);
+app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
+app.post("/api/v1/media", multerUploader.single("media"), handleMediaUpload);
+app.use("/api/v1/auth/", routes.auth);
+app.use("/api/v1/user/", routes.user);
 app.use("/api/v1/inventory/", routes.inventory);
 app.use("/api/v1/questions/", routes.questions);
 app.use("/api/v1/subscription/", routes.subscription);
@@ -34,4 +42,7 @@ app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
 app.use(errorHandler);
 app.all("*", notFoundError);
 
+//Running Cron Jobs on Server
+runJobs();
+//Staring the Server
 serverEntry(app);

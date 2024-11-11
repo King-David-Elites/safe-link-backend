@@ -203,6 +203,8 @@ const resetPassword = async (token: string, body: Partial<IAuth>) => {
   await tokenService.deleteToken({ _id: tokenInDb._id });
 };
 
+const authWithGoogle = async (access_token: string) => {};
+
 const authService = {
   getById,
   getByEmail,
