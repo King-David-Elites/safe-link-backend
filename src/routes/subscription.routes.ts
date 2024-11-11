@@ -2,6 +2,7 @@ import { Router } from "express";
 import isAuth from "../middleware/isAuth";
 import subscriptionController from "../controllers/subscription.controller";
 
+
 const router = Router();
 
 router.post("/subscribe", isAuth, subscriptionController.subscribe);
