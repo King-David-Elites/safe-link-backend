@@ -23,7 +23,7 @@
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
     "google-auth-library": "^9.14.2",
-    "helmet": "^7.0.0",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^7.8.2",
@@ -45,7 +45,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "tsc -p . && node ./dist/app.js",
+    "start": "tsc -p . && node --max-old-space-size=4096 ./dist/app.js",
     "dev": "nodemon ./src/app.ts",
     "test": "jest"
   },
