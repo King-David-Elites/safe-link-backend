@@ -36,6 +36,6 @@ app.all("*", notFoundError);
 app.use(errorHandler);
 
 //Running Cron Jobs on Server
-// runJobs();
+runJobs();
 //Staring the Server
 serverEntry(app);

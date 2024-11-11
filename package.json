@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "tsc -p . && node --max-old-space-size=4096 ./dist/app.js",
+    "start": "tsc -p . && node --max-old-space-size=420 ./dist/app.js",
     "dev": "nodemon ./src/app.ts",
     "test": "jest"
   },
