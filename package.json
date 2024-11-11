@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "node ./dist/app.ts",
+    "start": "node dist/app.js",
     "dev": "nodemon ./src/app.ts",
     "test": "jest"
   },
