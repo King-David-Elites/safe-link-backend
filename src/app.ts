@@ -27,13 +27,6 @@ app.get("/", (req, res, next) => {
 app.post("/api/v1/media", multerUploader.single("media"), handleMediaUpload);
 app.use("/api/v1/auth/", routes.auth);
 app.use("/api/v1/user/", routes.user);
-app.use("/api/v1/otp", routes.otp);
-app.use("/api/v1/inventory/", routes.inventory);
-app.use("/api/v1/questions/", routes.questions);
-app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
-app.post("/api/v1/media", multerUploader.single("media"), handleMediaUpload);
-app.use("/api/v1/auth/", routes.auth);
-app.use("/api/v1/user/", routes.user);
 app.use("/api/v1/inventory/", routes.inventory);
 app.use("/api/v1/questions/", routes.questions);
 app.use("/api/v1/subscription/", routes.subscription);
