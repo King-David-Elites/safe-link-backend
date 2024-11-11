@@ -106,8 +106,27 @@ const getUserAnswers = async (
   }
 };
 
+const getUserByIdAnswers = async (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.id;
+
+    const data = await questionService.getUserAnswers(userId);
+
+    res
+      .status(200)
+      .json({ message: "User's answers fetched successfully", data });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const questionControllers = {
   getUserAnswers,
+  getUserByIdAnswers,
   getAllQuestions,
   addQuestion,
   editQuestion,

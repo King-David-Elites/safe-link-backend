@@ -1,9 +1,9 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema, Types } from "mongoose";
 import {
   IPaymentAttempt,
   PaymentStatus,
-} from '../interfaces/models/subscription.interface';
-import Collections from '../interfaces/collections';
+} from "../interfaces/models/subscription.interface";
+import Collections from "../interfaces/collections";
 
 const PaymentAttemptSchema = new Schema<IPaymentAttempt>(
   {

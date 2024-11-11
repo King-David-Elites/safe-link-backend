@@ -1,0 +1,55 @@
+
+# @name tokenAPI
+POST http://localhost:3001/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "email": "testuser5@gmail.com",
+    "name": "testuser5",
+    "password": "testuser5",
+    "confirmPassword": "testuser5"
+}
+
+
+####
+
+# Login
+# @name tokenAPI
+POST http://localhost:3001/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "email": "kolaiwalewa@gmail.com",
+    "password": ""
+}
+
+####
+
+@authToken = {{tokenAPI.response.body.token}}
+# Get User
+# @name getUser
+GET http://localhost:3001/api/v1/user/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+######
+
+GET http://localhost:3001/api/v1/user/6722378793c4a7a80e68aa7c
+
+####
+GET http://localhost:3001/api/v1/inventory/6722512f61a01729e67bc375
+
+
+######
+
+POST http://localhost:3001/api/v1/subscription/subscribe
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmYmI1YzNlMzVhNGViZTAyNGEiLCJpYXQiOjE3MzA3MTE0NDYsImV4cCI6MTc2MjI2OTA0Nn0.6jDN--Nr6MyOa-OqVVzD0oPWH7E2Ajus40HqShZcjO8
+
+{
+    "planId": "65dc534815ce9430aa0ab115"
+}
+
+######
+
+GET http://localhost:3001/api/v1/subscription/plan
