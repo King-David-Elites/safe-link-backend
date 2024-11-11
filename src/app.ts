@@ -12,13 +12,13 @@ const doc = require("../doc.json");
 
 const app = express();
 
-app.use(cors());
-app.use(helmet());
-
 const TEN_MINUTES = 1000 * 60 * 10;
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: false }));
+
+app.use(cors());
+app.use(helmet());
 
 app.get("/", (req, res, next) => {
   res.redirect("/api/v1/doc");
@@ -32,10 +32,10 @@ app.use("/api/v1/questions/", routes.questions);
 app.use("/api/v1/subscription/", routes.subscription);
 app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
 
-app.use(errorHandler);
 app.all("*", notFoundError);
+app.use(errorHandler);
 
 //Running Cron Jobs on Server
-runJobs();
+// runJobs();
 //Staring the Server
 serverEntry(app);
