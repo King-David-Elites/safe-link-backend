@@ -53,3 +53,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhM
 ######
 
 GET http://localhost:3001/api/v1/subscription/plan
+
+######
+
+
+POST http://localhost:3001/api/v1/whatsapp-otp/generate
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmYmI1YzNlMzVhNGViZTAyNGEiLCJpYXQiOjE3MzA3MTE0NDYsImV4cCI6MTc2MjI2OTA0Nn0.6jDN--Nr6MyOa-OqVVzD0oPWH7E2Ajus40HqShZcjO8
+
