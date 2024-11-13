@@ -6,7 +6,7 @@ import cron from "node-cron";
 import settings from "../constants/settings";
 import axios from "axios";
 
-const serverUrl = "http://localhost:3001/api/v1"; //process.env.SERVER_BASE_URL ?? "";
+const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
 export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
