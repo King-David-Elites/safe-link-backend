@@ -34,5 +34,10 @@ router.post(
   isAuth,
   subscriptionController.webhookHandler
 );
+// Route to get top 12 completed profiles
+router.get(
+  '/top-completed-profiles', 
+  userController.getTopCompletedProfiles
+);
 
 export default router;

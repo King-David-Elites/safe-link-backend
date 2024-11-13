@@ -1,11 +1,19 @@
-import { Router } from 'express';
-import otpController from '../controllers/otp.controller';
-import isAuth from '../middleware/isAuth';
+import { Router } from "express";
+import isAuth from "../middleware/isAuth";
+import userController from "../controllers/user.controller";
+import validate from "../validations";
+import { EditUserInput } from "../validations/user.validation";
 
 const router = Router();
 
-router.post('/generate', isAuth, otpController.generateOtp);
-router.post('/verify', isAuth, otpController.verifyOtp);
-router.post('/resend', isAuth, otpController.resendOtp);
+router
+  .route("/")
+  .get(isAuth, userController.getMyInfo)
+  .put(isAuth, validate(EditUserInput), userController.editUser)
+  .delete(isAuth, userController.deleteUser);
+
+router.route("/all").get(userController.getUsers);
+router.route("/:id").get(userController.getUserById);
+router.route("/:email").get(userController.getUserByEmail);
 
 export default router;
