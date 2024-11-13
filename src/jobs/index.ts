@@ -6,11 +6,11 @@ import cron from "node-cron";
 import settings from "../constants/settings";
 import axios from "axios";
 
-const serverUrl = process.env.SERVER_BASE_URL ?? "";
+const serverUrl = "http://localhost:3001/api/v1"; //process.env.SERVER_BASE_URL ?? "";
 
 export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
-  cron.schedule("1 * * * *", pingServer); //Make the Server Active every 14 minutes
+  cron.schedule("*/12 * * * *", pingServer); //Make the Server Active every 12 minutes
 }
 
 async function handleSubscriptionJob() {
@@ -33,11 +33,8 @@ async function handleSubscriptionJob() {
 
 async function pingServer() {
   try {
-    // Replace with the actual URL where your server is running
-    console.log("cronjob triggered");
-    // const serverUrl = "http://localhost:3001/api/v1"; //"https://safe-link-backend-osn7.onrender.com";
-    await axios.get(serverUrl);
-    console.log("Server pinged successfully");
+    const response = await axios.get(`${serverUrl}/ping/ping`);
+    console.log("Server pinged successfully", response.data);
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error pinging the server:", error.message);
