@@ -340,7 +340,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                               color: #000000;
                                               line-height: 50.4px;
                                             "
-                                            ><strong>CREAM</strong></span
+                                            ><strong>SAFELINK</strong></span
                                           ><span
                                             style="
                                               color: #000000;
@@ -619,19 +619,17 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                         "
                                       >
                                         <p style="line-height: 160%">
-                                          Hi ${user.email}, your account as been
-                                          created but is currently inactive. Please
-                                          click on the button below to verify your
-                                          account. Ignore if you didn't initiate this
-                                          action.
-                                          
-                                          <br />
-  
-                                          <i
-                                            ><strong>This link will expire in 15
-                                              minutes</strong
-                                            ></i
-                                          >
+                                          Hi ${user.username}, your account as been
+                                          created but you have to activate it. 
+                                          Kindly click on the button below to verify your account and please ignore if you didn't initiate this action. 
+
+                                          <br/>
+                                          <i><strong>This link will expire in 15 minutes</strong></i>
+                                          <br/>
+                                          Once again you’re welcome, 
+                                          <br/>
+
+                                          <strong>The SafeLink Team.</strong>
                                         </p>
                                         <p style="line-height: 160%"> </p>
                                         <p style="line-height: 160%"> </p>
@@ -868,7 +866,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                               line-height: 25.6px;
                                               color: #000000;
                                             "
-                                            >kingdavidelites@gmail.com</span
+                                            >usesafelink@gmail.com</span
                                           >
                                         </p>
                                       </div>

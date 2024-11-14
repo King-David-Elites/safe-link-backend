@@ -72,7 +72,7 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
 
   await sendMail({
     to: email,
-    subject: "CREAM CARD ACCOUNT VERIFICATION",
+    subject: "SAFELINK ACCOUNT VERIFICATION",
     html: verifyEmailHTML(user, token.value),
   });
 };
