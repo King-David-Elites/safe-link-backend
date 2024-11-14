@@ -28,5 +28,6 @@ router
   );
 
 router.route("/answer").get(isAuth, questionControllers.getUserAnswers);
+router.route("/answer/user/:id").get(questionControllers.getUserByIdAnswers);
 
 export default router;

@@ -16,6 +16,7 @@ const router = Router();
 
 router.post("/register", validate(SignUpInput), authController.register);
 router.post("/login", validate(LoginInput), authController.login);
+router.post("/google", authController.googleAuth);
 router.patch(
   "/verify-account",
   validate(VerifyEmailInput),

@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import authService from '../services/auth.service';
-import { IAuth } from '../interfaces/models/user.interface';
-import { IResetPasswordReq } from '../interfaces/responses/auth.response';
+import { NextFunction, Request, Response } from "express";
+import authService from "../services/auth.service";
+import { IAuth } from "../interfaces/models/user.interface";
+import { IResetPasswordReq } from "../interfaces/responses/auth.response";
+import googleAuthService from "../services/googleAuthServices";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +15,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       username,
     });
 
-    res.status(201).json({ message: 'Verification email sent', data: null });
+    res.status(201).json({ message: "Verification email sent", data: null });
   } catch (error) {
     return next(error);
   }
@@ -30,7 +31,7 @@ const verifyAccount = async (
 
     const data = await authService.verifyAccount(token);
 
-    res.status(200).json({ message: 'Account verified successfully' });
+    res.status(200).json({ message: "Account verified successfully" });
   } catch (error) {
     return next(error);
   }
@@ -47,7 +48,7 @@ const login = async (
     const data = await authService.login({ email, password });
 
     res.status(200).json({
-      message: 'Login successful',
+      message: "Login successful",
       data: { accessToken: data.accessToken, user: data.user },
     });
   } catch (error) {
@@ -66,7 +67,7 @@ const requestForgotPasswordLink = async (
     await authService.requestForgotPasswordLink(email);
 
     res.status(200).json({
-      message: 'Password reset link sent successfully',
+      message: "Password reset link sent successfully",
       data: null,
     });
   } catch (error) {
@@ -86,9 +87,34 @@ const resetPassword = async (
 
     res
       .status(200)
-      .json({ message: 'Password reset successfully', data: null });
+      .json({ message: "Password reset successfully", data: null });
   } catch (error) {
     return next(error);
+  }
+};
+
+const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { token } = req.body;
+
+    const payload = await googleAuthService.verifyGoogleToken(token);
+
+    if (!payload?.name || !payload?.email) return;
+
+    const { email, name } = payload;
+
+    const user = await googleAuthService.findOrCreateUser({ email, name });
+
+    const accessToken = googleAuthService.generateJWT(user._id);
+
+    return res
+      .status(200)
+      .json({ message: "Login successful", accessToken, user });
+  } catch (error) {
+    console.log("Google Authentication failed", error);
+    return res
+      .status(400)
+      .json({ message: "Google Authentication failed", error });
   }
 };
 
@@ -98,6 +124,7 @@ const authController = {
   login,
   requestForgotPasswordLink,
   resetPassword,
+  googleAuth,
 };
 
 export default authController;

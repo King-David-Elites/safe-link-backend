@@ -3,6 +3,11 @@ import isAuth from "../middleware/isAuth";
 import userController from "../controllers/user.controller";
 import validate from "../validations";
 import { EditUserInput } from "../validations/user.validation";
+import { Router } from "express";
+import isAuth from "../middleware/isAuth";
+import userController from "../controllers/user.controller";
+import validate from "../validations";
+import { EditUserInput } from "../validations/user.validation";
 
 const router = Router();
 
@@ -12,8 +17,8 @@ router
   .put(isAuth, validate(EditUserInput), userController.editUser)
   .delete(isAuth, userController.deleteUser);
 
-router.route("/all").get(userController.getUsers);router.route("/complete-profiles").get(userController.getCompleteProfiles);
-
+router.route("/all").get(userController.getUsers);
+router.route("/complete-profiles").get(userController.getCompleteProfiles);
 router.route("/:id").get(userController.getUserById);
 router.route("/:email").get(userController.getUserByEmail);
 
