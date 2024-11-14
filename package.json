@@ -24,6 +24,7 @@
     "express-rate-limit": "^7.0.0",
     "google-auth-library": "^9.14.2",
     "helmet": "^7.0.0",
+    "json-bigint": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^7.5.2",

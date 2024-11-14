@@ -65,8 +65,8 @@ export async function subscribeForPlan(userId: string, planId: string) {
     try {
       customer = await paystack.customer.create({
         email: user.email,
-        first_name: user.name.split(" ")[0],
-        last_name: user.name.split(" ")[1] ?? "",
+        first_name: user.firstName,
+        last_name: user.lastName,
         phone: user.phoneNumber,
       });
       if (!customer.status) throw new Error("Failed to create customer");
