@@ -3,12 +3,6 @@ import isAuth from "../middleware/isAuth";
 import userController from "../controllers/user.controller";
 import validate from "../validations";
 import { EditUserInput } from "../validations/user.validation";
-import { Router } from "express";
-import isAuth from "../middleware/isAuth";
-import userController from "../controllers/user.controller";
-import validate from "../validations";
-import { EditUserInput } from "../validations/user.validation";
-
 const router = Router();
 
 router
