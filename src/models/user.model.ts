@@ -5,8 +5,10 @@ import Collections from '../interfaces/collections';
 
 const UserSchema = new mongoose.Schema<IUser>(
   {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    name: { type: String },
+    username: { type: String },
     about: { type: String },
     profilePicture: { type: String, default: '' },
     professionalPictures: [{ type: String }],

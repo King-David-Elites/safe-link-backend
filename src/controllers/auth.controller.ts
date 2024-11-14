@@ -5,13 +5,13 @@ import { IResetPasswordReq } from '../interfaces/responses/auth.response';
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password, confirmPassword, name } = req.body;
+    const { email, password, confirmPassword, username } = req.body;
 
     await authService.createAccount({
       email,
       password,
       confirmPassword,
-      name,
+      username,
     });
 
     res.status(201).json({ message: 'Verification email sent', data: null });

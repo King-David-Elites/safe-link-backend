@@ -59,7 +59,9 @@ const changePassword = async (body: IChangePasswordReq) => {
 
 const editUser = async (body: Partial<IUser>): Promise<IUser> => {
   let {
-    name,
+    firstName,
+    lastName,
+    username,
     about,
     profilePicture,
     professionalPictures,
@@ -96,7 +98,9 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     leisurePictures = await uploaderListOfMedia(leisurePictures)
   }
 
-  user.name = name || user.name;
+  user.firstName = firstName || user.firstName;
+  user.lastName = lastName || user.lastName;
+  user.username = username || user.username;
   user.about = about || user.about;
   user.profilePicture = profilePicture || user.profilePicture;
   user.professionalPictures = professionalPictures || user.professionalPictures;
@@ -124,7 +128,7 @@ const getUsers = async (search?: string) => {
   const query: FilterQuery<IUser> = {};
 
   if (search) {
-    query.name = { $regex: search, $options: 'i' };
+    query.username = { $regex: search, $options: 'i' };
   }
 
   const users = await User.aggregate([
@@ -178,7 +182,10 @@ export const getCompleteProfiles = async () => {
     // Query to find users with all required fields completed
     const users = await User.find({
       $and: [
-        { name: { $ne: null, $exists: true, $nin: [''] } },
+        { firstName: { $ne: null, $exists: true, $nin: [''] } },
+        { lastName: { $ne: null, $exists: true, $nin: [''] } },
+        { email: { $ne: null, $exists: true, $nin: [''] } },
+        { username: { $ne: null, $exists: true, $nin: [''] } },
         { about: { $ne: null, $exists: true, $nin: [''] } },
         { profilePicture: { $ne: null, $exists: true, $nin: [''] } },
         { professionalPictures: { $ne: null, $exists: true, $nin: [''] } },
@@ -190,7 +197,7 @@ export const getCompleteProfiles = async () => {
         { state: { $ne: null, $exists: true, $nin: [''] } },
         { country: { $ne: null, $exists: true, $nin: [''] } },
         { phoneNumber: { $ne: null, $exists: true, $nin: [''] } },
-        { subscriptionStatus: { $ne: 'free', $exists: true }},
+        { subscriptionStatus: { $ne: 'free', $exists: true } },
       ]
     });
 

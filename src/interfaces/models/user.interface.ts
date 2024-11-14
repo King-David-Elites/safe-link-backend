@@ -35,8 +35,10 @@ export enum SubscriptionStatus {
 
 export interface IUser {
   _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  name: string;
+  username: string;
   about: string;
   profilePicture: string;
   professionalPictures: string[];
