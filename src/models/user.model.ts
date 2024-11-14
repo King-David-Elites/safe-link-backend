@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     firstName: { type: String},
     lastName: { type: String},
     email: { type: String, required: true, unique: true },
-    username: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     about: { type: String },
     profilePicture: { type: String, default: '' },
     professionalPictures: [{ type: String }],

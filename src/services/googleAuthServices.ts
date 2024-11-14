@@ -18,25 +18,29 @@ const verifyGoogleToken = async (token: string) => {
 
 const findOrCreateUser = async ({
   email,
-  name,
+  username,
 }: {
   email: string;
-  name: string;
+  username: string;
 }) => {
   let user = await User.findOne({ email });
   if (!user) {
     user = await User.create({
       email,
-      name,
+      username,
       isVerified: true,
     });
   }
+
   const freemium = await PlanModel.findOne({ name: PlansEnum.FREE });
-  await UserSubscriptionModel.create({
-    user: user._id,
-    plan: freemium?._id,
-    isActive: true,
-  });
+  if (freemium) {
+    await UserSubscriptionModel.create({
+      user: user._id,
+      plan: freemium._id,
+      isActive: true,
+    });
+  }
+
   return user;
 };
 
