@@ -26,12 +26,12 @@ export interface IToken {
 
 // Define the subscription status enum
 export enum SubscriptionStatus {
-  FREE = 'FREE',
-  BASIC = 'BASIC',
-  PLATINUM = 'PLATINUM',
+  FREE = 'free',
+  BASIC = 'basic',
+  PLUS = 'premium',
+  PLATINUM = 'Platinum',
   // Add more subscription statuses as needed
 }
-
 
 export interface IUser {
   _id: string;

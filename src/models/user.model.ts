@@ -1,5 +1,5 @@
 import mongoose, { Types } from 'mongoose';
-import { IUser } from '../interfaces/models/user.interface';
+import { IUser, SubscriptionStatus } from '../interfaces/models/user.interface';
 import { string } from 'yup';
 import Collections from '../interfaces/collections';
 
@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema<IUser>(
     otp: { type: String },
     otpExpiresAt: { type: Date },
     isVerified: { type: Boolean, default: false },
+    subscriptionStatus: {
+      type: String,
+      enum: Object.values(SubscriptionStatus),
+      default: SubscriptionStatus.FREE,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

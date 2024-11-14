@@ -190,6 +190,7 @@ export const getCompleteProfiles = async () => {
         { state: { $ne: null, $exists: true, $nin: [''] } },
         { country: { $ne: null, $exists: true, $nin: [''] } },
         { phoneNumber: { $ne: null, $exists: true, $nin: [''] } },
+        { subscriptionStatus: { $ne: 'free', $exists: true }},
       ]
     });
 
