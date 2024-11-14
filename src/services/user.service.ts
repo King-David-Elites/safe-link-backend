@@ -172,6 +172,38 @@ const getUsers = async (search?: string) => {
   return users;
 };
 
+// New function to get users with complete profiles
+export const getCompleteProfiles = async () => {
+  try {
+    // Query to find users with all required fields completed
+    const users = await User.find({
+      $and: [
+        { name: { $ne: null, $exists: true, $nin: [''] } },
+        { about: { $ne: null, $exists: true, $nin: [''] } },
+        { profilePicture: { $ne: null, $exists: true, $nin: [''] } },
+        { professionalPictures: { $ne: null, $exists: true, $nin: [''] } },
+        { workPictures: { $ne: null, $exists: true, $nin: [''] } },
+        { leisurePictures: { $ne: null, $exists: true, $nin: [''] } },
+        { address: { $ne: null, $exists: true, $nin: [''] } },
+        { city: { $ne: null, $exists: true, $nin: [''] } },
+        { zipCode: { $ne: null, $exists: true, $nin: [''] } },
+        { state: { $ne: null, $exists: true, $nin: [''] } },
+        { country: { $ne: null, $exists: true, $nin: [''] } },
+        { phoneNumber: { $ne: null, $exists: true, $nin: [''] } },
+      ]
+    });
+
+    // Return the list of users with complete profiles
+    return users;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Error fetching users with complete profiles: ' + error.message);
+    } else {
+      throw new Error('Error fetching users with complete profiles');
+    }
+  }
+};
+
 const userService = {
   getById,
   getByEmail,
@@ -179,6 +211,7 @@ const userService = {
   editUser,
   deleteUser,
   getUsers,
+  getCompleteProfiles,
 };
 
 export default userService;

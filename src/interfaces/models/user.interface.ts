@@ -24,6 +24,15 @@ export interface IToken {
   _id: string;
 }
 
+// Define the subscription status enum
+export enum SubscriptionStatus {
+  FREE = 'FREE',
+  BASIC = 'BASIC',
+  PLATINUM = 'PLATINUM',
+  // Add more subscription statuses as needed
+}
+
+
 export interface IUser {
   _id: string;
   email: string;
@@ -42,5 +51,6 @@ export interface IUser {
   otp: string;
   otpExpiresAt?: Date;
   isVerified: boolean;
+  subscriptionStatus: SubscriptionStatus;
 }
  
