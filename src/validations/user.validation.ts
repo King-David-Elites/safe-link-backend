@@ -2,7 +2,7 @@ import { array, number, object, string } from "yup";
 
 export const EditUserInput = object({
   body: object({
-    name: string().notRequired(),
+    username: string().notRequired(),
     about: string().notRequired(),
     profilePicture: string().notRequired(),
     professionalPictures: array(string()).notRequired(),
