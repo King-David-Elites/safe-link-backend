@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 
-config();
+config({ path: '../../.env' });
 
 const settings = {
   mongoDbUrl: <string>process.env.MONGODB_URL,
@@ -10,8 +10,8 @@ const settings = {
     apiSecret: <string>process.env.CLOUDINARY_API_SECRET,
   },
   nodemailer: {
-    email: <string>process.env.EMAIL_ADDRESS,
-    password: <string>process.env.EMAIL_TEST_PASSWORD,
+    email: <string>process.env.SAFELINK_EMAIL_ADDRESS,
+    password: <string>process.env.SAFELINK_EMAIL_PASSWORD,
   },
   frontendUrl: <string>process.env.FRONTEND_URL,
   accessTokenSecret: <string>process.env.ACCESS_TOKEN_SECRET,
