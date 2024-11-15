@@ -27,9 +27,10 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
       throw new UnAuthenticatedError("Token does not exist or has expired");
     }
 
-    const userAuth = await authService.getById(userToken.userId);
+    // const userAuth = await authService.getById(userToken.userId);
 
-    const user = await userService.getByEmail(userAuth.email);
+    const user = await userService.getById(userToken.userId);
+    // console.log("user from token", user);
 
     req.userId = user._id;
 

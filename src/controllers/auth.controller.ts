@@ -103,9 +103,12 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email, name } = payload;
 
-    const user = await googleAuthService.findOrCreateUser({ email, username: name });
+    const user = await googleAuthService.findOrCreateUser({
+      email,
+      username: name,
+    });
 
-    const accessToken = googleAuthService.generateJWT(user._id);
+    const accessToken = await googleAuthService.generateJWT(user._id);
 
     return res
       .status(200)
