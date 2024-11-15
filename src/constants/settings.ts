@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 
-config({ path: '../../.env' });
+config();
 
 const settings = {
   mongoDbUrl: <string>process.env.MONGODB_URL,
