@@ -1,17 +1,17 @@
-import { FilterQuery } from 'mongoose';
-import { BadRequestError, NotFoundError } from '../constants/errors';
-import { IUser } from '../interfaces/models/user.interface';
-import { IChangePasswordReq } from '../interfaces/responses/auth.response';
-import Auth from '../models/user.auth.model';
-import User from '../models/user.model';
-import argon2 from 'argon2';
-import { uploader, uploaderListOfMedia } from '../utils/uploader';
+import { FilterQuery } from "mongoose";
+import { BadRequestError, NotFoundError } from "../constants/errors";
+import { IUser } from "../interfaces/models/user.interface";
+import { IChangePasswordReq } from "../interfaces/responses/auth.response";
+import Auth from "../models/user.auth.model";
+import User from "../models/user.model";
+import argon2 from "argon2";
+import { uploader, uploaderListOfMedia } from "../utils/uploader";
 
 const getById = async (id: string): Promise<IUser> => {
   const user = await User.findById(id);
 
   if (!user) {
-    throw new NotFoundError('User does not exist');
+    throw new NotFoundError("User does not exist");
   }
 
   return user;
@@ -21,7 +21,7 @@ const getByEmail = async (email: string): Promise<IUser> => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new NotFoundError('User does not exist');
+    throw new NotFoundError("User does not exist");
   }
 
   return user;
@@ -32,7 +32,7 @@ const changePassword = async (body: IChangePasswordReq) => {
 
   if (newPassword !== confirmNewPassword) {
     throw new BadRequestError(
-      'New password and confirm new password do not match'
+      "New password and confirm new password do not match"
     );
   }
 
@@ -41,13 +41,13 @@ const changePassword = async (body: IChangePasswordReq) => {
   const userAuth = await Auth.findOne({ email: user.email });
 
   if (!userAuth) {
-    throw new NotFoundError('User does not exist');
+    throw new NotFoundError("User does not exist");
   }
 
   const isPasswordMatch = await userAuth?.verifyPassword(oldPassword);
 
   if (!isPasswordMatch) {
-    throw new BadRequestError('Old password is incorrect');
+    throw new BadRequestError("Old password is incorrect");
   }
 
   const newPasswordHash = await argon2.hash(newPassword);
@@ -79,23 +79,23 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
   const user = await User.findById(_id);
 
   if (!user) {
-    throw new NotFoundError('User does not exist');
+    throw new NotFoundError("User does not exist");
   }
 
-  if(profilePicture){
-    profilePicture = await uploader(profilePicture)
+  if (profilePicture) {
+    profilePicture = await uploader(profilePicture);
   }
 
-  if(workPictures){
-    workPictures = await uploaderListOfMedia(workPictures)
+  if (workPictures) {
+    workPictures = await uploaderListOfMedia(workPictures);
   }
 
-  if(professionalPictures){
-    professionalPictures = await uploaderListOfMedia(professionalPictures)
+  if (professionalPictures) {
+    professionalPictures = await uploaderListOfMedia(professionalPictures);
   }
 
-  if(leisurePictures){
-    leisurePictures = await uploaderListOfMedia(leisurePictures)
+  if (leisurePictures) {
+    leisurePictures = await uploaderListOfMedia(leisurePictures);
   }
 
   user.firstName = firstName || user.firstName;
@@ -119,7 +119,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
 const deleteUser = async (userId: string) => {
   const user = await User.findByIdAndDelete<IUser>(userId);
 
-  if (!user) throw new NotFoundError('User does not exist');
+  if (!user) throw new NotFoundError("User does not exist");
 
   await Auth.findOneAndDelete({ email: user?.email });
 };
@@ -128,7 +128,7 @@ const getUsers = async (search?: string) => {
   const query: FilterQuery<IUser> = {};
 
   if (search) {
-    query.username = { $regex: search, $options: 'i' };
+    query.username = { $regex: search, $options: "i" };
   }
 
   const users = await User.aggregate([
@@ -137,22 +137,22 @@ const getUsers = async (search?: string) => {
     },
     {
       $lookup: {
-        from: 'usersubscriptions',
-        localField: 'user',
-        foreignField: '_id',
-        as: 'subscription',
+        from: "usersubscriptions",
+        localField: "user",
+        foreignField: "_id",
+        as: "subscription",
         pipeline: [
           {
             $lookup: {
-              from: 'subscriptionplans',
-              localField: 'plan',
-              foreignField: '_id',
-              as: 'plan',
+              from: "subscriptionplans",
+              localField: "plan",
+              foreignField: "_id",
+              as: "plan",
             },
           },
           {
             $unwind: {
-              path: '$plan',
+              path: "$plan",
               preserveNullAndEmptyArrays: true,
             },
           },
@@ -161,13 +161,13 @@ const getUsers = async (search?: string) => {
     },
     {
       $unwind: {
-        path: '$subscription',
+        path: "$subscription",
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $sort: {
-        'subscription.plan.price': -1,
+        "subscription.plan.price": -1,
         createdAt: 1,
       },
     },
@@ -182,32 +182,34 @@ export const getCompleteProfiles = async () => {
     // Query to find users with all required fields completed
     const users = await User.find({
       $and: [
-        { firstName: { $ne: null, $exists: true, $nin: [''] } },
-        { lastName: { $ne: null, $exists: true, $nin: [''] } },
-        { email: { $ne: null, $exists: true, $nin: [''] } },
-        { username: { $ne: null, $exists: true, $nin: [''] } },
-        { about: { $ne: null, $exists: true, $nin: [''] } },
-        { profilePicture: { $ne: null, $exists: true, $nin: [''] } },
-        { professionalPictures: { $ne: null, $exists: true, $nin: [''] } },
-        { workPictures: { $ne: null, $exists: true, $nin: [''] } },
-        { leisurePictures: { $ne: null, $exists: true, $nin: [''] } },
-        { address: { $ne: null, $exists: true, $nin: [''] } },
-        { city: { $ne: null, $exists: true, $nin: [''] } },
-        { zipCode: { $ne: null, $exists: true, $nin: [''] } },
-        { state: { $ne: null, $exists: true, $nin: [''] } },
-        { country: { $ne: null, $exists: true, $nin: [''] } },
-        { phoneNumber: { $ne: null, $exists: true, $nin: [''] } },
-        { subscriptionStatus: { $ne: 'free', $exists: true } },
-      ]
+        { firstName: { $ne: null, $exists: true, $nin: [""] } },
+        { lastName: { $ne: null, $exists: true, $nin: [""] } },
+        { email: { $ne: null, $exists: true, $nin: [""] } },
+        { username: { $ne: null, $exists: true, $nin: [""] } },
+        { about: { $ne: null, $exists: true, $nin: [""] } },
+        { profilePicture: { $ne: null, $exists: true, $nin: [""] } },
+        { professionalPictures: { $ne: null, $exists: true, $nin: [""] } },
+        { workPictures: { $ne: null, $exists: true, $nin: [""] } },
+        { leisurePictures: { $ne: null, $exists: true, $nin: [""] } },
+        { address: { $ne: null, $exists: true, $nin: [""] } },
+        { city: { $ne: null, $exists: true, $nin: [""] } },
+        { zipCode: { $ne: null, $exists: true, $nin: [""] } },
+        { state: { $ne: null, $exists: true, $nin: [""] } },
+        { country: { $ne: null, $exists: true, $nin: [""] } },
+        { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
+        { subscriptionStatus: { $ne: "free", $exists: true } },
+      ],
     });
 
     // Return the list of users with complete profiles
     return users;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error('Error fetching users with complete profiles: ' + error.message);
+      throw new Error(
+        "Error fetching users with complete profiles: " + error.message
+      );
     } else {
-      throw new Error('Error fetching users with complete profiles');
+      throw new Error("Error fetching users with complete profiles");
     }
   }
 };
