@@ -138,7 +138,7 @@ const login = async (body: Partial<IAuth>): Promise<LoginRes> => {
   }
 
   // send access token and user info
-  const accessToken = await JWTHelper.signJWT(authInDb._id);
+  const accessToken = await JWTHelper.signJWT(<string>user?._id);
 
   return {
     accessToken,

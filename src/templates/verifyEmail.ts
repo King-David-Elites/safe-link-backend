@@ -1,5 +1,5 @@
-import settings from '../constants/settings';
-import { IUser } from '../interfaces/models/user.interface';
+import settings from "../constants/settings";
+import { IUser } from "../interfaces/models/user.interface";
 
 export const verifyEmailHTML = (user: IUser, token: string) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -606,7 +606,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                       style="
                                         overflow-wrap: break-word;
                                         word-break: break-word;
-                                        padding: 33px 55px;
+                                        padding: 33px 0px;
                                         font-family: 'Cabin', sans-serif;
                                       "
                                       align="left"
@@ -614,22 +614,23 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                       <div
                                         style="
                                           line-height: 160%;
-                                          text-align: center;
+                                          text-align: left;
                                           word-wrap: break-word;
                                         "
                                       >
-                                        <p style="line-height: 160%">
-                                          Hi ${user.username}, your account as been
+                                        <p style="line-height: 120%">
+                                          Hi ${user.username}, your account has been
                                           created but you have to activate it. 
+
+                                          <div style="margin: 24px 0" />
+                                          
                                           Kindly click on the button below to verify your account and please ignore if you didn't initiate this action. 
 
-                                          <br/>
-                                          <i><strong>This link will expire in 15 minutes</strong></i>
-                                          <br/>
-                                          Once again you’re welcome, 
-                                          <br/>
+                                          <div style="margin: 24px 0" />
 
-                                          <strong>The SafeLink Team.</strong>
+                                          <i><strong>This link will expire in 15 minutes</strong></i>
+
+                      
                                         </p>
                                         <p style="line-height: 160%"> </p>
                                         <p style="line-height: 160%"> </p>
@@ -679,7 +680,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                             -webkit-text-size-adjust: none;
                                             text-align: center;
                                             color: #ffffff;
-                                            background-color: #000000;
+                                            background-color: #f2be5c;
                                             border-radius: 4px;
                                             -webkit-border-radius: 4px;
                                             -moz-border-radius: 4px;
@@ -724,7 +725,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                       style="
                                         overflow-wrap: break-word;
                                         word-break: break-word;
-                                        padding: 33px 55px 60px;
+                                        padding: 13px 15px 60px;
                                         font-family: 'Cabin', sans-serif;
                                       "
                                       align="left"
@@ -737,6 +738,7 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                         "
                                       >
                                         <p style="line-height: 160%; font-size: 14px">
+<<<<<<< HEAD
                                           <span
                                             style="
                                               font-size: 18px;
@@ -753,7 +755,13 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                             "
                                             >The Safelink Team</span
                                           >
+=======
+
+                                          Once again you’re welcome, 
+ 
+>>>>>>> 6e4d55ed640f38b0920f46986edf4bf09bcac78a
                                         </p>
+                                        <strong>The SafeLink Team.</strong>
                                       </div>
                                     </td>
                                   </tr>

@@ -44,8 +44,9 @@ const findOrCreateUser = async ({
   return user;
 };
 
-const generateJWT = (userId: string) => {
-  return JWTHelper.signJWT(userId);
+const generateJWT = async (userId: string) => {
+  const token = await JWTHelper.signJWT(userId);
+  return token;
 };
 
 const googleAuthService = {
