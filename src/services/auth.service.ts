@@ -52,10 +52,11 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
   const auth = await Auth.create({ email, password });
 
   const freemium = await PlanModel.findOne({ name: PlansEnum.FREE });
-
+  const formattedUsername = username?.replace(/\s+/g, "-").toLowerCase();
   const user = await User.create({
     email,
     username,
+    formattedUsername,
   });
 
   await UserSubscriptionModel.create({

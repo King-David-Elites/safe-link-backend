@@ -1,7 +1,7 @@
 // models/user.model.ts
-import mongoose, { Types } from 'mongoose';
-import { IUser, SubscriptionStatus } from '../interfaces/models/user.interface';
-import Collections from '../interfaces/collections';
+import mongoose, { Types } from "mongoose";
+import { IUser, SubscriptionStatus } from "../interfaces/models/user.interface";
+import Collections from "../interfaces/collections";
 
 const UserSchema = new mongoose.Schema<IUser>(
   {
@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     about: { type: String },
-    profilePicture: { type: String, default: '' },
+    profilePicture: { type: String, default: "" },
     professionalPictures: [{ type: String }],
     workPictures: [{ type: String }],
     leisurePictures: [{ type: String }],
@@ -29,11 +29,11 @@ const UserSchema = new mongoose.Schema<IUser>(
       default: SubscriptionStatus.FREE,
     },
     isProfileCompleted: { type: Boolean, default: false },
+    formattedUsername: { type: String },
     shareableLink: { type: String, default: null },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-
 
 // Middleware to update the shareableLink when updating a user document
 UserSchema.pre("save", function (next) {
@@ -41,8 +41,10 @@ UserSchema.pre("save", function (next) {
   if (this.isModified("username") || this.isModified("isProfileCompleted")) {
     // If the profile is complete, generate the shareable link
     if (this.isProfileCompleted) {
-      const formattedUsername = this.username?.replace(/\s+/g, "-");
-      this.shareableLink = `joinsafelink/${formattedUsername}`;
+      const formattedUsername = this.username
+        ?.replace(/\s+/g, "-")
+        .toLowerCase();
+      this.shareableLink = `https://www.joinsafelink/${formattedUsername}`;
     } else {
       // If profile is incomplete, reset the shareable link
       this.shareableLink = "";
@@ -54,20 +56,29 @@ UserSchema.pre("save", function (next) {
 UserSchema.pre("findOneAndUpdate", function (next) {
   // Access the updated fields
   const updates = this.getUpdate();
-  
+
   // If `username` or `isProfileCompleted` is being updated
-  if (updates && ((updates as mongoose.UpdateQuery<any>).username || (updates as mongoose.UpdateQuery<any>).isProfileCompleted !== undefined)) {
+  if (
+    updates &&
+    ((updates as mongoose.UpdateQuery<any>).username ||
+      (updates as mongoose.UpdateQuery<any>).isProfileCompleted !== undefined)
+  ) {
     // Retrieve the new values for these fields
-    const isProfileCompleted = (updates as mongoose.UpdateQuery<any>).isProfileCompleted ?? this.get("isProfileCompleted");
-    const username = (updates as mongoose.UpdateQuery<any>).username ?? this.get("username");
-    
+    const isProfileCompleted =
+      (updates as mongoose.UpdateQuery<any>).isProfileCompleted ??
+      this.get("isProfileCompleted");
+    const username =
+      (updates as mongoose.UpdateQuery<any>).username ?? this.get("username");
+
     if (isProfileCompleted) {
       const formattedUsername = username?.replace(/\s+/g, "-");
-      (updates as mongoose.UpdateQuery<any>).$set = { shareableLink: `joinsafelink/${formattedUsername}` };
+      (updates as mongoose.UpdateQuery<any>).$set = {
+        shareableLink: `https://www.joinsafelink/${formattedUsername}`,
+      };
     } else {
       (updates as mongoose.UpdateQuery<any>).$set = { shareableLink: null };
     }
-    
+
     // Ensure the updated fields are applied
     this.setUpdate(updates);
   }
@@ -75,12 +86,12 @@ UserSchema.pre("findOneAndUpdate", function (next) {
 });
 
 // Add a virtual field for dynamic shareable link generation (only when profile is complete)
-UserSchema.virtual('dynamicShareableLink').get(function () {
+UserSchema.virtual("dynamicShareableLink").get(function () {
   if (!this.isProfileCompleted) {
     return null; // Only generate the link if the profile is complete
   }
-  const formattedUsername = this.username?.replace(/\s+/g, '-');
-  return `joinsafelink/${formattedUsername}`;
+  const formattedUsername = this.username?.replace(/\s+/g, "-");
+  return `https://www.joinsafelink/${formattedUsername}`;
 });
 
 const User = mongoose.model(Collections.user, UserSchema);
