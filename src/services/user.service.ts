@@ -238,6 +238,47 @@ export const getCompleteProfiles = async () => {
   }
 };
 
+// New function to get the top 12 users with complete profiles
+export const getTopCompleteProfiles = async () => {
+  try {
+    // Query to find users with all required fields completed
+    const users = await User.find({
+      $and: [
+        { firstName: { $ne: null, $exists: true, $nin: [""] } },
+        { lastName: { $ne: null, $exists: true, $nin: [""] } },
+        { email: { $ne: null, $exists: true, $nin: [""] } },
+        { username: { $ne: null, $exists: true, $nin: [""] } },
+        { about: { $ne: null, $exists: true, $nin: [""] } },
+        { profilePicture: { $ne: null, $exists: true, $nin: [""] } },
+        { professionalPictures: { $ne: null, $exists: true, $nin: [""] } },
+        { workPictures: { $ne: null, $exists: true, $nin: [""] } },
+        { leisurePictures: { $ne: null, $exists: true, $nin: [""] } },
+        { address: { $ne: null, $exists: true, $nin: [""] } },
+        { city: { $ne: null, $exists: true, $nin: [""] } },
+        { zipCode: { $ne: null, $exists: true, $nin: [""] } },
+        { state: { $ne: null, $exists: true, $nin: [""] } },
+        { country: { $ne: null, $exists: true, $nin: [""] } },
+        { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
+        { subscriptionStatus: { $ne: "free", $exists: true } },
+      ],
+    })
+      .sort({ createdAt: -1 }) // Sort by creation date in descending order
+      .limit(12); // Limit the result to the top 12 users
+
+    // Return the list of top 12 users with complete profiles
+    return users;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        "Error fetching top users with complete profiles: " + error.message
+      );
+    } else {
+      throw new Error("Error fetching top users with complete profiles");
+    }
+  }
+};
+
+
 const getByUsername = async (username: string) => {
   // Ensure username is case-insensitive if required
   return await User.findOne({ username: new RegExp(`^${username}$`, "i") });
@@ -289,6 +330,7 @@ const userService = {
   deleteUser,
   getUsers,
   getCompleteProfiles,
+  getTopCompleteProfiles,
   getByUsername,
   generateShareableLink,
 };
