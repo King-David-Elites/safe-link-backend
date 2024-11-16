@@ -128,6 +128,42 @@ export const getCompleteProfiles = async (req: Request, res: Response): Promise<
 };
 
 
+const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const username = <string>req.params.username; // Extract username from URL params
+
+    const data = await userService.getByUsername(username); // Call the service to fetch user by username
+
+    if (!data) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User Info fetched successfully", data });
+  } catch (error) {
+    return next(error); // Pass errors to the error handler
+  }
+};
+
+const generateUserShareableLink = async (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = <string>req.userId;
+
+    const shareableLink = await userService.generateShareableLink(userId);
+
+    res.status(200).json({
+      message: "Shareable link generated successfully",
+      data: { shareableLink },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 const userController = {
   changePassword,
   editUser,
@@ -137,6 +173,8 @@ const userController = {
   getUserById,
   getUsers,
   getCompleteProfiles,
+  getUserByUsername,
+  generateUserShareableLink,
 };
 
 export default userController;

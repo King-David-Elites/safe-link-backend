@@ -54,5 +54,7 @@ export interface IUser {
   otpExpiresAt?: Date;
   isVerified: boolean;
   subscriptionStatus: SubscriptionStatus;
+  isProfileCompleted: boolean;
+  shareableLink: string;
 }
  

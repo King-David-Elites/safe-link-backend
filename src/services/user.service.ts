@@ -113,6 +113,30 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
   user.country = country || user.country;
   user.phoneNumber = phoneNumber || user.phoneNumber;
 
+  const requiredFields = [
+    user.firstName,
+    user.lastName,
+    user.username,
+    user.about,
+    user.profilePicture,
+    user.professionalPictures,
+    user.workPictures,
+    user.leisurePictures,
+    user.address,
+    user.city,
+    user.zipCode,
+    user.state,
+    user.country,
+    user.phoneNumber
+  ];
+  const isProfileComplete = requiredFields.every(field => field !== null && field !== '' && field !== undefined);
+
+  // Check if the subscription status is not 'FREE'
+  const isSubscriptionValid = user.subscriptionStatus !== 'free';
+
+  // Set the profile completion status considering both conditions
+  user.isProfileCompleted = isProfileComplete && isSubscriptionValid;
+
   return await user.save();
 };
 
@@ -212,6 +236,49 @@ export const getCompleteProfiles = async () => {
   }
 };
 
+const getByUsername = async (username: string) => {
+  // Ensure username is case-insensitive if required
+  return await User.findOne({ username: new RegExp(`^${username}$`, "i") });
+};
+
+const generateShareableLink = async (userId: string): Promise<string> => {
+  // Fetch the user by their ID
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new NotFoundError("User not found.");
+  }
+
+  // If the shareable link already exists, return it
+  if (user.shareableLink) {
+    return user.shareableLink;
+  }
+
+  // Check if the user profile is complete
+  if (!user.isProfileCompleted) {
+    throw new BadRequestError(
+      "User profile is incomplete. Please complete your profile to generate a shareable link."
+    );
+  }
+
+  // Ensure the user's subscription is not FREE
+  if (user.subscriptionStatus === 'free') {
+    throw new BadRequestError(
+      "Shareable link is only available for paid subscription users. Please upgrade your subscription."
+    );
+  }
+
+  // Generate the shareable link based on the username
+  const formattedUsername = user.username.replace(/\s+/g, "-");
+  const shareableLink = `joinsafelink/${formattedUsername}`;
+
+  // Save the generated link to the user's record
+  user.shareableLink = shareableLink;
+  await user.save();
+
+  return shareableLink;
+};
+
 const userService = {
   getById,
   getByEmail,
@@ -220,6 +287,8 @@ const userService = {
   deleteUser,
   getUsers,
   getCompleteProfiles,
+  getByUsername,
+  generateShareableLink,
 };
 
 export default userService;
