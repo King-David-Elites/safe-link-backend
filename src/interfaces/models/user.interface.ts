@@ -1,5 +1,5 @@
-import { Relations } from '.';
-import { ISubscriptionPlan } from './subscription.interface';
+import { Relations } from ".";
+import { ISubscriptionPlan } from "./subscription.interface";
 
 export interface IAuth {
   email: string;
@@ -11,8 +11,8 @@ export interface IAuth {
 }
 
 export enum ITokenTypes {
-  passwordResetToken = 'passwordResetToken',
-  accountVerificationToken = 'accountVerificationToken',
+  passwordResetToken = "passwordResetToken",
+  accountVerificationToken = "accountVerificationToken",
 }
 
 export interface IToken {
@@ -26,10 +26,10 @@ export interface IToken {
 
 // Define the subscription status enum
 export enum SubscriptionStatus {
-  FREE = 'free',
-  BASIC = 'basic',
-  PLUS = 'premium',
-  PLATINUM = 'Platinum',
+  FREE = "free",
+  BASIC = "basic",
+  PLUS = "premium",
+  PLATINUM = "Platinum",
   // Add more subscription statuses as needed
 }
 
@@ -55,6 +55,6 @@ export interface IUser {
   isVerified: boolean;
   subscriptionStatus: SubscriptionStatus;
   isProfileCompleted: boolean;
+  formattedUsername: string;
   shareableLink: string;
 }
- 

@@ -127,12 +127,14 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     user.zipCode,
     user.state,
     user.country,
-    user.phoneNumber
+    user.phoneNumber,
   ];
-  const isProfileComplete = requiredFields.every(field => field !== null && field !== '' && field !== undefined);
+  const isProfileComplete = requiredFields.every(
+    (field) => field !== null && field !== "" && field !== undefined
+  );
 
   // Check if the subscription status is not 'FREE'
-  const isSubscriptionValid = user.subscriptionStatus !== 'free';
+  const isSubscriptionValid = user.subscriptionStatus !== "free";
 
   // Set the profile completion status considering both conditions
   user.isProfileCompleted = isProfileComplete && isSubscriptionValid;
@@ -278,10 +280,10 @@ export const getTopCompleteProfiles = async () => {
   }
 };
 
-
-const getByUsername = async (username: string) => {
+const getByUsername = async (formattedUsername: string) => {
   // Ensure username is case-insensitive if required
-  return await User.findOne({ username: new RegExp(`^${username}$`, "i") });
+  // return await User.findOne({ username: new RegExp(`^${formattedUsername}$`, "i") });
+  return await User.findOne({ formattedUsername: formattedUsername });
 };
 
 const generateShareableLink = async (userId: string): Promise<string> => {
@@ -305,18 +307,19 @@ const generateShareableLink = async (userId: string): Promise<string> => {
   }
 
   // Ensure the user's subscription is not FREE
-  if (user.subscriptionStatus === 'free') {
+  if (user.subscriptionStatus === "free") {
     throw new BadRequestError(
       "Shareable link is only available for paid subscription users. Please upgrade your subscription."
     );
   }
 
   // Generate the shareable link based on the username
-  const formattedUsername = user.username.replace(/\s+/g, "-");
-  const shareableLink = `joinsafelink/${formattedUsername}`;
+  const formattedUsername = user.username.replace(/\s+/g, "-").toLowerCase();
+  const shareableLink = `https://www.joinsafelink/${formattedUsername}`;
 
   // Save the generated link to the user's record
   user.shareableLink = shareableLink;
+  user.formattedUsername = formattedUsername;
   await user.save();
 
   return shareableLink;

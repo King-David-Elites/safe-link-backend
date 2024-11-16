@@ -10,7 +10,8 @@ const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
 export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
-  cron.schedule("*/12 * * * *", pingServer); //Make the Server Active every 12 minutes
+  cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
+  cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
 }
 
 async function handleSubscriptionJob() {
@@ -35,6 +36,27 @@ async function pingServer() {
   try {
     const response = await axios.get(`${serverUrl}/ping/ping`);
     console.log("Server pinged successfully", response.data);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error pinging the server:", error.message);
+    } else {
+      console.error("Error pinging the server:", error);
+    }
+  }
+}
+
+async function pingAiSearchServer() {
+  try {
+    const response = await axios.post(
+      "https://safelink-search-api.onrender.com/search",
+      { query: "ping" },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("AI search server pinged successfully");
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error pinging the server:", error.message);
