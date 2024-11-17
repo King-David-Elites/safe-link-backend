@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     username: { type: String, required: true, unique: true },
     about: { type: String },
     profilePicture: { type: String, default: "" },
+    coverPicture: { type: String, default: "" },
     professionalPictures: [{ type: String }],
     workPictures: [{ type: String }],
     leisurePictures: [{ type: String }],
