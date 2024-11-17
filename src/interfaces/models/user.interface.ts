@@ -41,6 +41,7 @@ export interface IUser {
   username: string;
   about: string;
   profilePicture: string;
+  coverPicture: string;
   professionalPictures: string[];
   workPictures: string[];
   leisurePictures: string[];
