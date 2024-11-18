@@ -327,7 +327,6 @@ const generateShareableLink = async (userId: string): Promise<string> => {
   user.formattedUsername = formattedUsername;
   await user.save();
 
-  console.log("shareable link", shareableLink);
   return shareableLink;
 };
 

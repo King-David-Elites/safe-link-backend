@@ -28,8 +28,6 @@ config();
 const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY!);
 
 export async function subscribeForPlan(userId: string, planId: string) {
-  console.log({ userId });
-
   const plan = await PlanModel.findById(planId);
   if (!plan) throw new NotFoundError("Plan does not exist");
 

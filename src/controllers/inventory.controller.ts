@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import { IRequest } from '../interfaces/expressRequest';
-import { upload } from '../helpers/upload';
-import { BadRequestError } from '../constants/errors';
-import inventoryService from '../services/inventory.service';
+import { NextFunction, Request, Response } from "express";
+import { IRequest } from "../interfaces/expressRequest";
+import { upload } from "../helpers/upload";
+import { BadRequestError } from "../constants/errors";
+import inventoryService from "../services/inventory.service";
 
 const addToInventory = async (
   req: IRequest,
@@ -15,12 +15,12 @@ const addToInventory = async (
       req.body;
 
     videos = await Promise.all(
-      videos.map((video: string) => upload(video, { resource_type: 'video' }))
+      videos.map((video: string) => upload(video, { resource_type: "video" }))
     );
 
     images = await Promise.all(images.map((image: string) => upload(image)));
 
-    cover = await upload(cover);
+    cover = cover && (await upload(cover));
 
     const data = await inventoryService.createInventory({
       title,
@@ -34,7 +34,7 @@ const addToInventory = async (
     });
 
     res.status(201).json({
-      message: 'Inventory created successfully',
+      message: "Inventory created successfully",
       data,
     });
   } catch (error) {
@@ -72,7 +72,7 @@ const editInventory = async (
       _id: inventoryId,
     });
 
-    res.status(200).json({ message: 'Inventory edited successfully', data });
+    res.status(200).json({ message: "Inventory edited successfully", data });
   } catch (error) {
     return next(error);
   }
@@ -91,7 +91,7 @@ const deleteInventory = async (
 
     res
       .status(200)
-      .json({ message: 'Inventory deleted successfully', data: null });
+      .json({ message: "Inventory deleted successfully", data: null });
   } catch (error) {
     return next(error);
   }
@@ -107,7 +107,7 @@ const getMyInventories = async (
 
     const data = await inventoryService.getUserInventories(userId);
 
-    res.status(200).json({ message: 'Inventories fetched successfully', data });
+    res.status(200).json({ message: "Inventories fetched successfully", data });
   } catch (error) {
     return next(error);
   }
@@ -123,7 +123,7 @@ const getUserInventories = async (
 
     const data = await inventoryService.getUserInventories(userId);
 
-    res.status(200).json({ message: 'Inventories fetched successfully', data });
+    res.status(200).json({ message: "Inventories fetched successfully", data });
   } catch (error) {
     return next(error);
   }
@@ -139,7 +139,7 @@ const getSingleInventory = async (
   try {
     const data = await inventoryService.getSingleInventory(inventoryId);
 
-    res.status(200).json({ message: 'Inventory fetched successfully', data });
+    res.status(200).json({ message: "Inventory fetched successfully", data });
   } catch (error) {
     return next(error);
   }

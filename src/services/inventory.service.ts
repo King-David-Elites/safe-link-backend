@@ -19,7 +19,6 @@ const createInventory = async (
   })
     .populate("plan")
     .then((subscription) => subscription?.plan as ISubscriptionPlan);
-  console.log(plan);
 
   let cap = plan?.listingsCap || 10;
 

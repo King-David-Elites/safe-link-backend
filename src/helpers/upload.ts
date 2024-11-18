@@ -51,6 +51,7 @@ export const upload = async (
   } catch (error: any) {
     const errorMessage =
       error.message || "File upload failed. Please try again.";
+    console.error("error uploading file", error.message || error);
     throw new BadRequestError(errorMessage);
   }
 };
