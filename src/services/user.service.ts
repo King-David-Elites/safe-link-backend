@@ -320,13 +320,14 @@ const generateShareableLink = async (userId: string): Promise<string> => {
 
   // Generate the shareable link based on the username
   const formattedUsername = user.username.replace(/\s+/g, "-").toLowerCase();
-  const shareableLink = `https://www.joinsafelink/${formattedUsername}`;
+  const shareableLink = `https://www.joinsafelink.com/${formattedUsername}`;
 
   // Save the generated link to the user's record
   user.shareableLink = shareableLink;
   user.formattedUsername = formattedUsername;
   await user.save();
 
+  console.log("shareable link", shareableLink);
   return shareableLink;
 };
 
