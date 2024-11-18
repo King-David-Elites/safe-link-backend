@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import { IToken, ITokenTypes } from '../interfaces/models/user.interface';
-import { randomUUID } from 'crypto';
-import Collections from '../interfaces/collections';
+import mongoose from "mongoose";
+import { IToken, ITokenTypes } from "../interfaces/models/user.interface";
+import { randomUUID } from "crypto";
+import Collections from "../interfaces/collections";
 
 const FIFTEEN_MINUTES = 60 * 15;
 

@@ -13,11 +13,11 @@ router
 
 router.route("/all").get(userController.getUsers);
 router.route("/complete-profiles").get(userController.getCompleteProfiles);
+router
+  .route("/shareable-link")
+  .get(isAuth, userController.generateUserShareableLink);
 router.route("/:id").get(userController.getUserById);
 router.route("/:email").get(userController.getUserByEmail);
-router.route("/shareable-link").get(userController.generateUserShareableLink)
 router.get("/profile/:username", userController.getUserByUsername);
-
-
 
 export default router;
