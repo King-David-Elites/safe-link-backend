@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { IRequest } from "../interfaces/expressRequest";
 import {
   cancelSubscription,
+  getAllSubscribedUsers,
   getPlans,
+  getUserSubscriptionStatus,
   handleWebhooks,
   subscribeForPlan,
   verifyWebhook,
@@ -70,11 +72,49 @@ const webhookHandler = async (
   }
 };
 
+const getAllSubscriptions = async (req: Request, res: Response) => {
+  try {
+    const activeSubscriptions = await getAllSubscribedUsers();
+    res.status(200).json({
+      success: true,
+      subscriptions: activeSubscriptions,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * Controller to check a user's subscription status
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {void}
+ */
+const checkUserSubscriptionStatus = async (req: IRequest, res: Response) => {
+  try {
+    const subscriptionStatus = await getUserSubscriptionStatus(req.userId!);
+    res.status(200).json({
+      success: true,
+      subscriptionStatus,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const subscriptionController = {
   getSubscriptionPlans,
   cancelSubscriptionController,
   subscribe,
   webhookHandler,
+  getAllSubscriptions,
+  checkUserSubscriptionStatus,
 };
 
 export default subscriptionController;
