@@ -73,9 +73,8 @@ const answerQuestion = async (
 ) => {
   try {
     const questionId = req.params.id;
-    const userId = req.userId ?? "";
+    const userId = <string>req.userId;
     const answer = req.body.answer;
-    console.log("user id", userId);
 
     const data = await questionService.answerQuestion({
       questionId,

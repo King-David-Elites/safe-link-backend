@@ -20,7 +20,6 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
     }
 
     const token = await authHeader.split(" ")[1];
-    console.log("token", token);
 
     if (!token) {
       // throw new UnAuthenticatedError("Provide token");
@@ -31,7 +30,7 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
     }
 
     const userToken = await JWTHelper.verifyJWT<{ userId: string }>(token);
-    console.log("user token", userToken);
+
     if (!userToken) {
       // throw new UnAuthenticatedError("Token does not exist or has expired");
       return res.status(401).json({
@@ -49,7 +48,6 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
 
     next();
   } catch (error) {
-    console.error("Authentication error:", error);
     return res.status(401).json({
       success: false,
       message: "Authentication failed",
