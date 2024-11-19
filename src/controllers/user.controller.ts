@@ -83,7 +83,11 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const deleteUser = async (req: IRequest, res: Response, next: NextFunction) => {
+const deleteUser = async (
+  req: IRequest, 
+  res: Response, 
+  next: NextFunction
+) => {
   try {
     const userId = <string>req.userId;
 
@@ -205,7 +209,10 @@ const generateUserShareableLink = async (
   }
 };
 
-export const updateProfilePicture = async (req: IRequest, res: Response) => {
+export const updateProfilePicture = async (
+  req: IRequest, 
+  res: Response
+) => {
   try {
     const userId = <string>req.userId; // Ensure user is authenticated and ID is available
     const { profilePicture } = req.body;
