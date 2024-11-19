@@ -98,6 +98,8 @@ const getSingleInventory = async (inventoryId: string): Promise<IInventory> => {
   return inventory;
 };
 
+
+
 const inventoryService = {
   getUserInventories,
   editInventory,

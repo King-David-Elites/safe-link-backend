@@ -325,6 +325,22 @@ const generateShareableLink = async (userId: string): Promise<string> => {
   return shareableLink;
 };
 
+const updateProfilePicture = async (userId: string, profilePicture: string) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new NotFoundError("User not found.");
+  }
+
+  const uploadedPicture = await uploader(profilePicture); // Use the uploader utility to handle the file
+
+  user.profilePicture = uploadedPicture;
+  await user.save();
+
+  return user;
+};
+
+
 const userService = {
   getById,
   getByEmail,
@@ -336,6 +352,7 @@ const userService = {
   getTopCompleteProfiles,
   getByUsername,
   generateShareableLink,
+  updateProfilePicture,
 };
 
 export default userService;

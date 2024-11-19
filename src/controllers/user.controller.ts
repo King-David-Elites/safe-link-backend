@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { BadRequestError } from "../constants/errors"; // Adjust the import path as necessary
 import { IChangePasswordReq } from "../interfaces/responses/auth.response";
 import userService from "../services/user.service";
 import { IRequest } from "../interfaces/expressRequest";
@@ -55,7 +56,7 @@ const getMyInfo = async (req: IRequest, res: Response, next: NextFunction) => {
 };
 
 const getUserByEmail = async (
-  req: Request,
+  req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -185,6 +186,34 @@ const generateUserShareableLink = async (
   }
 };
 
+export const updateProfilePicture = async (req: IRequest, res: Response) => {
+  try {
+    const userId = <string>req.userId; // Ensure user is authenticated and ID is available
+    const { profilePicture } = req.body;
+
+    if (!userId) {
+      throw new BadRequestError("User is not authenticated.");
+    }
+
+    if (!profilePicture) {
+      throw new BadRequestError("Profile picture is required.");
+    }
+
+    const updatedUser = await userService.updateProfilePicture(userId, profilePicture);
+
+    res.status(200).json({
+      message: "Profile picture updated successfully.",
+      data: updatedUser,
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An error occurred while updating the profile picture.";
+    const statusCode = (error as any).statusCode ? (error as any).statusCode : 500;
+    res.status(statusCode).json({
+      message: errorMessage,
+    });
+  }
+};
+
 
 const userController = {
   changePassword,
@@ -198,6 +227,7 @@ const userController = {
   getTopCompleteProfiles,
   getUserByUsername,
   generateUserShareableLink,
+  updateProfilePicture,
 };
 
 export default userController;
