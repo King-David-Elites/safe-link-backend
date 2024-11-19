@@ -227,7 +227,6 @@ export const getCompleteProfiles = async () => {
         { state: { $ne: null, $exists: true, $nin: [""] } },
         { country: { $ne: null, $exists: true, $nin: [""] } },
         { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
-        { subscriptionStatus: { $ne: "free", $exists: true } },
       ],
     });
 
@@ -266,7 +265,6 @@ export const getTopCompleteProfiles = async () => {
         { state: { $ne: null, $exists: true, $nin: [""] } },
         { country: { $ne: null, $exists: true, $nin: [""] } },
         { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
-        { subscriptionStatus: { $ne: "free", $exists: true } },
       ],
     })
       .sort({ createdAt: -1 }) // Sort by creation date in descending order
@@ -311,12 +309,12 @@ const generateShareableLink = async (userId: string): Promise<string> => {
     );
   }
 
-  // Ensure the user's subscription is not FREE
-  if (user.subscriptionStatus === "free") {
-    throw new BadRequestError(
-      "Shareable link is only available for paid subscription users. Please upgrade your subscription."
-    );
-  }
+  // // Ensure the user's subscription is not FREE
+  // if (user.subscriptionStatus === "free") {
+  //   throw new BadRequestError(
+  //     "Shareable link is only available for paid subscription users. Please upgrade your subscription."
+  //   );
+  // }
 
   // Generate the shareable link based on the username
   const formattedUsername = user.username.replace(/\s+/g, "-").toLowerCase();
