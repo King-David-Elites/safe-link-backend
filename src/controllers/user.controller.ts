@@ -109,49 +109,67 @@ const getUsers = async (
   }
 };
 
-export const getCompleteProfiles = async (req: Request, res: Response): Promise<Response> => {
+export const getCompleteProfiles = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     // Fetch the list of users with filled name, phone number, and email from the service
     const users = await userService.getCompleteProfiles();
 
     // Check if users are found and send appropriate response
     if (users.length === 0) {
-      return res.status(404).json({ message: 'No users found with complete profiles' });
+      return res
+        .status(404)
+        .json({ message: "No users found with complete profiles" });
     }
 
     // Send the list of users as a response
     return res.status(200).json({ users });
   } catch (error) {
     // Handle any errors and send a 500 status code if necessary
-    const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
-    return res.status(500).json({ message: 'Failed to retrieve users', error: errorMessage });
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve users", error: errorMessage });
   }
 };
 
 // Controller to fetch the top 12 users with complete profiles
-export const getTopCompleteProfiles = async (req: Request, res: Response): Promise<Response> => {
+export const getTopCompleteProfiles = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     // Fetch the list of top 12 users with complete profiles from the service
     const users = await userService.getTopCompleteProfiles();
 
     // Check if users are found and send appropriate response
     if (users.length === 0) {
-      return res.status(404).json({ message: 'No users found with complete profiles' });
+      return res
+        .status(404)
+        .json({ message: "No users found with complete profiles" });
     }
 
     // Send the list of users as a response
     return res.status(200).json({ users });
   } catch (error) {
     // Handle any errors and send a 500 status code if necessary
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return res.status(500).json({
-      message: 'Failed to retrieve top users with complete profiles',
+      message: "Failed to retrieve top users with complete profiles",
       error: errorMessage,
     });
   }
 };
 
-const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
+const getUserByUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const username = <string>req.params.username; // Extract username from URL params
 
@@ -174,6 +192,7 @@ const generateUserShareableLink = async (
 ) => {
   try {
     const userId = <string>req.userId;
+    console.log("user id from sl", userId);
 
     const shareableLink = await userService.generateShareableLink(userId);
 

@@ -28,8 +28,6 @@ config();
 const paystack = new Paystack(process.env.PAYSTACK_SECRET_KEY!);
 
 export async function subscribeForPlan(userId: string, planId: string) {
-  console.log({ userId });
-
   const plan = await PlanModel.findById(planId);
   if (!plan) throw new NotFoundError("Plan does not exist");
 
@@ -119,7 +117,7 @@ export async function getPlans() {
 }
 
 export function verifyWebhook(signature: string, body: WebhookResponse) {
-  const secret = process.env.PAYSTACK_SECRET!;
+  const secret = process.env.PAYSTACK_SECRET_KEY!;
 
   const hash = crypto
     .createHmac("sha512", secret)
@@ -204,5 +202,42 @@ export async function handleWebhooks(body: WebhookResponse) {
     }
     case WebhookEvents.SUBSCRIPTION_DISABLED:
       throw new CustomError(503, "Method not implemented");
+  }
+}
+
+export async function getAllSubscribedUsers() {
+  try {
+    const activeSubscriptions = await UserSubscriptionModel.find({
+      isActive: true,
+      // expiryDate: { $gte: new Date() },
+    })
+      .populate("user", "username firstName lastName email")
+      .populate("plan", "name");
+
+    return activeSubscriptions;
+  } catch (error) {
+    console.error("Error fetching subscribed users:", error);
+    throw new Error("Could not retrieve subscribed users");
+  }
+}
+
+export async function getUserSubscriptionStatus(userId: string) {
+  try {
+    const subscription = await UserSubscriptionModel.findOne({
+      user: userId,
+      isActive: true,
+    }).populate("plan");
+
+    if (!subscription) {
+      return { message: "No active subscription found" };
+    }
+
+    return subscription;
+  } catch (error) {
+    console.error(
+      `Error fetching subscription status for user ${userId}:`,
+      error
+    );
+    throw new Error("Could not retrieve subscription status");
   }
 }

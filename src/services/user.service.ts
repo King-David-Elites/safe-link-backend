@@ -64,6 +64,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     username,
     about,
     profilePicture,
+    coverPicture,
     professionalPictures,
     workPictures,
     leisurePictures,
@@ -103,6 +104,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
   user.username = username || user.username;
   user.about = about || user.about;
   user.profilePicture = profilePicture || user.profilePicture;
+  user.coverPicture = coverPicture || user.coverPicture;
   user.professionalPictures = professionalPictures || user.professionalPictures;
   user.workPictures = workPictures || user.workPictures;
   user.leisurePictures = leisurePictures || user.leisurePictures;
@@ -119,6 +121,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     user.username,
     user.about,
     user.profilePicture,
+    user.coverPicture,
     user.professionalPictures,
     user.workPictures,
     user.leisurePictures,
@@ -214,6 +217,7 @@ export const getCompleteProfiles = async () => {
         { username: { $ne: null, $exists: true, $nin: [""] } },
         { about: { $ne: null, $exists: true, $nin: [""] } },
         { profilePicture: { $ne: null, $exists: true, $nin: [""] } },
+        { coverPicture: { $ne: null, $exists: true, $nin: [""] } },
         { professionalPictures: { $ne: null, $exists: true, $nin: [""] } },
         { workPictures: { $ne: null, $exists: true, $nin: [""] } },
         { leisurePictures: { $ne: null, $exists: true, $nin: [""] } },
@@ -252,6 +256,7 @@ export const getTopCompleteProfiles = async () => {
         { username: { $ne: null, $exists: true, $nin: [""] } },
         { about: { $ne: null, $exists: true, $nin: [""] } },
         { profilePicture: { $ne: null, $exists: true, $nin: [""] } },
+        { coverPicture: { $ne: null, $exists: true, $nin: [""] } },
         { professionalPictures: { $ne: null, $exists: true, $nin: [""] } },
         { workPictures: { $ne: null, $exists: true, $nin: [""] } },
         { leisurePictures: { $ne: null, $exists: true, $nin: [""] } },
@@ -315,7 +320,7 @@ const generateShareableLink = async (userId: string): Promise<string> => {
 
   // Generate the shareable link based on the username
   const formattedUsername = user.username.replace(/\s+/g, "-").toLowerCase();
-  const shareableLink = `https://www.joinsafelink/${formattedUsername}`;
+  const shareableLink = `https://www.joinsafelink.com/${formattedUsername}`;
 
   // Save the generated link to the user's record
   user.shareableLink = shareableLink;

@@ -114,7 +114,6 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
       .status(200)
       .json({ message: "Login successful", accessToken, user });
   } catch (error) {
-    console.log("Google Authentication failed", error);
     return res
       .status(400)
       .json({ message: "Google Authentication failed", error });

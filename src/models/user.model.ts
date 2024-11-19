@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     username: { type: String, required: true, unique: true },
     about: { type: String },
     profilePicture: { type: String, default: "" },
+    coverPicture: { type: String, default: "" },
     professionalPictures: [{ type: String }],
     workPictures: [{ type: String }],
     leisurePictures: [{ type: String }],
@@ -44,7 +45,7 @@ UserSchema.pre("save", function (next) {
       const formattedUsername = this.username
         ?.replace(/\s+/g, "-")
         .toLowerCase();
-      this.shareableLink = `https://www.joinsafelink/${formattedUsername}`;
+      this.shareableLink = `https://www.joinsafelink.com/${formattedUsername}`;
     } else {
       // If profile is incomplete, reset the shareable link
       this.shareableLink = "";
@@ -73,7 +74,7 @@ UserSchema.pre("findOneAndUpdate", function (next) {
     if (isProfileCompleted) {
       const formattedUsername = username?.replace(/\s+/g, "-");
       (updates as mongoose.UpdateQuery<any>).$set = {
-        shareableLink: `https://www.joinsafelink/${formattedUsername}`,
+        shareableLink: `https://www.joinsafelink.com/${formattedUsername}`,
       };
     } else {
       (updates as mongoose.UpdateQuery<any>).$set = { shareableLink: null };
@@ -91,7 +92,7 @@ UserSchema.virtual("dynamicShareableLink").get(function () {
     return null; // Only generate the link if the profile is complete
   }
   const formattedUsername = this.username?.replace(/\s+/g, "-");
-  return `https://www.joinsafelink/${formattedUsername}`;
+  return `https://www.joinsafelink.com/${formattedUsername}`;
 });
 
 const User = mongoose.model(Collections.user, UserSchema);

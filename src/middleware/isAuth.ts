@@ -10,22 +10,33 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new UnAuthenticatedError(
-        "Provide auth token in this format `Bearer ${token}`"
-      );
+      return res.status(401).json({
+        success: false,
+        message: "Provide auth token in this format `Bearer ${token}`",
+      });
+      // throw new UnAuthenticatedError(
+      //   "Provide auth token in this format `Bearer ${token}`"
+      // );
     }
 
     const token = await authHeader.split(" ")[1];
-    console.log("token", token);
 
     if (!token) {
-      throw new UnAuthenticatedError("Provide token");
+      // throw new UnAuthenticatedError("Provide token");
+      return res.status(401).json({
+        success: false,
+        message: "Token is missing",
+      });
     }
 
     const userToken = await JWTHelper.verifyJWT<{ userId: string }>(token);
-    console.log("user token", userToken);
+
     if (!userToken) {
-      throw new UnAuthenticatedError("Token does not exist or has expired");
+      // throw new UnAuthenticatedError("Token does not exist or has expired");
+      return res.status(401).json({
+        success: false,
+        message: "Token does not exist or has expired",
+      });
     }
 
     // const userAuth = await authService.getById(userToken.userId);
@@ -37,7 +48,11 @@ const isAuth = async (req: IRequest, res: Response, next: NextFunction) => {
 
     next();
   } catch (error) {
-    return next(error);
+    return res.status(401).json({
+      success: false,
+      message: "Authentication failed",
+    });
+    // return next(error);
   }
 };
 
