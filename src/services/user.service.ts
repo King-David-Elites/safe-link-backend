@@ -302,12 +302,12 @@ const generateShareableLink = async (userId: string): Promise<string> => {
     return user.shareableLink;
   }
 
-  // Check if the user profile is complete
-  if (!user.isProfileCompleted) {
-    throw new BadRequestError(
-      "User profile is incomplete. Please complete your profile to generate a shareable link."
-    );
-  }
+  // // Check if the user profile is complete
+  // if (!user.isProfileCompleted) {
+  //   throw new BadRequestError(
+  //     "User profile is incomplete. Please complete your profile to generate a shareable link."
+  //   );
+  // }
 
   // // Ensure the user's subscription is not FREE
   // if (user.subscriptionStatus === "free") {
