@@ -24,11 +24,11 @@ const createInventory = async (
 
   const usersListings = await Inventory.find({ owner });
 
-  if (usersListings.length >= cap) {
-    throw new BadRequestError(
-      `Oops! the plan you're subscribed to only allows ${cap} listings`
-    );
-  }
+  // if (usersListings.length >= cap) {
+  //   throw new BadRequestError(
+  //     `Oops! the plan you're subscribed to only allows ${cap} listings`
+  //   );
+  // }
 
   if (images) {
     images = await uploaderListOfMedia(images);
