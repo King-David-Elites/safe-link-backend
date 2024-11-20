@@ -239,6 +239,40 @@ export const updateProfilePicture = async (
     });
   }
 };
+//Controller for generating Statically Completed Profiles
+export const getStaticCompleteProfiles = async (
+  req: Request, 
+  res: Response
+) => {
+  try {
+    // Static list of emails
+    const staticEmails = [
+      "oshinoikid@gmail.com",
+      "olukemipeace@gmail.com",
+      "oshinoikid01@gmail.com",
+    ];
+
+    // Fetch all complete profiles
+    const completeProfiles = await userService.getCompleteProfiles();
+
+    // Filter profiles by the static emails
+    const filteredProfiles = completeProfiles.filter((user) =>
+      staticEmails.includes(user.email)
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved static complete profiles",
+      data: filteredProfiles,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Internal Server Error",
+    });
+  }
+};
+
 
 
 const userController = {
@@ -254,6 +288,7 @@ const userController = {
   getUserByUsername,
   generateUserShareableLink,
   updateProfilePicture,
+  getStaticCompleteProfiles,
 };
 
 export default userController;
