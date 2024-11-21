@@ -87,6 +87,10 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     profilePicture = await uploader(profilePicture);
   }
 
+  if (coverPicture) {
+    coverPicture = await uploader(coverPicture);
+  }
+
   if (workPictures) {
     workPictures = await uploaderListOfMedia(workPictures);
   }

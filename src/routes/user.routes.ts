@@ -13,6 +13,9 @@ router
 
 router.route("/all").get(userController.getUsers);
 router.route("/complete-profiles").get(userController.getCompleteProfiles);
+router
+  .route("/static-complete-profiles")
+  .get(userController.getStaticCompleteProfiles);
 router.route("/top-12-sellers").get(userController.getTopCompleteProfiles);
 router
   .route("/shareable-link")
@@ -20,6 +23,5 @@ router
 router.route("/:id").get(userController.getUserById);
 router.route("/:email").get(userController.getUserByEmail);
 router.get("/profile/:username", userController.getUserByUsername);
-router.route("/static-complete-profiles").get(userController.getStaticCompleteProfiles);
 
 export default router;
