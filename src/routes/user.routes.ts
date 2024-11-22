@@ -14,12 +14,13 @@ router
 router.route("/all").get(userController.getUsers);
 router.route("/complete-profiles").get(userController.getCompleteProfiles);
 router.route("/top-12-sellers").get(userController.getTopCompleteProfiles);
+router.route("/static-complete-profiles").get(userController.getStaticCompleteProfiles);
 router
   .route("/shareable-link")
   .get(isAuth, userController.generateUserShareableLink);
 router.route("/:id").get(userController.getUserById);
 router.route("/:email").get(userController.getUserByEmail);
 router.get("/profile/:username", userController.getUserByUsername);
-router.route("/static-complete-profiles").get(userController.getStaticCompleteProfiles);
+
 
 export default router;

@@ -3,6 +3,7 @@ import { BadRequestError } from "../constants/errors"; // Adjust the import path
 import { IChangePasswordReq } from "../interfaces/responses/auth.response";
 import userService from "../services/user.service";
 import { IRequest } from "../interfaces/expressRequest";
+import User from "../models/user.model"; // Adjust the import path as necessary
 
 const changePassword = async (
   req: IRequest,
@@ -240,40 +241,30 @@ export const updateProfilePicture = async (
   }
 };
 //Controller for generating Statically Completed Profiles
-export const getStaticCompleteProfiles = async (
-  req: Request, 
-  res: Response
-) => {
+export const getStaticCompleteProfiles = async (req: Request, res: Response): Promise<Response> => {
   try {
-    // Static list of emails
-    const staticEmails = [
-      "oshinoikid@gmail.com",
-      "olukemipeace@gmail.com",
-      "oshinoikid01@gmail.com",
-    ];
+    // Call the service to fetch the users
+    const users = await getStaticCompleteProfiles(req, res);
 
-    // Fetch all complete profiles
-    const completeProfiles = await userService.getCompleteProfiles();
-
-    // Filter profiles by the static emails
-    const filteredProfiles = completeProfiles.filter((user) =>
-      staticEmails.includes(user.email)
-    );
-
-    res.status(200).json({
+    // Respond with the fetched users
+    return res.status(200).json({
       success: true,
-      message: "Successfully retrieved static complete profiles",
-      data: filteredProfiles,
+      message: "Static complete profiles fetched successfully.",
+      data: users,
     });
   } catch (error) {
-    res.status(500).json({
+    // Handle and log the error
+    console.error("Error in fetchStaticCompleteProfiles:", error);
+
+    return res.status(500).json({
       success: false,
-      message: error instanceof Error ? error.message : "Internal Server Error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred while fetching static complete profiles.",
     });
   }
 };
-
-
 
 const userController = {
   changePassword,

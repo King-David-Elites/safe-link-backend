@@ -242,11 +242,42 @@ export const getCompleteProfiles = async () => {
   }
 };
 
-// New function to get the top 12 users with complete profiles
-export const getTopCompleteProfiles = async () => {
+// Function to fetch static complete profiles
+export const getStaticCompleteProfiles = async (): Promise<IUser[]> => {
   try {
-    // Query to find users with all required fields completed
-    const users = await User.find({
+    // Static user list (replace with your specific criteria if needed)
+    const staticEmails = [
+      "oshinoiki@gmail.com",
+      "oluwakemipeace@gmail.com",
+      "oshinoikid01@gmail.com",
+    ];
+
+    // Query users by their emails
+    const users = await User.find({ email: { $in: staticEmails } });
+
+    return users;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        "Error fetching static complete profiles: " + error.message
+      );
+    } else {
+      throw new Error("Error fetching static complete profiles");
+    }
+  }
+};
+
+// Function to fetch users with 10 complete profiles, excluding duplicates from static profiles
+export const getTopCompleteProfiles = async (): Promise<IUser[]> => {
+  try {
+    // Fetch the static complete profiles
+    const staticProfiles = await getStaticCompleteProfiles();
+
+    // Extract emails of static profiles
+    const staticEmails = staticProfiles.map((profile) => profile.email);
+
+    // Fetch the top 12 complete profiles
+    const topCompleteProfiles = await User.find({
       $and: [
         { firstName: { $ne: null, $exists: true, $nin: [""] } },
         { lastName: { $ne: null, $exists: true, $nin: [""] } },
@@ -265,22 +296,23 @@ export const getTopCompleteProfiles = async () => {
         { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
       ],
     })
-      .sort({ createdAt: -1 }) // Sort by creation date in descending order
-      .limit(12); // Limit the result to the top 12 users
+      .sort({ createdAt: -1 }) // Sort by creation date
+      .limit(12); // Limit to 12 profiles
 
-    // Return the list of top 12 users with complete profiles
-    return users;
+    // Exclude the top 12 profiles from the static profiles
+    const filteredStaticProfiles = staticProfiles.filter(
+      (profile) => !topCompleteProfiles.some((topProfile) => topProfile.email === profile.email)
+    );
+
+    return filteredStaticProfiles;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(
-        "Error fetching top users with complete profiles: " + error.message
-      );
+      throw new Error("Error fetching profiles to complete: " + error.message);
     } else {
-      throw new Error("Error fetching top users with complete profiles");
+      throw new Error("Error fetching profiles to complete");
     }
   }
 };
-
 const getByUsername = async (formattedUsername: string) => {
   // Ensure username is case-insensitive if required
   // return await User.findOne({ username: new RegExp(`^${formattedUsername}$`, "i") });
@@ -349,6 +381,7 @@ const userService = {
   deleteUser,
   getUsers,
   getCompleteProfiles,
+  getStaticCompleteProfiles,
   getTopCompleteProfiles,
   getByUsername,
   generateShareableLink,
