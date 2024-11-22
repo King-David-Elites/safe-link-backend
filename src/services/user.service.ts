@@ -5,7 +5,12 @@ import { IChangePasswordReq } from "../interfaces/responses/auth.response";
 import Auth from "../models/user.auth.model";
 import User from "../models/user.model";
 import argon2 from "argon2";
-import { uploader, uploaderListOfMedia } from "../utils/uploader";
+import {
+  conditionalArrayUpload,
+  conditionalSingleUpload,
+  uploader,
+  uploaderListOfMedia,
+} from "../utils/uploader";
 
 const getById = async (id: string): Promise<IUser> => {
   const user = await User.findById(id);
@@ -83,41 +88,54 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     throw new NotFoundError("User does not exist");
   }
 
-  if (profilePicture) {
-    profilePicture = await uploader(profilePicture);
-  }
+  user.profilePicture = await conditionalSingleUpload(
+    profilePicture,
+    user.profilePicture,
+    uploader
+  );
 
-  if (coverPicture) {
-    coverPicture = await uploader(coverPicture);
-  }
+  user.coverPicture = await conditionalSingleUpload(
+    coverPicture,
+    user.coverPicture,
+    uploader
+  );
 
-  if (workPictures) {
-    workPictures = await uploaderListOfMedia(workPictures);
-  }
+  user.workPictures = await conditionalArrayUpload(
+    workPictures,
+    user.workPictures,
+    uploaderListOfMedia
+  );
 
-  if (professionalPictures) {
-    professionalPictures = await uploaderListOfMedia(professionalPictures);
-  }
+  user.professionalPictures = await conditionalArrayUpload(
+    professionalPictures,
+    user.professionalPictures,
+    uploaderListOfMedia
+  );
 
-  if (leisurePictures) {
-    leisurePictures = await uploaderListOfMedia(leisurePictures);
-  }
+  user.leisurePictures = await conditionalArrayUpload(
+    leisurePictures,
+    user.leisurePictures,
+    uploaderListOfMedia
+  );
 
-  user.firstName = firstName || user.firstName;
-  user.lastName = lastName || user.lastName;
-  user.username = username || user.username;
-  user.about = about || user.about;
-  user.profilePicture = profilePicture || user.profilePicture;
-  user.coverPicture = coverPicture || user.coverPicture;
-  user.professionalPictures = professionalPictures || user.professionalPictures;
-  user.workPictures = workPictures || user.workPictures;
-  user.leisurePictures = leisurePictures || user.leisurePictures;
-  user.address = address || user.address;
-  user.city = city || user.city;
-  user.zipCode = zipCode || user.zipCode;
-  user.state = state || user.state;
-  user.country = country || user.country;
-  user.phoneNumber = phoneNumber || user.phoneNumber;
+  const fieldsToUpdate = {
+    firstName,
+    lastName,
+    username,
+    about,
+    address,
+    city,
+    zipCode,
+    state,
+    country,
+    phoneNumber,
+  };
+
+  for (const [key, value] of Object.entries(fieldsToUpdate)) {
+    if (value !== undefined) {
+      (user as any)[key] = value; // Explicit cast to 'any' to bypass the error
+    }
+  }
 
   const requiredFields = [
     user.firstName,
@@ -136,15 +154,21 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     user.country,
     user.phoneNumber,
   ];
-  const isProfileComplete = requiredFields.every(
-    (field) => field !== null && field !== "" && field !== undefined
-  );
+  const isProfileComplete = requiredFields.every((field) => {
+    if (Array.isArray(field)) {
+      // Handle array of fields
+      return field.every((f) => user[f as keyof IUser]);
+    } else {
+      // Handle single field
+      return user[field as keyof IUser];
+    }
+  });
 
   // Check if the subscription status is not 'FREE'
   const isSubscriptionValid = user.subscriptionStatus !== "free";
 
   // Set the profile completion status considering both conditions
-  user.isProfileCompleted = isProfileComplete && isSubscriptionValid;
+  user.isProfileCompleted = isProfileComplete; //&& isSubscriptionValid;
 
   return await user.save();
 };
@@ -247,32 +271,21 @@ export const getCompleteProfiles = async () => {
 };
 
 // New function to get the top 12 users with complete profiles
+const ids = ["67373b6c4482733902e9fe79", "673cb9c0fe3fb1cb3f4c4d6c"];
+
 export const getTopCompleteProfiles = async () => {
   try {
-    // Query to find users with all required fields completed
+    // Fetch users by IDs or users with a completed profile
     const users = await User.find({
-      $and: [
-        { firstName: { $ne: null, $exists: true, $nin: [""] } },
-        { lastName: { $ne: null, $exists: true, $nin: [""] } },
-        { email: { $ne: null, $exists: true, $nin: [""] } },
-        { username: { $ne: null, $exists: true, $nin: [""] } },
-        { about: { $ne: null, $exists: true, $nin: [""] } },
-        { profilePicture: { $ne: null, $exists: true, $nin: [""] } },
-        { coverPicture: { $ne: null, $exists: true, $nin: [""] } },
-        { professionalPictures: { $ne: null, $exists: true, $nin: [""] } },
-        { workPictures: { $ne: null, $exists: true, $nin: [""] } },
-        { leisurePictures: { $ne: null, $exists: true, $nin: [""] } },
-        { address: { $ne: null, $exists: true, $nin: [""] } },
-        { city: { $ne: null, $exists: true, $nin: [""] } },
-        { state: { $ne: null, $exists: true, $nin: [""] } },
-        { country: { $ne: null, $exists: true, $nin: [""] } },
-        { phoneNumber: { $ne: null, $exists: true, $nin: [""] } },
+      $or: [
+        { _id: { $in: ids } }, // Fetch users with specific IDs
+        { isProfileCompleted: true }, // Fetch users with completed profiles
       ],
     })
       .sort({ createdAt: -1 }) // Sort by creation date in descending order
       .limit(12); // Limit the result to the top 12 users
 
-    // Return the list of top 12 users with complete profiles
+    // Return the list of users with complete profiles or specific IDs
     return users;
   } catch (error) {
     if (error instanceof Error) {
