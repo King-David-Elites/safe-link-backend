@@ -341,6 +341,7 @@ const updateProfilePicture = async (userId: string, profilePicture: string) => {
   return user;
 };
 
+
 const userService = {
   getById,
   getByEmail,
