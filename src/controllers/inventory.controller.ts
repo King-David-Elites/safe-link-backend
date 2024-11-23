@@ -50,6 +50,7 @@ const editInventory = async (
   try {
     const owner = <string>req.userId;
     const inventoryId = req.params.id;
+    console.log({ owner, inventoryId });
 
     if (req.body.images && req.body.images.length > 0) {
       req.body.images = await Promise.all(
