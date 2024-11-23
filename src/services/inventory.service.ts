@@ -7,7 +7,11 @@ import { IInventory } from "../interfaces/models/inventory.interface";
 import { ISubscriptionPlan } from "../interfaces/models/subscription.interface";
 import Inventory from "../models/inventory.model";
 import UserSubscriptionModel from "../models/user.subscription.model";
-import { uploaderListOfMedia, uploadVideos } from "../utils/uploader";
+import {
+  conditionalArrayUpload,
+  uploaderListOfMedia,
+  uploadVideos,
+} from "../utils/uploader";
 
 const createInventory = async (
   body: Omit<IInventory, "_id">
@@ -68,7 +72,8 @@ const editInventory = async (
   userId: string,
   body: Partial<IInventory>
 ): Promise<IInventory> => {
-  const { title, description, price, currency, owner, images, videos } = body;
+  let { title, description, price, currency, owner, images, videos } = body;
+  console.log("body id", body._id);
 
   const inventory = await Inventory.findById(body._id);
 
@@ -77,9 +82,22 @@ const editInventory = async (
   if (inventory.owner.toString() != userId.toString())
     throw new ForbiddenError("Inventory does not belong to you");
 
+  // if (images) {
+  //   images = await conditionalArrayUpload(
+  //     images,
+  //     inventory.images,
+  //     uploaderListOfMedia
+  //   );
+  // }
+
+  // if (videos) {
+  //   videos = await uploadVideos(videos);
+  // }
+
   inventory.title = title || inventory.title;
   inventory.description = description || inventory.description;
   inventory.price = price || inventory.price;
+  inventory.currency = currency || inventory.currency;
   inventory.images = images || inventory.images;
   inventory.videos = videos || inventory.videos;
 
@@ -96,8 +114,6 @@ const getSingleInventory = async (inventoryId: string): Promise<IInventory> => {
 
   return inventory;
 };
-
-
 
 const inventoryService = {
   getUserInventories,
