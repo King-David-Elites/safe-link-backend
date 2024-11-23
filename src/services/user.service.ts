@@ -149,19 +149,20 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     user.leisurePictures,
     user.address,
     user.city,
-    user.zipCode,
+    // user.zipCode,
     user.state,
     user.country,
     user.phoneNumber,
   ];
+
   const isProfileComplete = requiredFields.every((field) => {
+    // const value = user[field as keyof IUser];
     if (Array.isArray(field)) {
-      // Handle array of fields
-      return field.every((f) => user[f as keyof IUser]);
-    } else {
-      // Handle single field
-      return user[field as keyof IUser];
+      console.log(field, field.length > 0);
+      return field.length > 0;
     }
+
+    return Boolean(field);
   });
 
   // Check if the subscription status is not 'FREE'
@@ -169,6 +170,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
 
   // Set the profile completion status considering both conditions
   user.isProfileCompleted = isProfileComplete; //&& isSubscriptionValid;
+  console.log({ isProfileComplete, user });
 
   return await user.save();
 };
