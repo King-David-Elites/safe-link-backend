@@ -279,6 +279,7 @@ const ids = [
   "6740bc36ce598243e5c35ae7",
   "673f9b66a137a04f9c663d37",
   "673f9b66a137a04f9c663d37",
+  "6741258dce598243e5c35f43",
 ];
 
 export const getTopCompleteProfiles = async () => {
