@@ -72,7 +72,7 @@ UserSchema.pre("findOneAndUpdate", function (next) {
       (updates as mongoose.UpdateQuery<any>).username ?? this.get("username");
 
     if (isProfileCompleted) {
-      const formattedUsername = username?.replace(/\s+/g, "-");
+      const formattedUsername = username?.trim().replace(/\s+/g, "-");
       (updates as mongoose.UpdateQuery<any>).$set = {
         shareableLink: `https://www.joinsafelink.com/${formattedUsername}`,
       };
