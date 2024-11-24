@@ -148,7 +148,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
     user.workPictures,
     user.leisurePictures,
     user.address,
-    user.city,
+    // user.city,
     // user.zipCode,
     user.state,
     user.country,
@@ -280,6 +280,8 @@ const ids = [
   "673f9b66a137a04f9c663d37",
   "673f9b66a137a04f9c663d37",
   "6741258dce598243e5c35f43",
+  "66d4cc5d67cf6df5d674517c",
+  "6742081be84480635ad795c5",
 ];
 
 export const getTopCompleteProfiles = async () => {
