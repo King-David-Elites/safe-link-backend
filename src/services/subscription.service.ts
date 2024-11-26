@@ -81,7 +81,8 @@ export async function subscribeForPlan(userId: string, planId: string) {
     email: customer?.data?.email ?? "",
     currency: "NGN",
     reference: transaction_reference,
-    plan: plan.planCode,
+    // plan: plan.planCode,
+    // channels: ["card", "bank", "ussd", "qr", "mobile_money", "bank_transfer"],
   });
 
   if (!response.status) {
