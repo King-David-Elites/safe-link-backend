@@ -54,7 +54,9 @@ const createInventory = async (
 };
 
 const getUserInventories = async (userId: string): Promise<IInventory[]> => {
-  return await Inventory.find<IInventory>({ owner: userId });
+  return await Inventory.find<IInventory>({ owner: userId }).sort({
+    createdAt: -1,
+  });
 };
 
 const deleteInventory = async (userId: string, inventoryId: string) => {
