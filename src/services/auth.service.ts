@@ -81,7 +81,7 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
   await sendMail({
     to: email,
     subject: "WELCOME TO SAFELINK – Let’s Build Your Business Together!",
-    html: welcomeEmail(user, token.value),
+    html: welcomeEmailHTML(user, token.value),
   });
 };
 
