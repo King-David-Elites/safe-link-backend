@@ -5,6 +5,7 @@ import { IAuth, ITokenTypes, IUser } from "../interfaces/models/user.interface";
 import Auth from "../models/user.auth.model";
 import User from "../models/user.model";
 import { verifyEmailHTML } from "../templates/verifyEmail";
+import { welcomeEmailHTML } from "../templates/welcomeEmail";
 import tokenService from "./token.service";
 import JWTHelper from "../helpers/jwt";
 import { LoginRes } from "../interfaces/responses/auth.response";
@@ -75,6 +76,12 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
     to: email,
     subject: "SAFELINK ACCOUNT VERIFICATION",
     html: verifyEmailHTML(user, token.value),
+  });
+
+  await sendMail({
+    to: email,
+    subject: "WELCOME TO SAFELINK – Let’s Build Your Business Together!",
+    html: welcomeEmail(user, token.value),
   });
 };
 
