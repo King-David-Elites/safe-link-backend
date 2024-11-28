@@ -26,6 +26,8 @@ const UserSubscriptionSchema = new Schema<UserSubscription>(
     email_token: {
       type: String,
     },
+    notifiedOnExpiry: { type: Boolean, default: false },
+    notified72HoursBefore: { type: Boolean, default: false },
   },
   {
     timestamps: true,
