@@ -738,28 +738,9 @@ export const verifyEmailHTML = (user: IUser, token: string) => {
                                         "
                                       >
                                         <p style="line-height: 160%; font-size: 14px">
-<<<<<<< HEAD
-                                          <span
-                                            style="
-                                              font-size: 18px;
-                                              line-height: 28.8px;
-                                            "
-                                            >Thanks,</span
-                                          >
-                                        </p>
-                                        <p style="line-height: 160%; font-size: 14px">
-                                          <span
-                                            style="
-                                              font-size: 18px;
-                                              line-height: 28.8px;
-                                            "
-                                            >The Safelink Team</span
-                                          >
-=======
 
                                           Once again you’re welcome, 
  
->>>>>>> 6e4d55ed640f38b0920f46986edf4bf09bcac78a
                                         </p>
                                         <strong>The SafeLink Team.</strong>
                                       </div>

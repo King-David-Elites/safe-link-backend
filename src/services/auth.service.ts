@@ -38,21 +38,27 @@ const getByEmail = async (email: string): Promise<IAuth> => {
   return auth;
 };
 
-const createAccount = async (body: Partial<IUser & IAuth>) => {
+export const createAccount = async (body: Partial<IUser & IAuth>) => {
   const { email, password, confirmPassword, username } = body;
 
-  if (password != confirmPassword) {
+  // Check if passwords match
+  if (password !== confirmPassword) {
     throw new BadRequestError("Passwords do not match");
   }
 
+  // Check if user with the email already exists
   const authInDb = await Auth.findOne({ email });
-
-  if (authInDb)
+  if (authInDb) {
     throw new BadRequestError("User with this email already exists");
+  }
 
+  // Create the auth record
   const auth = await Auth.create({ email, password });
 
+  // Retrieve the freemium plan
   const freemium = await PlanModel.findOne({ name: PlansEnum.FREE });
+
+  // Format the username and create the user
   const formattedUsername = username?.replace(/\s+/g, "-").toLowerCase();
   const user = await User.create({
     email,
@@ -60,29 +66,41 @@ const createAccount = async (body: Partial<IUser & IAuth>) => {
     formattedUsername,
   });
 
+  // Create user subscription with the freemium plan
   await UserSubscriptionModel.create({
     user: user._id,
     plan: freemium?._id,
     isActive: true,
   });
 
+  // Generate account verification token
   const token = await tokenService.createToken({
     email,
     type: ITokenTypes.accountVerificationToken,
     value: v4(),
   });
 
-  await sendMail({
-    to: email,
-    subject: "SAFELINK ACCOUNT VERIFICATION",
-    html: verifyEmailHTML(user, token.value),
-  });
-
-  await sendMail({
-    to: email,
-    subject: "WELCOME TO SAFELINK – Let’s Build Your Business Together!",
-    html: welcomeEmailHTML(user),
-  });
+  try {
+    // Send verification and welcome emails concurrently
+    console.log("Sending verification and welcome emails...");
+    await Promise.all([
+      sendMail({
+        to: email,
+        subject: "SAFELINK ACCOUNT VERIFICATION",
+        html: verifyEmailHTML(user, token.value),
+      }),
+      sendMail({
+        to: email,
+        subject: "WELCOME TO SAFELINK – Let’s Build Your Business Together!",
+        html: welcomeEmailHTML(user),
+      }),
+    ]);
+    console.log("Both emails sent successfully");
+  } catch (error) {
+    console.error("Error sending emails:", error);
+    // Handle email errors gracefully (log or notify admins)
+    throw new Error("Failed to send emails");
+  }
 };
 
 const verifyAccount = async (token: string) => {
