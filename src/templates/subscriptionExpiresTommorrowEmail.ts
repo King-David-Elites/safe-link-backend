@@ -276,9 +276,9 @@ export const subscriptionExpiresSoonEmailHTML = (user: IUser) => {
                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                   <p style="line-height: 160%;">Dear ${user.username},</p>
 
-                                  <p style="line-height: 160%;"> This is a friendly reminder that your SafeLink subscription will automatically renew in 72 hours.</p>
+                                  <p style="line-height: 160%;"> This is a gentle reminder that your SafeLink subscription will automatically renew by this same time tomorrow.</p>
 
-                                  <p style="line-height: 160%;">To opt out of this automatic renewal, please cancel your subscription on your account's profile section.</p>
+                                  <p style="line-height: 160%;">If you wish to cancel your subscription, please do so on your account's profile section.</p>
 
                                   <p style="line-height: 160%;">Thank you for choosing SafeLink.</p>
 

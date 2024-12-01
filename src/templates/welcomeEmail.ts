@@ -275,11 +275,14 @@ export const welcomeEmailHTML = (user: IUser) => {
   
                                 <div style="line-height: 160%; text-align: center; word-wrap: break-word;">
                                   <p style="line-height: 160%;">Dear ${user.username},</p>
-                                  <p style="line-height: 160%;"> My name is David, CEO and Founder of SafeLink. Thank you for signing up for SafeLink- we’re delighted to have you on board!</p>
+                                  <p style="line-height: 160%;">Welcome to the SafeLink family—we’re thrilled to have you on board! 🎉</p>
 
-                                  <p style="line-height: 160%;">With SafeLink, you're taking a step towards simplifying your business and reaching a wider audience.</p>
-                                  <p style="line-height: 160%;">Imagine a world where your products are always organized, easily accessible, and ever ready to be shared. With SafeLink, your business appears more professional and appealing. </p>
-                                  <p style="line-height: 160%;"> We're here to support you every step of the way. If you have any questions or need assistance, please don't hesitate to reach out.   </p>
+                                  <p style="line-height: 160%;">WWith SafeLink, your business just got a major upgrade. Now, all your products are neatly organized in one simple link, making it easy to share, attract more referrals, and boost your sales.</p>
+
+                                  <p style="line-height: 160%;">Now you don't have to waste your time and data sending numerous pictures to clients, or worry about your product pictures eating up you and your client's phone memory space. SafeLink makes your business look professional and keeps everything at your fingertips.  </p>
+
+                                  <p style="line-height: 160%;"> If you need help or have questions, we’re here for you every step of the way. Let’s grow your business together!   </p>
+                                  
                                   <p style="line-height: 160%;">Here's to a brighter future for your business! </p>
                                   <p style="line-height: 160%;"> Best regards,
                                   </br>Olukemi David
