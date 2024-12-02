@@ -149,7 +149,7 @@ export async function handleWebhooks(body: WebhookResponse) {
           {
             plan: plan._id,
             expiryDate: add(new Date(), { months: plan.duration }),
-            isActive: false,
+            isActive: true,
           }
         );
         paymentLog.status = PaymentStatus.SUCCESSFUL;
@@ -226,7 +226,7 @@ export async function getUserSubscriptionStatus(userId: string) {
   try {
     const subscription = await UserSubscriptionModel.findOne({
       user: userId,
-      isActive: true,
+      // isActive: true,
     }).populate("plan");
 
     if (!subscription) {
@@ -242,3 +242,36 @@ export async function getUserSubscriptionStatus(userId: string) {
     throw new Error("Could not retrieve subscription status");
   }
 }
+
+// export const manuallyUpdateCustomerSubscription = async (
+//   id: string,
+//   reference: string
+// ) => {
+//   const paymentLog = await PaymentAttemptModel.findOne({
+//     transaction_reference: reference,
+//   }).populate([{ path: "plan" }]);
+
+//   if (paymentLog) {
+//     const user = await User.findById(paymentLog.user);
+//     if (!user) throw new NotFoundError("user not found");
+
+//     const plan = paymentLog.plan as ISubscriptionPlan;
+
+//     await UserSubscriptionModel.findOneAndUpdate(
+//       {
+//         user: paymentLog.user,
+//       },
+//       {
+//         plan: plan._id,
+//         expiryDate: add(new Date(), { months: plan.duration }),
+//         isActive: true,
+//       }
+//     );
+//     paymentLog.status = PaymentStatus.SUCCESSFUL;
+//     console.log("payment log", paymentLog);
+//     await paymentLog.save();
+//   } else {
+//     console.log("payment not found");
+//     throw new NotFoundError("payment not found");
+//   }
+// };
