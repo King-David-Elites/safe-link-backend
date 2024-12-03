@@ -28,6 +28,7 @@ const UserSubscriptionSchema = new Schema<UserSubscription>(
     },
     notifiedOnExpiry: { type: Boolean, default: false },
     notified72HoursBefore: { type: Boolean, default: false },
+    notified24HoursBefore: {type: Boolean, default: false},
   },
   {
     timestamps: true,

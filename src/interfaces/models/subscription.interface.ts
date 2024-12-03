@@ -48,6 +48,7 @@ export interface UserSubscription {
   email_token: string;
   notifiedOnExpiry?: boolean;
   notified72HoursBefore?: boolean;
+  notified24HoursBefore?: boolean;
 }
 
 export enum WebhookStatus {
