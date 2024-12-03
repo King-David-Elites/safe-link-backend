@@ -12,6 +12,7 @@ import {
   uploaderListOfMedia,
   uploadVideos,
 } from "../utils/uploader";
+import axios from "axios";
 
 const createInventory = async (
   body: Omit<IInventory, "_id">
@@ -28,6 +29,7 @@ const createInventory = async (
 
   const usersListings = await Inventory.find({ owner });
 
+  // Uncomment if the cap logic is needed
   // if (usersListings.length >= cap) {
   //   throw new BadRequestError(
   //     `Oops! the plan you're subscribed to only allows ${cap} listings`
@@ -42,7 +44,7 @@ const createInventory = async (
     videos = await uploadVideos(videos);
   }
 
-  return await Inventory.create({
+  const newInventory = await Inventory.create({
     title,
     description,
     price,
@@ -51,6 +53,22 @@ const createInventory = async (
     images,
     videos,
   });
+
+  // Notify the external AI training service
+  try {
+    await axios.post("https://safelink.railway.app/add_to_inventory_ai", {
+      inventoryId: newInventory._id, // Send the created inventory ID
+    });
+    console.log("Inventory ID sent to AI training service");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Failed to notify AI training service:", error.message);
+    } else {
+      console.error("Failed to notify AI training service:", error);
+    }
+  }
+
+  return newInventory;
 };
 
 const getUserInventories = async (userId: string): Promise<IInventory[]> => {
