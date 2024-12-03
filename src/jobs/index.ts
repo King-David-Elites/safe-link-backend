@@ -12,44 +12,30 @@ import cron from "node-cron";
 import settings from "../constants/settings";
 import axios from "axios";
 
-
 const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
 export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
-  cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
+  // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
   cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
   cron.schedule("0 * * * *", notifyAndDeactivateSubscriptions);
 }
 
 async function handleSubscriptionJob() {
   try {
-    const subscriptions = await UserSubscriptionModel.find({
-      expiryDate: { $gt: endOfToday() },
-      name: { $ne: PlansEnum.FREE },
+    const expiredSubscriptions = await UserSubscriptionModel.find({
+      expiryDate: { $lt: new Date() }, // Expired subscriptions
+      plan: { $ne: "65dc534815ce9430aa0ab114" },
       isActive: true,
     });
 
-    for (const subscription of subscriptions) {
-      subscription.isActive = false;
-      // sendReminderMail
+    for (const subscription of expiredSubscriptions) {
+      subscription.plan = "65dc534815ce9430aa0ab114"; // Reset plan to free
+      // subscription.isActive = false;
       await subscription.save();
     }
   } catch (error) {
-    console.error(error);
-  }
-}
-
-async function pingServer() {
-  try {
-    const response = await axios.get(`${serverUrl}/ping/ping`);
-    console.log("Server pinged successfully", response.data);
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error pinging the server:", error.message);
-    } else {
-      console.error("Error pinging the server:", error);
-    }
+    console.error("Error processing expired subscriptions:", error);
   }
 }
 
@@ -85,11 +71,17 @@ async function notifyAndDeactivateSubscriptions() {
     // Deactivate expired subscriptions
     await deactivateExpiredSubscriptions(currentDate);
   } catch (error) {
-    console.error("Error in subscription notification and deactivation:", error);
+    console.error(
+      "Error in subscription notification and deactivation:",
+      error
+    );
   }
 }
 
-async function notifyExpiringSubscriptions(currentDate: Date, next72Hours: Date) {
+async function notifyExpiringSubscriptions(
+  currentDate: Date,
+  next72Hours: Date
+) {
   const subscriptionsExpiringSoon = await UserSubscriptionModel.find({
     expiryDate: { $gte: currentDate, $lte: next72Hours },
     isActive: true,
@@ -151,7 +143,10 @@ async function deactivateExpiredSubscriptions(currentDate: Date) {
 
       console.log(`Subscription expired for user ${user.email}`);
     } catch (error) {
-      console.error(`Failed to deactivate subscription for user ${subscription.user.email}:`, error);
+      console.error(
+        `Failed to deactivate subscription for user ${subscription.user.email}:`,
+        error
+      );
     }
   }
 }

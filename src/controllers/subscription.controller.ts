@@ -6,6 +6,7 @@ import {
   getPlans,
   getUserSubscriptionStatus,
   handleWebhooks,
+  // manuallyUpdateCustomerSubscription,
   subscribeForPlan,
   verifyWebhook,
 } from "../services/subscription.service";
@@ -72,6 +73,28 @@ const webhookHandler = async (
   }
 };
 
+// const manualSubscription = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const id = req.body.id;
+//     const reference = req.body.reference;
+//     console.log({ id, reference });
+//     if (!id || !reference) {
+//       return res
+//         .status(400)
+//         .json({ message: "please provide the id and reference" });
+//     }
+//     const payment = await manuallyUpdateCustomerSubscription(id, reference);
+
+//     res.status(200).json({ message: "processed" });
+//   } catch (error) {
+//     return next(error);
+//   }
+// };
+
 const getAllSubscriptions = async (req: Request, res: Response) => {
   try {
     const activeSubscriptions = await getAllSubscribedUsers();
@@ -113,6 +136,7 @@ const subscriptionController = {
   cancelSubscriptionController,
   subscribe,
   webhookHandler,
+  // manualSubscription,
   getAllSubscriptions,
   checkUserSubscriptionStatus,
 };
