@@ -56,7 +56,7 @@ const createInventory = async (
 
   // Notify the external AI training service
   try {
-    await axios.post("https://safelink.railway.app/add_to_inventory_ai", {
+    await axios.post("https://safelink.up.railway.app/add_inventory_to_ai", {
       inventoryId: newInventory._id, // Send the created inventory ID
     });
     console.log("Inventory ID sent to AI training service");
