@@ -8,6 +8,8 @@ import swagger from "swagger-ui-express";
 import handleMediaUpload from "./controllers/media.controller";
 import { multerUploader } from "./helpers/upload";
 import { runJobs } from "./jobs";
+import { verifyEmailHTML } from "./templates/verifyEmail";
+import sendMail from "./helpers/mailer";
 const doc = require("../doc.json");
 
 const app = express();
@@ -36,6 +38,11 @@ app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
 app.all("*", notFoundError);
 app.use(errorHandler);
 
+// sendMail({
+//   to: "kolawoleiwalewa@gmail.com",
+//   subject: "SAFELINK ACCOUNT VERIFICATION",
+//   html: verifyEmailHTML({ username: "kolawole" }, "tokenasd"),
+// }),
 //Running Cron Jobs on Server
 runJobs();
 //Staring the Server
