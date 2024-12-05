@@ -85,7 +85,7 @@ export const subscriptionExpires24HoursEmailHTML = (user: IUser) => {
     <tr>
       <td class="email-header">
         <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1597218650916-xxxxc.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 26%;max-width: 150.8px;" width="150.8" />
-        <h1>CREAM</h1>
+        <h1>Upcoming Subscription Renewal Notice</h1>
       </td>
     </tr>
     <!-- Body Section -->

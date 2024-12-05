@@ -85,13 +85,13 @@ export const welcomeEmailHTML = (user: IUser) => {
     <tr>
       <td class="email-header">
         <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1597218650916-xxxxc.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 26%;max-width: 150.8px;" width="150.8" />
-        <h1>SAFELINK</h1>
+        <h1>Thank you for joining SafeLink</h1>
       </td>
     </tr>
     <!-- Body Section -->
     <tr>
       <td class="email-body">
-        <h1>Request for Reset Your Password</h1>
+        <h1>Now let’s create your business catalogue</h1>
         <p>Dear ${user.username},</p>
         <p>Welcome to the SafeLink family—we’re thrilled to have you on board! 🎉</p>
         <p>With SafeLink, your business just got a major upgrade. Now, all your products are neatly organized in one simple link, making it easy to share, attract more referrals, and boost your sales.</p>
@@ -100,8 +100,8 @@ export const welcomeEmailHTML = (user: IUser) => {
         <p>Here's to a brighter future for your business!</p>
         <p>Best regards,</p>
         <p><strong>Olukemi David</strong><br>CEO, SafeLink</p>
-        <p>Thanks,</p>
-        <p><strong>The SafeLink Team</strong></p>
+        <p style="text-align: center;">Thanks,</p>
+        <p style="text-align: center;"><strong>The SafeLink Team</strong></p>
       </td>
     </tr>
     <!-- Footer Section -->
