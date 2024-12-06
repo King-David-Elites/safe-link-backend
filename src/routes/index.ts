@@ -1,6 +1,7 @@
 import auth from "./auth.routes";
 import questions from "./questions.routes";
 import user from "./user.routes";
+import influencer from "./influencer.routes";
 import inventory from "./inventory.routes";
 import otp from "./otp.routes";
 import subscription from "./subscription.routes";
@@ -14,6 +15,7 @@ const routes = {
   otp,
   subscription,
   ping,
+  influencer,
 };
 
 export default routes;
