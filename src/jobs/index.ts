@@ -17,7 +17,7 @@ const serverUrl = process.env.SERVER_BASE_URL ?? "";
 export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
   // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
-  cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
+  // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
 }
 

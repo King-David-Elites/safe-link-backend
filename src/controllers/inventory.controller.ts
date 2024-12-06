@@ -3,6 +3,7 @@ import { IRequest } from "../interfaces/expressRequest";
 import { upload } from "../helpers/upload";
 import { BadRequestError } from "../constants/errors";
 import inventoryService from "../services/inventory.service";
+import axios from "axios";
 
 const addToInventory = async (
   req: IRequest,
@@ -74,6 +75,18 @@ const editInventory = async (
     });
 
     res.status(200).json({ message: "Inventory edited successfully", data });
+    try {
+      await axios.post("https://safelink.up.railway.app/add_inventory_to_ai", {
+        inventory_id: data._id, // Send the created inventory ID
+      });
+      console.log("Inventory ID sent to AI training service");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Failed to notify AI training service:", error.message);
+      } else {
+        console.error("Failed to notify AI training service:", error);
+      }
+    }
   } catch (error) {
     return next(error);
   }
