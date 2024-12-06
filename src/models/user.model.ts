@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     lastName: { type: String },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
+    referralCode: { type: String },
     about: { type: String },
     profilePicture: { type: String, default: "" },
     coverPicture: { type: String, default: "" },

@@ -6,6 +6,7 @@ export interface IAuth {
   verifyPassword(password: string): boolean;
   password: string;
   confirmPassword: string;
+  referralCode?: string;
   isVerified: boolean;
   _id: string;
 }
@@ -39,6 +40,7 @@ export interface IUser {
   lastName: string;
   email: string;
   username: string;
+  referralCode: string;
   about: string;
   profilePicture: string;
   coverPicture: string;
