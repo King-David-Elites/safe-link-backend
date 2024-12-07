@@ -97,7 +97,7 @@ const resetPassword = async (
 
 const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { token } = req.body;
+    const { token, referralCode } = req.body;
 
     const payload = await googleAuthService.verifyGoogleToken(token);
 
@@ -108,6 +108,7 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
     const user = await googleAuthService.findOrCreateUser({
       email,
       username: name,
+      referralCode,
     });
 
     const accessToken = await googleAuthService.generateJWT(user._id);

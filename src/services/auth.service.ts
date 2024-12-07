@@ -53,11 +53,12 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
   if (referralCode) {
     const influencer = await Influencer.findOne({ referralCode });
     if (!influencer) {
-      console.log("influencer not found");
-      return;
+      console.warn("influencer not found");
+      referredBy = null;
+    } else {
+      referredBy = influencer._id;
+      console.log({ referredBy });
     }
-    referredBy = influencer._id;
-    console.log({ referredBy });
   }
 
   // Check if user with the email already exists

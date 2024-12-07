@@ -12,7 +12,7 @@ const getReferralsByInfluencers = async (
 ): Promise<InfluencerReferral[]> => {
   const startOfMonth = new Date(year, month - 1, 1);
   const endOfMonth = new Date(year, month, 1); // Start of the next month
-  const freePlan = "65dc534815ce9430aa0ab114";
+  const freePlan = "65dc534815ce9430aa0ab118";
 
   const pipeline = [
     // Match users referred by influencers

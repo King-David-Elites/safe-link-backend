@@ -25,7 +25,7 @@ async function handleSubscriptionJob() {
   try {
     const expiredSubscriptions = await UserSubscriptionModel.find({
       expiryDate: { $lt: new Date() }, // Expired subscriptions
-      plan: { $ne: "65dc534815ce9430aa0ab114" },
+      plan: { $ne: "65dc534815ce9430aa0ab118" },
       isActive: true,
     });
 

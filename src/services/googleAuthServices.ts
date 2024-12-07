@@ -4,6 +4,8 @@ import JWTHelper from "../helpers/jwt";
 import { PlansEnum } from "../interfaces/models/subscription.interface";
 import PlanModel from "../models/plans.model";
 import UserSubscriptionModel from "../models/user.subscription.model";
+import Influencer from "../models/influencer.model";
+import mongoose from "mongoose";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(googleClientId);
@@ -19,15 +21,29 @@ const verifyGoogleToken = async (token: string) => {
 const findOrCreateUser = async ({
   email,
   username,
+  referralCode,
 }: {
   email: string;
   username: string;
+  referralCode: string | null;
 }) => {
   let user = await User.findOne({ email });
   if (!user) {
+    let referredBy: mongoose.Types.ObjectId | null = null;
+    if (referralCode) {
+      const influencer = await Influencer.findOne({ referralCode });
+      if (!influencer) {
+        console.warn("influencer not found");
+        referredBy = null; // Proceed without referral
+      } else {
+        referredBy = influencer?._id ?? null;
+        console.log({ referredBy });
+      }
+    }
     user = await User.create({
       email,
       username,
+      referredBy,
       isVerified: true,
     });
   }
