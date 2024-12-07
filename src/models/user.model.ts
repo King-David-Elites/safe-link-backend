@@ -1,5 +1,5 @@
 // models/user.model.ts
-import mongoose, { Types } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import { IUser, SubscriptionStatus } from "../interfaces/models/user.interface";
 import Collections from "../interfaces/collections";
 
@@ -9,7 +9,6 @@ const UserSchema = new mongoose.Schema<IUser>(
     lastName: { type: String },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
-    referralCode: { type: String },
     about: { type: String },
     profilePicture: { type: String, default: "" },
     coverPicture: { type: String, default: "" },
@@ -33,6 +32,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     isProfileCompleted: { type: Boolean, default: false },
     formattedUsername: { type: String },
     shareableLink: { type: String, default: null },
+    referredBy: { type: Schema.Types.ObjectId, ref: "Influencer" }, // Foreign key to Influencer
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

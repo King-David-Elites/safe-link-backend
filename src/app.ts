@@ -33,6 +33,7 @@ app.use("/api/v1/influencer/", routes.influencer);
 app.use("/api/v1/inventory/", routes.inventory);
 app.use("/api/v1/questions/", routes.questions);
 app.use("/api/v1/subscription/", routes.subscription);
+app.use("/api/v1/referral/", routes.referral);
 app.use("/api/v1/ping/", routes.ping);
 app.use("/api/v1/doc", swagger.serve, swagger.setup(doc));
 

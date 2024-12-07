@@ -17,6 +17,8 @@ import { PlansEnum } from "../interfaces/models/subscription.interface";
 import UserSubscriptionModel from "../models/user.subscription.model";
 import Token from "../models/user.token.model";
 import { v4 } from "uuid";
+import Influencer from "../models/influencer.model";
+import mongoose from "mongoose";
 
 const getById = async (id: string): Promise<IAuth> => {
   const auth = await Auth.findById(id);
@@ -39,11 +41,23 @@ const getByEmail = async (email: string): Promise<IAuth> => {
 };
 
 export const createAccount = async (body: Partial<IUser & IAuth>) => {
-  const { email, password, confirmPassword, username } = body;
+  const { email, password, confirmPassword, username, referralCode } = body;
+  console.log({ referralCode });
 
   // Check if passwords match
   if (password !== confirmPassword) {
     throw new BadRequestError("Passwords do not match");
+  }
+
+  let referredBy: mongoose.Types.ObjectId | null = null;
+  if (referralCode) {
+    const influencer = await Influencer.findOne({ referralCode });
+    if (!influencer) {
+      console.log("influencer not found");
+      return;
+    }
+    referredBy = influencer._id;
+    console.log({ referredBy });
   }
 
   // Check if user with the email already exists
@@ -64,6 +78,7 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
     email,
     username,
     formattedUsername,
+    referredBy,
   });
 
   // Create user subscription with the freemium plan

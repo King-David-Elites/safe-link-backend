@@ -4,10 +4,11 @@ POST http://localhost:3001/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "testuser5@gmail.com",
-    "name": "testuser5",
-    "password": "testuser5",
-    "confirmPassword": "testuser5"
+    "email": "testuser19@gmail.com",
+    "username": "testuser19",
+    "password": "testuser19",
+    "confirmPassword": "testuser19",
+    "referralCode": "testinf01"
 }
 
 
@@ -20,7 +21,7 @@ Content-Type: application/json
 
 {
     "email": "kolaiwalewa@gmail.com",
-    "password": ""
+    "password": "kola0522"
 }
 
 ####
@@ -33,6 +34,11 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 ######
+
+GET http://localhost:3001/api/v1/user/all
+
+######
+
 
 GET http://localhost:3001/api/v1/user/6722378793c4a7a80e68aa7c
 
@@ -61,3 +67,88 @@ POST http://localhost:3001/api/v1/whatsapp-otp/generate
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmYmI1YzNlMzVhNGViZTAyNGEiLCJpYXQiOjE3MzA3MTE0NDYsImV4cCI6MTc2MjI2OTA0Nn0.6jDN--Nr6MyOa-OqVVzD0oPWH7E2Ajus40HqShZcjO8
 
+
+######
+
+GET http://localhost:3001/api/v1/ping/ping
+
+######
+
+
+
+GET http://localhost:3001/api/v1/user/profile/kolawole-iwalewa
+
+#####
+
+GET http://localhost:3001/api/v1/user/complete-profiles
+
+####
+
+GET http://localhost:3001/api/v1/user/shareable-link/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmY2I1YzNlMzVhNGViZTAyNGMiLCJpYXQiOjE3MzE5MDc3NDAsImV4cCI6MTc2MzQ2NTM0MH0.D5eYOo548OZcUIm0w3XoWSHs0aHzEHmdFO-GPqlo2dM
+
+#####
+
+GET http://localhost:3001/api/v1/subscription/subscriptions
+
+######
+
+GET http://localhost:3001/api/v1/user/profile/kolawole-iwalewa
+
+#####
+
+GET http://localhost:3001/api/v1/user/static-complete-profiles
+
+#####
+
+GET http://localhost:3001/api/v1/user/top-12-sellers
+
+######
+
+GET http://64.176.179.24/api/v1/user/complete-profiles
+
+######
+
+
+https://api.joinsafelink.com/api/v1/user/all
+
+
+######
+
+POST http://localhost:3001/api/v1/subscription/cancel
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmY2I1YzNlMzVhNGViZTAyNGMiLCJpYXQiOjE3MzE5MDc3NDAsImV4cCI6MTc2MzQ2NTM0MH0.D5eYOo548OZcUIm0w3XoWSHs0aHzEHmdFO-GPqlo2dM
+
+#####
+
+
+POST http://localhost:3001/api/v1/subscription/manual-subscription
+Content-Type: application/json
+
+{
+    "id": "asd",
+    "reference": "ab33389e-8eb6-4c74-bb14-42fe67532fc3"
+}
+
+######
+
+POST https://safelink.up.railway.app/add_inventory_to_ai
+Content-Type: application/json
+
+{
+    "inventory_id": "66faf5eab0d7086885949951"
+}
+
+#####
+
+POST http://localhost:3001/api/v1/influencer/create-influencer
+Content-Type: application/json
+
+{
+    "name": "test influencer",
+    "referralCode": "testinf01"
+}
+
+#####
+
+
+GET http://localhost:3001/api/v1/referral/current-month
