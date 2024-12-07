@@ -5,6 +5,7 @@ import influencer from "./influencer.routes";
 import inventory from "./inventory.routes";
 import otp from "./otp.routes";
 import subscription from "./subscription.routes";
+import referral from "./referral.routes";
 import ping from "./ping";
 
 const routes = {
@@ -16,6 +17,7 @@ const routes = {
   subscription,
   ping,
   influencer,
+  referral,
 };
 
 export default routes;

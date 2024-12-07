@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Relations } from ".";
 import { ISubscriptionPlan } from "./subscription.interface";
 
@@ -40,7 +41,6 @@ export interface IUser {
   lastName: string;
   email: string;
   username: string;
-  referralCode: string;
   about: string;
   profilePicture: string;
   coverPicture: string;
@@ -60,4 +60,5 @@ export interface IUser {
   isProfileCompleted: boolean;
   formattedUsername: string;
   shareableLink: string;
+  referredBy?: Types.ObjectId; // Reference to Influencer _id
 }
