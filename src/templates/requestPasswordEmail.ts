@@ -91,10 +91,11 @@ export const resetPasswordHTML = (user: IUser, token: string) => {
     <!-- Body Section -->
     <tr>
       <td class="email-body">
-        <h1>Subscription Renewal Reminder</h1>
+        <h1>Request for reset your password</h1>
         <p>Dear ${user.username},</p>
-        <p>This is a friendly reminder that your SafeLink subscription will automatically renew in 72 hours.</p>
-        <p>To opt out of this automatic renewal, please cancel your subscription on your account's profile section.</p>
+        <p>Your Password Reset Token, Hi Kolawole Iwalewa, You are receiving this email because you (or someone else) has requested a password reset for your account.</p>
+        <p>Please click on the button below, please ignore this email and your password will remain unchanged.</p>
+        <a href="${settings.frontendUrl}/reset-password?token=${token}" class="btn">Reset Link</a>
         <p>Thank you for choosing SafeLink.</p>
         <p>Here's to a brighter future for your business!</p>
         <p><strong>The SafeLink Team</strong></p>
