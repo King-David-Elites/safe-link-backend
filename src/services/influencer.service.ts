@@ -1,4 +1,5 @@
 import Influencer from '../models/influencer.model';
+import User from '../models/user.model';
 
 interface InfluencerParams {
   name: string;

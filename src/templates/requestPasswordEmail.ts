@@ -85,7 +85,7 @@ export const resetPasswordHTML = (user: IUser, token: string) => {
     <tr>
       <td class="email-header">
         <img align="center" border="0" src="https://cdn.templates.unlayer.com/assets/1597218650916-xxxxc.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 26%;max-width: 150.8px;" width="150.8" />
-        <h1>CREAM</h1>
+        <h1>Your Security is Important to us and We’ve Got You!</h1>
       </td>
     </tr>
     <!-- Body Section -->
@@ -93,11 +93,12 @@ export const resetPasswordHTML = (user: IUser, token: string) => {
       <td class="email-body">
         <h1>Request for reset your password</h1>
         <p>Dear ${user.username},</p>
-        <p>Your Password Reset Token, Hi Kolawole Iwalewa, You are receiving this email because you (or someone else) has requested a password reset for your account.</p>
-        <p>Please click on the button below, please ignore this email and your password will remain unchanged.</p>
+        <p>We received a request to reset the password for your SafeLink account. If this was you, no worries—just click the button below to securely reset your password:</p>
         <a href="${settings.frontendUrl}/reset-password?token=${token}" class="btn">Reset Link</a>
-        <p>Thank you for choosing SafeLink.</p>
-        <p>Here's to a brighter future for your business!</p>
+        <p>If you didn’t request this, you can safely ignore this email, and your password will remain unchanged.</p>
+        <p>For your security, this link will expire in 24 hours. If you have any issues, feel free to contact our support team.</p>
+        <p>Thanks for choosing SafeLink!</p>
+        <p>Best Regards.</p>
         <p><strong>The SafeLink Team</strong></p>
       </td>
     </tr>
