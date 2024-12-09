@@ -158,7 +158,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
   const isProfileComplete = requiredFields.every((field) => {
     // const value = user[field as keyof IUser];
     if (Array.isArray(field)) {
-      console.log(field, field.length > 0);
+      // console.log(field, field.length > 0);
       return field.length > 0;
     }
 
@@ -170,7 +170,7 @@ const editUser = async (body: Partial<IUser>): Promise<IUser> => {
 
   // Set the profile completion status considering both conditions
   user.isProfileCompleted = isProfileComplete; //&& isSubscriptionValid;
-  console.log({ isProfileComplete, user });
+  // console.log({ isProfileComplete, user });
 
   return await user.save();
 };

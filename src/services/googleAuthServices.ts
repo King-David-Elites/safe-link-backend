@@ -37,7 +37,7 @@ const findOrCreateUser = async ({
         referredBy = null; // Proceed without referral
       } else {
         referredBy = influencer?._id ?? null;
-        console.log({ referredBy });
+        // console.log({ referredBy });
       }
     }
     user = await User.create({
@@ -46,15 +46,20 @@ const findOrCreateUser = async ({
       referredBy,
       isVerified: true,
     });
-  }
 
-  const freemium = await PlanModel.findOne({ name: PlansEnum.FREE });
-  if (freemium) {
-    await UserSubscriptionModel.create({
-      user: user._id,
-      plan: freemium._id,
-      isActive: true,
-    });
+    const freemium = await PlanModel.findOne({ name: PlansEnum.FREE });
+    if (freemium) {
+      const existingUserSubscription = await UserSubscriptionModel.findOne({
+        user: user._id, // or email-based if user creation hasn't occurred yet
+      });
+
+      if (!existingUserSubscription)
+        await UserSubscriptionModel.create({
+          user: user._id,
+          plan: freemium._id,
+          isActive: true,
+        });
+    }
   }
 
   return user;
