@@ -93,7 +93,6 @@ const editInventory = async (
   body: Partial<IInventory>
 ): Promise<IInventory> => {
   let { title, description, price, currency, owner, images, videos } = body;
-  console.log("body id", body._id);
 
   const inventory = await Inventory.findById(body._id);
 

@@ -42,7 +42,7 @@ const getByEmail = async (email: string): Promise<IAuth> => {
 
 export const createAccount = async (body: Partial<IUser & IAuth>) => {
   const { email, password, confirmPassword, username, referralCode } = body;
-  console.log({ referralCode });
+  // console.log({ referralCode });
 
   // Check if passwords match
   if (password !== confirmPassword) {
@@ -57,7 +57,7 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
       referredBy = null;
     } else {
       referredBy = influencer._id;
-      console.log({ referredBy });
+      // console.log({ referredBy });
     }
   }
 
@@ -83,11 +83,16 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
   });
 
   // Create user subscription with the freemium plan
-  await UserSubscriptionModel.create({
+  const existingUserSubscription = await UserSubscriptionModel.findOne({
     user: user._id,
-    plan: freemium?._id,
-    isActive: true,
   });
+
+  if (!existingUserSubscription)
+    await UserSubscriptionModel.create({
+      user: user._id,
+      plan: freemium?._id,
+      isActive: true,
+    });
 
   // Generate account verification token
   const token = await tokenService.createToken({

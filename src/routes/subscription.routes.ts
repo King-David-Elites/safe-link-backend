@@ -11,7 +11,7 @@ router.post(
   subscriptionController.cancelSubscriptionController
 );
 router.get("/plan", subscriptionController.getSubscriptionPlans);
-router.post("/webhook", isAuth, subscriptionController.webhookHandler);
+router.post("/webhook", subscriptionController.webhookHandler);
 // router.post("/manual-subscription", subscriptionController.manualSubscription);
 
 // Route to get all subscribed users
