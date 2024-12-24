@@ -7,10 +7,12 @@ import { PlansEnum } from "../interfaces/models/subscription.interface";
 import sendMail from "../helpers/mailer";
 import { subscriptionExpires72HoursEmailHTML } from "../templates/subscriptionExpires72HoursEmail";
 import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionExpires24HoursEmail";
+import { christmasEmailHTML } from "../templates/christmasEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
 import settings from "../constants/settings";
 import axios from "axios";
+import Influencer from "../models/influencer.model";
 
 const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
@@ -19,6 +21,8 @@ export async function runJobs() {
   // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
   // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
+  cron.schedule("0 6 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
+  
 }
 
 async function handleSubscriptionJob() {
@@ -64,6 +68,7 @@ async function notifyExpiringSubscriptions() {
   const currentDate = new Date();
   const next72Hours = new Date(currentDate.getTime() + 72 * 60 * 60 * 1000); // 72 hours from now
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
+  
 
   try {
     // Notify 72 hours before subscription ends
@@ -121,6 +126,30 @@ async function sendExpiryNotifications(
     }
   }
 }
+
+async function sendChristmasNotification() {
+  try {
+    const users = await User.find({}); // Retrieve all users
+
+    for (const user of users) {
+      try {
+        // Send Christmas email
+        await sendMail({
+          to: user.email,
+          subject: "Merry Christmas from SafeLink! 🎄",
+          html: christmasEmailHTML(user),
+        });
+
+        console.log(`Christmas email sent to ${user.email}`);
+      } catch (error) {
+        console.error(`Failed to send Christmas email to ${user.email}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending Christmas notifications:", error);
+  }
+}
+
 
 // async function deactivateExpiredSubscriptions(currentDate: Date) {
 //   const expiredSubscriptions = await UserSubscriptionModel.find({
