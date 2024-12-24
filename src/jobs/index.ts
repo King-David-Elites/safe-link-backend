@@ -54,7 +54,7 @@ async function pingAiSearchServer() {
         },
       }
     );
-    console.log("AI search server pinged successfully");
+    // console.log("AI search server pinged successfully");
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error pinging the server:", error.message);

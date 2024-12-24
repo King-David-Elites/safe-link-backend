@@ -155,6 +155,7 @@ export async function handleWebhooks(body: WebhookResponse) {
         paymentLog.status = PaymentStatus.SUCCESSFUL;
         await paymentLog.save();
       }
+      break;
     }
     case WebhookEvents.CHARGE_FAILED: {
       const response = body.data as ChargeResponse;
@@ -167,6 +168,7 @@ export async function handleWebhooks(body: WebhookResponse) {
         paymentLog.status = PaymentStatus.FAILED;
         await paymentLog.save();
       }
+      break;
     }
     case WebhookEvents.TRANSFER_SUCCESS:
       throw new CustomError(503, "Method not implemented");
@@ -176,6 +178,7 @@ export async function handleWebhooks(body: WebhookResponse) {
       throw new CustomError(503, "Method not implemented");
     case WebhookEvents.SUBSCRIPTION_CREATED: {
       const response = body.data as SubscriptionCreated["data"];
+      console.log("subscription made", response);
 
       const email = response.customer.email;
       const user = await User.findOne({ email });
@@ -209,7 +212,8 @@ export async function handleWebhooks(body: WebhookResponse) {
 export async function getAllSubscribedUsers() {
   try {
     const activeSubscriptions = await UserSubscriptionModel.find({
-      isActive: true,
+      // isActive: true,
+      plan: { $ne: "65dc534815ce9430aa0ab114" },
       // expiryDate: { $gte: new Date() },
     })
       .populate("user", "username firstName lastName email")
