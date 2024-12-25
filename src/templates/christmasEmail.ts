@@ -90,7 +90,7 @@ export const christmasEmailHTML = (user: IUser) => {
     </tr>
     <!-- Thumbnail Image -->
     <tr>
-      <img src="https://res.cloudinary.com/dkriotzd7/image/upload/v1735083881/Safelink_christmas_wz4iqm.png" alt="Christmas Thumbnail" style="max-width: 80%; border-radius: 10px;" />
+      <img src="https://res.cloudinary.com/dkriotzd7/image/upload/v1735083881/Safelink_christmas_wz4iqm.png" alt="Christmas Thumbnail" style="max-width: 100%; border-radius: 10px;" />
     </tr>
     <!-- Body Section -->
     <tr>
