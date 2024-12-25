@@ -21,8 +21,7 @@ export async function runJobs() {
   // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
   // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
-  cron.schedule("0 6 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
-  
+  cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
 }
 
 async function handleSubscriptionJob() {
@@ -68,7 +67,6 @@ async function notifyExpiringSubscriptions() {
   const currentDate = new Date();
   const next72Hours = new Date(currentDate.getTime() + 72 * 60 * 60 * 1000); // 72 hours from now
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
-  
 
   try {
     // Notify 72 hours before subscription ends
@@ -142,14 +140,16 @@ async function sendChristmasNotification() {
 
         console.log(`Christmas email sent to ${user.email}`);
       } catch (error) {
-        console.error(`Failed to send Christmas email to ${user.email}:`, error);
+        console.error(
+          `Failed to send Christmas email to ${user.email}:`,
+          error
+        );
       }
     }
   } catch (error) {
     console.error("Error sending Christmas notifications:", error);
   }
 }
-
 
 // async function deactivateExpiredSubscriptions(currentDate: Date) {
 //   const expiredSubscriptions = await UserSubscriptionModel.find({
