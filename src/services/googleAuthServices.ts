@@ -31,7 +31,9 @@ const findOrCreateUser = async ({
   if (!user) {
     let referredBy: mongoose.Types.ObjectId | null = null;
     if (referralCode) {
-      const influencer = await Influencer.findOne({ referralCode });
+      const influencer = await Influencer.findOne({
+        referralCode: referralCode.toLowerCase(),
+      });
       if (!influencer) {
         console.warn("influencer not found");
         referredBy = null; // Proceed without referral
