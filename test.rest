@@ -4,11 +4,11 @@ POST http://localhost:3001/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "testuser19@gmail.com",
-    "username": "testuser19",
-    "password": "testuser19",
-    "confirmPassword": "testuser19",
-    "referralCode": "testinf01"
+    "email": "testuser21@gmail.com",
+    "username": "testuser21",
+    "password": "testuser21",
+    "confirmPassword": "testuser21",
+    "referralCode": "testinf02"
 }
 
 
@@ -93,6 +93,10 @@ GET http://localhost:3001/api/v1/subscription/subscriptions
 
 ######
 
+POST http://localhost:3001/api/v1/subscription/webhook
+
+######
+
 GET http://localhost:3001/api/v1/user/profile/kolawole-iwalewa
 
 #####
@@ -144,11 +148,17 @@ POST http://localhost:3001/api/v1/influencer/create-influencer
 Content-Type: application/json
 
 {
-    "name": "test influencer",
-    "referralCode": "testinf01"
+    "name": "Akinolu Ololade Salimo",
+    "referralCode": "sally"
 }
 
 #####
 
 
-GET http://localhost:3001/api/v1/referral/current-month
+GET http://localhost:3001/api/v1/referral/current-month/subscribed
+
+
+#####
+
+
+GET https://api.joinsafelink.com/api/v1/referral/current-month/subscribed

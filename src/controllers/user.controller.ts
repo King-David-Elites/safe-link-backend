@@ -83,11 +83,7 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const deleteUser = async (
-  req: IRequest, 
-  res: Response, 
-  next: NextFunction
-) => {
+const deleteUser = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const userId = <string>req.userId;
 
@@ -209,10 +205,7 @@ const generateUserShareableLink = async (
   }
 };
 
-export const updateProfilePicture = async (
-  req: IRequest, 
-  res: Response
-) => {
+export const updateProfilePicture = async (req: IRequest, res: Response) => {
   try {
     const userId = <string>req.userId; // Ensure user is authenticated and ID is available
     const { profilePicture } = req.body;
@@ -225,15 +218,23 @@ export const updateProfilePicture = async (
       throw new BadRequestError("Profile picture is required.");
     }
 
-    const updatedUser = await userService.updateProfilePicture(userId, profilePicture);
+    const updatedUser = await userService.updateProfilePicture(
+      userId,
+      profilePicture
+    );
 
     res.status(200).json({
       message: "Profile picture updated successfully.",
       data: updatedUser,
     });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "An error occurred while updating the profile picture.";
-    const statusCode = (error as any).statusCode ? (error as any).statusCode : 500;
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "An error occurred while updating the profile picture.";
+    const statusCode = (error as any).statusCode
+      ? (error as any).statusCode
+      : 500;
     res.status(statusCode).json({
       message: errorMessage,
     });
@@ -241,7 +242,7 @@ export const updateProfilePicture = async (
 };
 //Controller for generating Statically Completed Profiles
 export const getStaticCompleteProfiles = async (
-  req: Request, 
+  req: Request,
   res: Response
 ) => {
   try {
@@ -272,8 +273,6 @@ export const getStaticCompleteProfiles = async (
     });
   }
 };
-
-
 
 const userController = {
   changePassword,
