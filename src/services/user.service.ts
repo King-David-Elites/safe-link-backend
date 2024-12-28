@@ -273,38 +273,33 @@ export const getCompleteProfiles = async () => {
 };
 
 // New function to get the top 12 users with complete profiles
-const ids = [
+const ids: string[] = [
   "67373b6c4482733902e9fe79",
-  "673cb9c0fe3fb1cb3f4c4d6c",
-  "6740bc36ce598243e5c35ae7",
-  "673f9b66a137a04f9c663d37",
-  "673f9b66a137a04f9c663d37",
-  "6741258dce598243e5c35f43",
-  "66d4cc5d67cf6df5d674517c",
-  "6742081be84480635ad795c5",
+  // "673cb9c0fe3fb1cb3f4c4d6c",
+  // "6740bc36ce598243e5c35ae7",
+  // "673f9b66a137a04f9c663d37",
+  // "673f9b66a137a04f9c663d37",
+  // "6741258dce598243e5c35f43",
+  // "66d4cc5d67cf6df5d674517c",
+  // "6742081be84480635ad795c5",
 ];
 
 export const getTopCompleteProfiles = async () => {
   try {
-    // Fetch users by IDs or users with a completed profile
-    const users = await User.find({
-      $or: [
-        { _id: { $in: ids } }, // Fetch users with specific IDs
-        { isProfileCompleted: true }, // Fetch users with completed profiles
-      ],
-    })
-      .sort({ createdAt: -1 }) // Sort by creation date in descending order
-      .limit(12); // Limit the result to the top 12 users
+    // Fetch a random selection of 12 users
+    const users = await User.aggregate([
+      { $match: { isProfileCompleted: true } },
+      { $sample: { size: 12 } },
+    ]);
 
-    // Return the list of users with complete profiles or specific IDs
     return users;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(
-        "Error fetching top users with complete profiles: " + error.message
+        "Error fetching random users with complete profiles: " + error.message
       );
     } else {
-      throw new Error("Error fetching top users with complete profiles");
+      throw new Error("Error fetching random users with complete profiles");
     }
   }
 };
