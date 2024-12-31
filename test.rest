@@ -4,11 +4,11 @@ POST http://localhost:3001/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "testuser21@gmail.com",
-    "username": "testuser21",
-    "password": "testuser21",
-    "confirmPassword": "testuser21",
-    "referralCode": "testinf02"
+    "email": "testuser22@gmail.com",
+    "username": "testuser22",
+    "password": "testuser22",
+    "confirmPassword": "testuser22",
+    "referralCode": "ref-ghunx6g7"
 }
 
 
@@ -162,3 +162,17 @@ GET http://localhost:3001/api/v1/referral/current-month/subscribed
 
 
 GET https://api.joinsafelink.com/api/v1/referral/current-month/subscribed
+
+#####
+
+@authToken = {{tokenAPI.response.body.token}}
+POST http://localhost:3001/api/v1/referral/create-referral
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhMzhmY2I1YzNlMzVhNGViZTAyNGMiLCJpYXQiOjE3MzU2NTE5NjEsImV4cCI6MTc2NzIwOTU2MX0.ofrsMzOTLXzB1eQAgb-58PD15CPunLfp1J6eSWMqc6M
+
+{
+    "accountName": "Iwalewa Kolawole",
+    "bankName": "GT Bank",
+    "accountNumber": "0441800394",
+    "bankCode": "000013"
+}
