@@ -6,6 +6,7 @@ import PlanModel from "../models/plans.model";
 import UserSubscriptionModel from "../models/user.subscription.model";
 import Influencer from "../models/influencer.model";
 import mongoose from "mongoose";
+import Referral from "../models/referral.model";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(googleClientId);
@@ -31,15 +32,28 @@ const findOrCreateUser = async ({
   if (!user) {
     let referredBy: mongoose.Types.ObjectId | null = null;
     if (referralCode) {
-      const influencer = await Influencer.findOne({
-        referralCode: referralCode.toLowerCase(),
-      });
-      if (!influencer) {
-        console.warn("influencer not found");
-        referredBy = null; // Proceed without referral
+      if (referralCode.toLowerCase().startsWith("ref-")) {
+        // Look up in Referral model
+        const referral = await Referral.findOne({
+          referralCode: referralCode.toLowerCase(),
+        });
+        if (!referral) {
+          console.warn("referral not found");
+          referredBy = null;
+        } else {
+          referredBy = referral._id;
+        }
       } else {
-        referredBy = influencer?._id ?? null;
-        // console.log({ referredBy });
+        // Look up in Influencer model
+        const influencer = await Influencer.findOne({
+          referralCode: referralCode.toLowerCase(),
+        });
+        if (!influencer) {
+          console.warn("influencer not found");
+          referredBy = null;
+        } else {
+          referredBy = influencer._id;
+        }
       }
     }
     user = await User.create({

@@ -19,6 +19,7 @@ import Token from "../models/user.token.model";
 import { v4 } from "uuid";
 import Influencer from "../models/influencer.model";
 import mongoose from "mongoose";
+import Referral from "../models/referral.model";
 
 const getById = async (id: string): Promise<IAuth> => {
   const auth = await Auth.findById(id);
@@ -51,15 +52,28 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
 
   let referredBy: mongoose.Types.ObjectId | null = null;
   if (referralCode) {
-    const influencer = await Influencer.findOne({
-      referralCode: referralCode.toLowerCase(),
-    });
-    if (!influencer) {
-      console.warn("influencer not found");
-      referredBy = null;
+    if (referralCode.toLowerCase().startsWith("ref-")) {
+      // Look up in Referral model
+      const referral = await Referral.findOne({
+        referralCode: referralCode.toLowerCase(),
+      });
+      if (!referral) {
+        console.warn("referral not found");
+        referredBy = null;
+      } else {
+        referredBy = referral._id;
+      }
     } else {
-      referredBy = influencer._id;
-      // console.log({ referredBy });
+      // Look up in Influencer model
+      const influencer = await Influencer.findOne({
+        referralCode: referralCode.toLowerCase(),
+      });
+      if (!influencer) {
+        console.warn("influencer not found");
+        referredBy = null;
+      } else {
+        referredBy = influencer._id;
+      }
     }
   }
 
