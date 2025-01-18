@@ -9,6 +9,7 @@ enum Collections {
   subscriptionPlan = "subscriptionPlan",
   paymentAttempt = "paymentAttempt",
   userSubscription = "userSubscription",
+  backupUserSubscription = "backupUserSubscription",
   referral = "referral",
 }
 

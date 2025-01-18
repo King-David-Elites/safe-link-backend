@@ -21,6 +21,10 @@ router
 
 router.route("/user").get(isAuth, inventoryControllers.getMyInventories);
 
+router
+  .route("/subscribed/no-inventory")
+  .get(inventoryControllers.getUsersWithNonFreePlansAndNoListings);
+
 router.route("/user/:id").get(inventoryControllers.getUserInventories);
 
 router

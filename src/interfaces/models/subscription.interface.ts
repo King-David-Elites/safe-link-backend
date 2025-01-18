@@ -40,6 +40,9 @@ export interface IPaymentAttempt {
 }
 
 export interface UserSubscription {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
   user: Relations<IUser>;
   plan: Relations<ISubscriptionPlan>;
   isActive: boolean;

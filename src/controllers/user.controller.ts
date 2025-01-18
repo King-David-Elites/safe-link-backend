@@ -274,6 +274,32 @@ export const getStaticCompleteProfiles = async (
   }
 };
 
+export const getUnsubscribedCompletedProfiles = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const completeProfiles =
+      await userService.getUnsubscribedCompleteProfiles();
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved complete profiles and no subscription",
+      count: completeProfiles.length,
+      data: completeProfiles.map((item) => ({
+        username: item.username,
+        email: item.email,
+        "phone no": item.phoneNumber,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Internal Server Error",
+    });
+  }
+};
+
 const userController = {
   changePassword,
   editUser,
@@ -288,6 +314,7 @@ const userController = {
   generateUserShareableLink,
   updateProfilePicture,
   getStaticCompleteProfiles,
+  getUnsubscribedCompletedProfiles,
 };
 
 export default userController;
