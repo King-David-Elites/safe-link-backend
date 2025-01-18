@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   BadRequestError,
   ForbiddenError,
@@ -56,9 +57,18 @@ const createInventory = async (
 
   // Notify the external AI training service
   try {
-    await axios.post("https://safelink.up.railway.app/add_inventory_to_ai", {
-      inventory_id: newInventory._id, // Send the created inventory ID
-    });
+    const formData = new FormData();
+    formData.append("inventory_id", newInventory._id.toString());
+
+    await axios.post(
+      "https://safelink.up.railway.app/add_inventory_to_ai",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     console.log("Inventory ID sent to AI training service");
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -136,12 +146,68 @@ const getSingleInventory = async (inventoryId: string): Promise<IInventory> => {
   return inventory;
 };
 
+// New function to get users with non-free plans and no listed products
+const freePlan = "65dc534815ce9430aa0ab114";
+const getUsersWithNonFreePlansAndNoListings = async () => {
+  try {
+    // Find users with plans that are not freePlan
+    const usersWithNonFreePlans = await UserSubscriptionModel.aggregate([
+      {
+        $match: {
+          plan: { $ne: new mongoose.Types.ObjectId(freePlan) }, // Exclude freePlan
+        },
+      },
+      {
+        $group: {
+          _id: "$user", // Group by user ID
+        },
+      },
+    ]);
+    console.log({ usersWithNonFreePlans });
+
+    // Extract user IDs
+    const userIds = usersWithNonFreePlans.map((user) => user._id);
+
+    // Find users who have no listings in the Inventory
+    const usersWithNoListings = await Inventory.aggregate([
+      {
+        $match: {
+          owner: { $in: userIds }, // Match users with non-free plans
+        },
+      },
+      {
+        $group: {
+          _id: "$owner", // Group by owner ID
+          count: { $sum: 1 }, // Count the number of listings
+        },
+      },
+      {
+        $match: {
+          count: { $eq: 0 }, // Filter to only those with zero listings
+        },
+      },
+    ]);
+
+    // Extract user IDs with no listings
+    const userIdsWithNoListings = usersWithNoListings.map((user) => user._id);
+
+    return userIdsWithNoListings; // Return the list of user IDs
+  } catch (error) {
+    console.error(
+      "Error fetching users with non-free plans and no listings:",
+      error
+    );
+    throw new Error("Could not fetch users");
+  }
+};
+
 const inventoryService = {
   getUserInventories,
   editInventory,
   deleteInventory,
   createInventory,
   getSingleInventory,
+  getUsersWithNonFreePlansAndNoListings,
 };
 
 export default inventoryService;

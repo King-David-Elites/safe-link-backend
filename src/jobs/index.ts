@@ -3,7 +3,10 @@ import User from "../models/user.model";
 import UserSubscriptionModel from "../models/user.subscription.model";
 import { endOfToday } from "date-fns";
 import { IUser } from "../interfaces/models/user.interface";
-import { PlansEnum } from "../interfaces/models/subscription.interface";
+import {
+  PlansEnum,
+  UserSubscription,
+} from "../interfaces/models/subscription.interface";
 import sendMail from "../helpers/mailer";
 import { subscriptionExpires72HoursEmailHTML } from "../templates/subscriptionExpires72HoursEmail";
 import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionExpires24HoursEmail";
@@ -13,6 +16,8 @@ import cron from "node-cron";
 import settings from "../constants/settings";
 import axios from "axios";
 import Influencer from "../models/influencer.model";
+import BackupUserSubscriptionModel from "../models/backup.user.subscription.model";
+import mongoose from "mongoose";
 
 const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
@@ -24,16 +29,17 @@ export async function runJobs() {
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
 }
 
-async function handleSubscriptionJob() {
+const freePlan = "65dc534815ce9430aa0ab114";
+export async function handleSubscriptionJob() {
   try {
     const expiredSubscriptions = await UserSubscriptionModel.find({
       expiryDate: { $lt: new Date() }, // Expired subscriptions
-      plan: { $ne: "65dc534815ce9430aa0ab118" },
+      plan: { $ne: freePlan },
       isActive: true,
     });
 
     for (const subscription of expiredSubscriptions) {
-      subscription.plan = "65dc534815ce9430aa0ab114"; // Reset plan to free
+      subscription.plan = freePlan; // Reset plan to free
       // subscription.isActive = false;
       await subscription.save();
     }
@@ -191,5 +197,77 @@ async function sendChristmasNotification() {
 //         error
 //       );
 //     }
+//   }
+// }
+
+// New function to remove duplicate subscriptions with backup
+// export async function removeDuplicateSubscriptionsWithBackup() {
+//   try {
+//     const duplicates = await UserSubscriptionModel.aggregate([
+//       {
+//         $match: { plan: new mongoose.Types.ObjectId(freePlan) },
+//       },
+//       {
+//         $group: {
+//           _id: "$user", // Group by user field
+//           latestSubscription: { $max: "$updatedAt" }, // Get the latest updatedAt
+//           subscriptions: { $push: "$$ROOT" }, // Push all subscriptions into an array
+//           count: { $sum: 1 }, // Add count to only get groups with multiple subscriptions
+//         },
+//       },
+//       {
+//         $match: {
+//           count: { $gt: 1 }, // Only get users with multiple subscriptions
+//         },
+//       },
+//       {
+//         $project: {
+//           user: "$_id",
+//           latestSubscription: 1,
+//           subscriptions: 1,
+//         },
+//       },
+//     ]);
+
+//     console.log(
+//       `Found ${duplicates.length} users with duplicate subscriptions`
+//     );
+
+//     for (const duplicate of duplicates) {
+//       const { subscriptions } = duplicate;
+
+//       // Keep the latest subscription and delete the rest
+//       const latest = subscriptions.find(
+//         (sub: UserSubscription) =>
+//           sub.updatedAt.getTime() ===
+//           new Date(duplicate.latestSubscription).getTime()
+//       );
+
+//       if (!latest) {
+//         console.error(
+//           `No latest subscription found for user ${duplicate.user}`
+//         );
+//         continue;
+//       }
+
+//       const toDelete = subscriptions.filter(
+//         (sub: UserSubscription) => sub._id.toString() !== latest._id.toString()
+//       );
+
+//       // Backup the subscriptions before deletion
+//       if (toDelete.length > 0) {
+//         await BackupUserSubscriptionModel.insertMany(toDelete);
+
+//         for (const subscription of toDelete) {
+//           await UserSubscriptionModel.deleteOne({ _id: subscription._id });
+//           console.log(
+//             `Deleted duplicate subscription ${subscription._id} for user ${subscription.user}`
+//           );
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error removing duplicate subscriptions:", error);
+//     throw error; // Re-throw the error to be handled by the caller
 //   }
 // }

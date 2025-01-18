@@ -7,9 +7,10 @@ import routes from "./routes";
 import swagger from "swagger-ui-express";
 import handleMediaUpload from "./controllers/media.controller";
 import { multerUploader } from "./helpers/upload";
-import { runJobs } from "./jobs";
+import { handleSubscriptionJob, runJobs } from "./jobs";
 import { verifyEmailHTML } from "./templates/verifyEmail";
 import sendMail from "./helpers/mailer";
+import path from "path";
 const doc = require("../doc.json");
 
 const app = express();
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
 app.use(helmet());
+
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res, next) => {
   res.redirect("/api/v1/doc");
