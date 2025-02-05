@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { IRequest } from "../interfaces/expressRequest";
-import { upload } from "../helpers/upload";
+// import { upload } from "../helpers/upload";
 import { BadRequestError } from "../constants/errors";
 import inventoryService from "../services/inventory.service";
 import axios from "axios";
+import { uploader } from "../utils/uploader";
 
 const addToInventory = async (
   req: IRequest,
@@ -15,13 +16,11 @@ const addToInventory = async (
     let { price, currency, title, description, cover, images, videos } =
       req.body;
 
-    videos = await Promise.all(
-      videos.map((video: string) => upload(video, { resource_type: "video" }))
-    );
+    videos = await Promise.all(videos.map((video: string) => uploader(video)));
 
-    images = await Promise.all(images.map((image: string) => upload(image)));
+    // images = await Promise.all(images.map((image: string) => upload(image)));
 
-    cover = cover && (await upload(cover));
+    // cover = cover && (await upload(cover));
 
     const data = await inventoryService.createInventory({
       title,
@@ -55,18 +54,18 @@ const editInventory = async (
 
     if (req.body.images && req.body.images.length > 0) {
       req.body.images = await Promise.all(
-        req.body.images.map((img: string) => upload(img))
+        req.body.images.map((img: string) => uploader(img))
       );
     }
 
     if (req.body.videos && req.body.videos.length > 0) {
       req.body.videos = await Promise.all(
-        req.body.videos.map((vid: string) => upload(vid))
+        req.body.videos.map((vid: string) => uploader(vid))
       );
     }
 
     if (req.body.cover) {
-      req.body.cover = await upload(req.body.cover);
+      req.body.cover = await uploader(req.body.cover);
     }
 
     const data = await inventoryService.editInventory(owner, {
@@ -159,6 +158,22 @@ const getSingleInventory = async (
   }
 };
 
+const getUsersWithNonFreePlansAndNoListings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const users =
+      await inventoryService.getUsersWithNonFreePlansAndNoListings();
+    res
+      .status(200)
+      .json({ message: "Users fetched successfully", data: users });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const inventoryControllers = {
   getSingleInventory,
   getUserInventories,
@@ -166,6 +181,7 @@ const inventoryControllers = {
   editInventory,
   addToInventory,
   deleteInventory,
+  getUsersWithNonFreePlansAndNoListings,
 };
 
 export default inventoryControllers;

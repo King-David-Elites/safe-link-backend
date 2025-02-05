@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import { BadRequestError, NotFoundError } from "../constants/errors";
 import { IUser } from "../interfaces/models/user.interface";
 import { IChangePasswordReq } from "../interfaces/responses/auth.response";
@@ -364,6 +364,47 @@ const updateProfilePicture = async (userId: string, profilePicture: string) => {
   return user;
 };
 
+export const getUnsubscribedCompleteProfiles = async () => {
+  const freePlan = "65dc534815ce9430aa0ab114";
+  try {
+    const users = await User.aggregate([
+      { $match: { isProfileCompleted: true } },
+      {
+        $lookup: {
+          from: "usersubscriptions",
+          localField: "_id",
+          foreignField: "user",
+          as: "subscription",
+        },
+      },
+      {
+        $unwind: {
+          path: "$subscription",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          "subscription.plan": new mongoose.Types.ObjectId(freePlan), // Match users with free subscription
+        },
+      },
+    ]);
+
+    return users;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        "Error fetching random users with complete profiles and no subscription: " +
+          error.message
+      );
+    } else {
+      throw new Error(
+        "Error fetching random users with complete profiles and no subscription"
+      );
+    }
+  }
+};
+
 const userService = {
   getById,
   getByEmail,
@@ -373,6 +414,7 @@ const userService = {
   getUsers,
   getCompleteProfiles,
   getTopCompleteProfiles,
+  getUnsubscribedCompleteProfiles,
   getByUsername,
   generateShareableLink,
   updateProfilePicture,

@@ -12,7 +12,12 @@ router
   .delete(isAuth, userController.deleteUser);
 
 router.route("/all").get(userController.getUsers);
+router
+  .route("/updated-profiles/unsubscribed")
+  .get(userController.getUnsubscribedCompletedProfiles);
+
 router.route("/complete-profiles").get(userController.getCompleteProfiles);
+
 router
   .route("/static-complete-profiles")
   .get(userController.getStaticCompleteProfiles);
