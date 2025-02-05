@@ -9,6 +9,7 @@ import { subscriptionExpires72HoursEmailHTML } from "../templates/subscriptionEx
 import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionExpires24HoursEmail";
 import { christmasEmailHTML } from "../templates/christmasEmail";
 import { newYearEmailHTML } from "../templates/newYearEmail";
+import { safelinkFreeEmailHTML } from "../templates/safelinkGoingFreeEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
 import settings from "../constants/settings";
@@ -24,6 +25,7 @@ export async function runJobs() {
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); //New Year Notification at 10:45AM WAT
+  cron.schedule("0 8 * * *", goingFreeNotification); //New Year Notification at 10:45AM WAT
 
 }
 
@@ -165,6 +167,32 @@ async function sendNewYearNotification() {
           to: user.email,
           subject: "Happy New Year 🎄",
           html: newYearEmailHTML(user),
+        });
+
+        console.log(`new Year email sent to ${user.email}`);
+      } catch (error) {
+        console.error(
+          `Failed to send New Year email to ${user.email}:`,
+          error
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error sending new year notifications:", error);
+  }
+}
+
+async function goingFreeNotification() {
+  try {
+    const users = await User.find({}); // Retrieve all users
+
+    for (const user of users) {
+      try {
+        // Send New Year Email
+        await sendMail({
+          to: user.email,
+          subject: "Happy New Year 🎄",
+          html: safelinkFreeEmailHTML(user),
         });
 
         console.log(`new Year email sent to ${user.email}`);
