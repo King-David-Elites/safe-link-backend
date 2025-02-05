@@ -30,7 +30,7 @@ export async function runJobs() {
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); //New Year Notification at 10:45AM WAT
-  cron.schedule("0 8 * * *", goingFreeNotification); //New Year Notification at 10:45AM WAT
+  cron.schedule("0 12 * * *", goingFreeNotification); //New Year Notification at 11:00AM WAT
 
 }
 
