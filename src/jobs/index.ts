@@ -30,7 +30,7 @@ export async function runJobs() {
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); //New Year Notification at 10:45AM WAT
-  cron.schedule("0 10 * * *", goingFreeNotification); //Notification at 11:00AM WAT today
+  // cron.schedule("0 10 * * *", goingFreeNotification); //Notification at 11:00AM WAT today
 
 }
 
@@ -197,7 +197,7 @@ async function goingFreeNotification() {
         // Send New Year Email
         await sendMail({
           to: user.email,
-          subject: "Happy New Year 🎄",
+          subject: "Promote your Business with Safelink",
           html: safelinkFreeEmailHTML(user),
         });
 
