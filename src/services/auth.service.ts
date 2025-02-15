@@ -80,7 +80,13 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
   // Check if user with the email already exists
   const authInDb = await Auth.findOne({ email });
   if (authInDb) {
-    throw new BadRequestError("User with this email already exists");
+    if (!authInDb.isVerified) {
+      // Delete old unverified user and associated auth record
+      await User.deleteOne({ _id: authInDb._id });
+      await Auth.deleteOne({ user: authInDb._id });
+    } else {
+      throw new BadRequestError("User with this email already exists");
+    }
   }
 
   // Create the auth record
@@ -217,6 +223,14 @@ const requestForgotPasswordLink = async (email: string) => {
 
   const user = await userService.getByEmail(email);
 
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  if (!user.isVerified) {
+    throw new BadRequestError("Please verify your email first");
+  }
+
   if (user) {
     const newToken = await tokenService.upsertToken({
       email,
@@ -235,35 +249,39 @@ const requestForgotPasswordLink = async (email: string) => {
 };
 
 const resetPassword = async (token: string, body: Partial<IAuth>) => {
-  const { password, confirmPassword } = body;
+  try {
+    const { password, confirmPassword } = body;
 
-  if (password !== confirmPassword) {
-    throw new BadRequestError("Passwords do not match");
-  }
+    if (password !== confirmPassword) {
+      throw new BadRequestError("Passwords do not match");
+    }
 
-  /**
-   * Get the user from the token and update their password
-   */
+    /**
+     * Get the user from the token and update their password
+     */
 
-  const tokenInDb = await tokenService.getToken({
-    value: token,
-    type: ITokenTypes.passwordResetToken,
-  });
+    const tokenInDb = await tokenService.getToken({
+      value: token,
+      type: ITokenTypes.passwordResetToken,
+    });
 
-  if (!tokenInDb) {
-    throw new NotFoundError(
-      "Token does not exist or has expired, kindly request the link again"
+    if (!tokenInDb) {
+      throw new NotFoundError(
+        "Token does not exist or has expired, kindly request the link again"
+      );
+    }
+
+    const newPassword = await argon2.hash(password as string);
+
+    await Auth.findOneAndUpdate(
+      { email: tokenInDb.email },
+      { password: newPassword }
     );
+
+    await tokenService.deleteToken({ _id: tokenInDb._id });
+  } catch (error) {
+    throw new BadRequestError("Failed to reset password");
   }
-
-  const newPassword = await argon2.hash(password as string);
-
-  await Auth.findOneAndUpdate(
-    { email: tokenInDb.email },
-    { password: newPassword }
-  );
-
-  await tokenService.deleteToken({ _id: tokenInDb._id });
 };
 
 const authWithGoogle = async (access_token: string) => {};
