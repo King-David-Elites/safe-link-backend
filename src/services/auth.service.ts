@@ -42,7 +42,14 @@ const getByEmail = async (email: string): Promise<IAuth> => {
 };
 
 export const createAccount = async (body: Partial<IUser & IAuth>) => {
-  const { email, password, confirmPassword, username, referralCode } = body;
+  const {
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+    username,
+    referralCode,
+  } = body;
   // console.log({ referralCode });
 
   // Check if passwords match
@@ -99,6 +106,7 @@ export const createAccount = async (body: Partial<IUser & IAuth>) => {
   const formattedUsername = username?.replace(/\s+/g, "-").toLowerCase();
   const user = await User.create({
     email,
+    phoneNumber,
     username,
     formattedUsername,
     referredBy,
