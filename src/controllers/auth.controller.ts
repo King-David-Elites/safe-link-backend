@@ -6,11 +6,18 @@ import googleAuthService from "../services/googleAuthServices";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password, confirmPassword, username, referralCode } =
-      req.body;
+    const {
+      email,
+      password,
+      phoneNumber,
+      confirmPassword,
+      username,
+      referralCode,
+    } = req.body;
 
     await authService.createAccount({
       email,
+      phoneNumber,
       password,
       confirmPassword,
       username,
