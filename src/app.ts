@@ -23,7 +23,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(helmet());
 
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("/mnt/blockstorage/uploads"));
 
 app.get("/", (req, res, next) => {
   res.redirect("/api/v1/doc");
