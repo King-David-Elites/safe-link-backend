@@ -178,3 +178,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmNhM
     "accountNumber": "0441800394",
     "bankCode": "000013"
 }
+
+######
+
+# curl "https://api.vultr.com/v2/blocks" \ -X GET \ -H "Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ"
+GET https://api.vultr.com/v2/blocks
+Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ
+
+#####
+
+GET https://api.vultr.com/v2/instances
+Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ
+
+
+#####
+# storage "id": "ddcf42a6-5ec0-4982-a9c5-6300ddc10f81",
+# server "id": "dae65dfe-171d-4ef5-bbc7-27a74b31eadb",
+
+
+POST https://api.vultr.com/v2/blocks/ddcf42a6-5ec0-4982-a9c5-6300ddc10f81/attach
+Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ
+Content-Type: application/json
+
+{
+    "instance_id" : "dae65dfe-171d-4ef5-bbc7-27a74b31eadb",
+    "live" : true
+}   
+
+
+
+
+
+
+
+
+
