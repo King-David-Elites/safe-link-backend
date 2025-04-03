@@ -68,9 +68,14 @@ const editInventory = async (
       req.body.cover = await uploader(req.body.cover);
     }
 
+    const allImages = [
+      ...new Set([...req.body.images, ...req.body.existingImages]),
+    ];
+
     const data = await inventoryService.editInventory(owner, {
       ...req.body,
       _id: inventoryId,
+      images: allImages,
     });
 
     res.status(200).json({ message: "Inventory edited successfully", data });
