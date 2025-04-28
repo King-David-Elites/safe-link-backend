@@ -192,11 +192,12 @@ Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ
 
 
 #####
-# storage "id": "ddcf42a6-5ec0-4982-a9c5-6300ddc10f81",
+# storage "id": "e97bda34-7d27-4c52-b1df-d7a155ab9478",
 # server "id": "dae65dfe-171d-4ef5-bbc7-27a74b31eadb",
 
+######
 
-POST https://api.vultr.com/v2/blocks/ddcf42a6-5ec0-4982-a9c5-6300ddc10f81/attach
+POST https://api.vultr.com/v2/blocks/e97bda34-7d27-4c52-b1df-d7a155ab9478/attach
 Authorization: Bearer IQVDCUUOT4T6CYQBFSXN44MZIONVTJKDABYQ
 Content-Type: application/json
 
