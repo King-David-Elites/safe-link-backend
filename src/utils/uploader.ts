@@ -11,44 +11,44 @@ cloudinary.config({
   api_secret: settings.cloudinary.apiSecret,
 });
 
-// export const uploader = async (data: string) => {
-//   let url = (await cloudinary.uploader.upload(data)).secure_url;
-//   return url;
-// };
+export const uploader = async (data: string) => {
+  let url = (await cloudinary.uploader.upload(data)).secure_url;
+  return url;
+};
 const baseURL = process.env.SAFELINK_BACKEND_BASE_URL;
 const env = process.env.NODE_ENV;
 
-export const uploader = async (base64Data: string): Promise<string> => {
-  const matches = base64Data.match(/^data:(image|video)\/(\w+);base64,(.+)$/);
-  console.log(base64Data.slice(0, 50)); // To inspect initial data
-  if (!matches || matches.length !== 4) {
-    throw new Error("Invalid base64 media data");
-  }
+// export const uploader = async (base64Data: string): Promise<string> => {
+//   const matches = base64Data.match(/^data:(image|video)\/(\w+);base64,(.+)$/);
+//   console.log(base64Data.slice(0, 50)); // To inspect initial data
+//   if (!matches || matches.length !== 4) {
+//     throw new Error("Invalid base64 media data");
+//   }
 
-  const mediaType = matches[1]; // "image" or "video"
-  const extension = matches[2]; // File extension (png, jpg, mp4, etc.)
-  const base64MediaData = matches[3]; // Extracted base64 data
-  const buffer = Buffer.from(base64MediaData, "base64");
+//   const mediaType = matches[1]; // "image" or "video"
+//   const extension = matches[2]; // File extension (png, jpg, mp4, etc.)
+//   const base64MediaData = matches[3]; // Extracted base64 data
+//   const buffer = Buffer.from(base64MediaData, "base64");
 
-  const fileName = `${Date.now()}-${mediaType}-upload.${extension}`;
-  const uploadPath =
-    env === "production"
-      ? path.join("/mnt/blockstorage/uploads", fileName)
-      : path.join("uploads", fileName); // Save to /mnt/blockstorage/uploads
+//   const fileName = `${Date.now()}-${mediaType}-upload.${extension}`;
+//   const uploadPath =
+//     env === "production"
+//       ? path.join("/mnt/blockstorage/uploads", fileName)
+//       : path.join("uploads", fileName); // Save to /mnt/blockstorage/uploads
 
-  // Ensure the directory exists
-  const uploadDir = path.dirname(uploadPath);
-  try {
-    await fs.mkdir(uploadDir, { recursive: true });
-  } catch (error) {
-    console.error("Error creating directory:", error);
-    throw new Error("Failed to create upload directory");
-  }
+//   // Ensure the directory exists
+//   const uploadDir = path.dirname(uploadPath);
+//   try {
+//     await fs.mkdir(uploadDir, { recursive: true });
+//   } catch (error) {
+//     console.error("Error creating directory:", error);
+//     throw new Error("Failed to create upload directory");
+//   }
 
-  await fs.writeFile(uploadPath, buffer);
+//   await fs.writeFile(uploadPath, buffer);
 
-  return `${baseURL}/uploads/${fileName}`; // Return URL path
-};
+//   return `${baseURL}/uploads/${fileName}`; // Return URL path
+// };
 
 export const uploaderListOfMedia = async (arr: any) => {
   let newArr = [];
