@@ -28,12 +28,12 @@ export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
   // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
   // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
-  cron.schedule("0 * * * *", notifyExpiringSubscriptions);
-  cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
-  cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
+ // cron.schedule("0 * * * *", notifyExpiringSubscriptions);
+  //cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
+  //cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
 
   // July Greeting Notification at 10:00PM WAT on July 1st
-  cron.schedule("0 22 1 7 *", julyGreetingsNotification, {
+  cron.schedule("0 23 1 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos"
   });
 }
