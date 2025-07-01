@@ -16,6 +16,7 @@ export const uploader = async (data: string) => {
   return url;
 };
 const baseURL = process.env.SAFELINK_BACKEND_BASE_URL;
+const env = process.env.NODE_ENV;
 
 // export const uploader = async (base64Data: string): Promise<string> => {
 //   const matches = base64Data.match(/^data:(image|video)\/(\w+);base64,(.+)$/);
@@ -30,7 +31,19 @@ const baseURL = process.env.SAFELINK_BACKEND_BASE_URL;
 //   const buffer = Buffer.from(base64MediaData, "base64");
 
 //   const fileName = `${Date.now()}-${mediaType}-upload.${extension}`;
-//   const uploadPath = path.join("uploads", fileName); // Save to "uploads" folder
+//   const uploadPath =
+//     env === "production"
+//       ? path.join("/mnt/blockstorage/uploads", fileName)
+//       : path.join("uploads", fileName); // Save to /mnt/blockstorage/uploads
+
+//   // Ensure the directory exists
+//   const uploadDir = path.dirname(uploadPath);
+//   try {
+//     await fs.mkdir(uploadDir, { recursive: true });
+//   } catch (error) {
+//     console.error("Error creating directory:", error);
+//     throw new Error("Failed to create upload directory");
+//   }
 
 //   await fs.writeFile(uploadPath, buffer);
 
