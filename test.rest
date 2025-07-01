@@ -150,8 +150,8 @@ POST http://localhost:3001/api/v1/influencer/create-influencer
 Content-Type: application/json
 
 {
-    "name": "Akinolu Ololade Salimo",
-    "referralCode": "sally"
+    "name": "COBBLERS AND LEATHER ARTISAN ASSOCIATION OF NIGERIA",
+    "referralCode": "CALAAN-OGUN"
 }
 
 #####
