@@ -12,6 +12,7 @@ import { subscriptionExpires72HoursEmailHTML } from "../templates/subscriptionEx
 import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionExpires24HoursEmail";
 import { christmasEmailHTML } from "../templates/christmasEmail";
 import { newYearEmailHTML } from "../templates/newYearEmail";
+import { julyGreetingsEmailHTML } from "../templates/julyGreetingsEmail";
 import { safelinkFreeEmailHTML } from "../templates/safelinkGoingFreeEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
@@ -29,9 +30,12 @@ export async function runJobs() {
   // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
-  cron.schedule("45 10 1 1 *", sendNewYearNotification); //New Year Notification at 10:45AM WAT
-  // cron.schedule("0 10 * * *", goingFreeNotification); //Notification at 11:00AM WAT today
+  cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
 
+  // July Greeting Notification at 10:00PM WAT on July 1st
+  cron.schedule("0 22 1 7 *", julyGreetingsNotification, {
+    timezone: "Africa/Lagos"
+  });
 }
 
 const freePlan = "65dc534815ce9430aa0ab114";
@@ -213,6 +217,33 @@ async function goingFreeNotification() {
     console.error("Error sending new year notifications:", error);
   }
 }
+
+async function julyGreetingsNotification() {
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Lagos" }); // format: YYYY-MM-DD
+  if (today !== "2025-07-01") return;
+
+  try {
+    const users = await User.find({}); // Retrieve all users
+
+    for (const user of users) {
+      try {
+        await sendMail({
+          to: user.email,
+          subject: "Happy New Month 🎉",
+          html: julyGreetingsEmailHTML(user),
+        });
+
+        console.log(`July greeting email sent to ${user.email}`);
+      } catch (error) {
+        console.error(`Failed to send July greeting to ${user.email}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending July greeting notifications:", error);
+  }
+}
+
+
 
 // async function deactivateExpiredSubscriptions(currentDate: Date) {
 //   const expiredSubscriptions = await UserSubscriptionModel.find({
