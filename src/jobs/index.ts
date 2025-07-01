@@ -33,7 +33,7 @@ export async function runJobs() {
   //cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
 
   // July Greeting Notification at 10:00PM WAT on July 1st
-  cron.schedule("0 23 1 7 *", julyGreetingsNotification, {
+  cron.schedule("30 23 1 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos"
   });
 }
