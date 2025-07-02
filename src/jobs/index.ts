@@ -31,8 +31,9 @@ export async function runJobs() {
   cron.schedule("0 * * * *", notifyExpiringSubscriptions);
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
-  // cron.schedule("0 10 * * *", goingFreeNotification); //Notification at 11:00AM WAT today
-  cron.schedule("25 12 2 7 *", julyGreetingsNotification, {
+
+  //July Greeting Notification at 10:00PM WAT on July 1st
+  cron.schedule("30 12 2 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos",
   });
 }
@@ -215,6 +216,7 @@ async function julyGreetingsNotification() {
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Africa/Lagos",
   }); // format: YYYY-MM-DD
+
   if (today !== "2025-07-02") return;
 
   try {
