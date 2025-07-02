@@ -213,13 +213,10 @@ async function goingFreeNotification() {
 }
 
 async function julyGreetingsNotification() {
-<<<<<<< HEAD
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Lagos" }); // format: YYYY-MM-DD
-=======
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Africa/Lagos",
   }); // format: YYYY-MM-DD
->>>>>>> 9e48c025392994457a7c557d7dc61b1da19d1404
+
   if (today !== "2025-07-02") return;
 
   try {
