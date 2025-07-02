@@ -28,12 +28,12 @@ export async function runJobs() {
   cron.schedule("0 0 * * *", handleSubscriptionJob);
   // cron.schedule("*/12 * * * *", pingServer); //Make the Server Active
   // cron.schedule("*/13 * * * *", pingAiSearchServer); //Make the Server Active every 12 minutes
- // cron.schedule("0 * * * *", notifyExpiringSubscriptions);
-  //cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
-  //cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
+  cron.schedule("0 * * * *", notifyExpiringSubscriptions);
+  cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
+  cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
 
-  // July Greeting Notification at 10:00PM WAT on July 1st
-  cron.schedule("30 23 1 7 *", julyGreetingsNotification, {
+  July Greeting Notification at 10:00PM WAT on July 1st
+  cron.schedule("30 12 2 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos"
   });
 }
@@ -220,7 +220,7 @@ async function goingFreeNotification() {
 
 async function julyGreetingsNotification() {
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Lagos" }); // format: YYYY-MM-DD
-  if (today !== "2025-07-01") return;
+  if (today !== "2025-07-02") return;
 
   try {
     const users = await User.find({}); // Retrieve all users
