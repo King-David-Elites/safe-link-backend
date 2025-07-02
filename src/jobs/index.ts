@@ -12,7 +12,6 @@ import { subscriptionExpires72HoursEmailHTML } from "../templates/subscriptionEx
 import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionExpires24HoursEmail";
 import { christmasEmailHTML } from "../templates/christmasEmail";
 import { newYearEmailHTML } from "../templates/newYearEmail";
-import { julyGreetingsEmailHTML } from "../templates/julyGreetingsEmail";
 import { safelinkFreeEmailHTML } from "../templates/safelinkGoingFreeEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
@@ -21,6 +20,7 @@ import axios from "axios";
 import Influencer from "../models/influencer.model";
 import BackupUserSubscriptionModel from "../models/backup.user.subscription.model";
 import mongoose from "mongoose";
+import { julyGreetingsEmailHTML } from "../templates/julygreetingsEmail";
 
 const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
@@ -32,7 +32,7 @@ export async function runJobs() {
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
 
-  July Greeting Notification at 10:00PM WAT on July 1st
+  //July Greeting Notification at 10:00PM WAT on July 1st
   cron.schedule("30 12 2 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos"
   });
@@ -181,10 +181,7 @@ async function sendNewYearNotification() {
 
         console.log(`new Year email sent to ${user.email}`);
       } catch (error) {
-        console.error(
-          `Failed to send New Year email to ${user.email}:`,
-          error
-        );
+        console.error(`Failed to send New Year email to ${user.email}:`, error);
       }
     }
   } catch (error) {
@@ -207,10 +204,7 @@ async function goingFreeNotification() {
 
         console.log(`new Year email sent to ${user.email}`);
       } catch (error) {
-        console.error(
-          `Failed to send New Year email to ${user.email}:`,
-          error
-        );
+        console.error(`Failed to send New Year email to ${user.email}:`, error);
       }
     }
   } catch (error) {
@@ -219,7 +213,13 @@ async function goingFreeNotification() {
 }
 
 async function julyGreetingsNotification() {
+<<<<<<< HEAD
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Lagos" }); // format: YYYY-MM-DD
+=======
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Africa/Lagos",
+  }); // format: YYYY-MM-DD
+>>>>>>> 9e48c025392994457a7c557d7dc61b1da19d1404
   if (today !== "2025-07-02") return;
 
   try {
@@ -242,8 +242,6 @@ async function julyGreetingsNotification() {
     console.error("Error sending July greeting notifications:", error);
   }
 }
-
-
 
 // async function deactivateExpiredSubscriptions(currentDate: Date) {
 //   const expiredSubscriptions = await UserSubscriptionModel.find({
