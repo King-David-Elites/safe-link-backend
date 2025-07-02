@@ -32,7 +32,7 @@ export async function runJobs() {
   cron.schedule("0 7 25 12 *", sendChristmasNotification); // Christmas Notification at 7:00AM WAT
   cron.schedule("45 10 1 1 *", sendNewYearNotification); // New Year Notification at 10:45AM WAT
   // cron.schedule("0 10 * * *", goingFreeNotification); //Notification at 11:00AM WAT today
-  cron.schedule("0 8 2 7 *", julyGreetingsNotification, {
+  cron.schedule("20 12 2 7 *", julyGreetingsNotification, {
     timezone: "Africa/Lagos",
   });
 }
