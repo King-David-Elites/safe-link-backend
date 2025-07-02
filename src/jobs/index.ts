@@ -34,7 +34,7 @@ export async function runJobs() {
 
   //July Greeting Notification at 10:00PM WAT on July 1st
   cron.schedule("30 12 2 7 *", julyGreetingsNotification, {
-    timezone: "Africa/Lagos"
+    timezone: "Africa/Lagos",
   });
 }
 
