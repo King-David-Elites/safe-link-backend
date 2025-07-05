@@ -13,6 +13,7 @@ import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionEx
 import { christmasEmailHTML } from "../templates/christmasEmail";
 import { newYearEmailHTML } from "../templates/newYearEmail";
 import { safelinkFreeEmailHTML } from "../templates/safelinkGoingFreeEmail";
+import {dontStressEmailHTML} from ".../templates/dontStressEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
 import settings from "../constants/settings";
@@ -34,6 +35,11 @@ export async function runJobs() {
 
   //July Greeting Notification at 10:00PM WAT on July 1st
   cron.schedule("30 12 2 7 *", julyGreetingsNotification, {
+    timezone: "Africa/Lagos"
+  });
+
+  //Dont Stress Yourself Notification Email
+  cron.schedule("00 7 5 7 *", dontStressEmailNotification, {
     timezone: "Africa/Lagos"
   });
 }
@@ -240,117 +246,31 @@ async function julyGreetingsNotification() {
   }
 }
 
-// async function deactivateExpiredSubscriptions(currentDate: Date) {
-//   const expiredSubscriptions = await UserSubscriptionModel.find({
-//     expiryDate: { $lt: currentDate },
-//     isActive: true,
-//     notifiedOnExpiry: false,
-//   }).populate<{ user: IUser }>("user");
+async function dontStressEmailNotification() {
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Africa/Lagos",
+  }); // format: YYYY-MM-DD
 
-//   const freemiumPlan = await PlanModel.findOne({ name: PlansEnum.FREE });
+  if (today !== "2025-07-05") return;
 
-//   for (const subscription of expiredSubscriptions) {
-//     try {
-//       const user = subscription.user;
+  try {
+    const users = await User.find({}); // Retrieve all users
 
-//       // Deactivate subscription
-//       subscription.isActive = false;
-//       if (freemiumPlan) {
-//         subscription.plan = freemiumPlan._id;
-//       } else {
-//         console.error("Freemium plan not found, skipping plan reset");
-//       }
-//       subscription.expiryDate = null;
+    for (const user of users) {
+      try {
+        await sendMail({
+          to: user.email,
+          subject: "Don’t Let WhatsApp Stress You This Weekend 😩",
+          html: dontStressEmailHTML(user),
+        });
 
-//       // Send email notification
-//       await sendMail({
-//         to: user.email,
-//         subject: "Subscription Expired",
-//         html: subscriptionExpiresEmailHTML(user),
-//       });
+        console.log(`Notification email sent to ${user.email}`);
+      } catch (error) {
+        console.error(`Failed to send Notification to ${user.email}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending  notifications:", error);
+  }
+}
 
-//       // Mark as notified on expiry
-//       subscription.notifiedOnExpiry = true;
-//       await subscription.save();
-
-//       console.log(`Subscription expired for user ${user.email}`);
-//     } catch (error) {
-//       console.error(
-//         `Failed to deactivate subscription for user ${subscription.user.email}:`,
-//         error
-//       );
-//     }
-//   }
-// }
-
-// New function to remove duplicate subscriptions with backup
-// export async function removeDuplicateSubscriptionsWithBackup() {
-//   try {
-//     const duplicates = await UserSubscriptionModel.aggregate([
-//       {
-//         $match: { plan: new mongoose.Types.ObjectId(freePlan) },
-//       },
-//       {
-//         $group: {
-//           _id: "$user", // Group by user field
-//           latestSubscription: { $max: "$updatedAt" }, // Get the latest updatedAt
-//           subscriptions: { $push: "$$ROOT" }, // Push all subscriptions into an array
-//           count: { $sum: 1 }, // Add count to only get groups with multiple subscriptions
-//         },
-//       },
-//       {
-//         $match: {
-//           count: { $gt: 1 }, // Only get users with multiple subscriptions
-//         },
-//       },
-//       {
-//         $project: {
-//           user: "$_id",
-//           latestSubscription: 1,
-//           subscriptions: 1,
-//         },
-//       },
-//     ]);
-
-//     console.log(
-//       `Found ${duplicates.length} users with duplicate subscriptions`
-//     );
-
-//     for (const duplicate of duplicates) {
-//       const { subscriptions } = duplicate;
-
-//       // Keep the latest subscription and delete the rest
-//       const latest = subscriptions.find(
-//         (sub: UserSubscription) =>
-//           sub.updatedAt.getTime() ===
-//           new Date(duplicate.latestSubscription).getTime()
-//       );
-
-//       if (!latest) {
-//         console.error(
-//           `No latest subscription found for user ${duplicate.user}`
-//         );
-//         continue;
-//       }
-
-//       const toDelete = subscriptions.filter(
-//         (sub: UserSubscription) => sub._id.toString() !== latest._id.toString()
-//       );
-
-//       // Backup the subscriptions before deletion
-//       if (toDelete.length > 0) {
-//         await BackupUserSubscriptionModel.insertMany(toDelete);
-
-//         for (const subscription of toDelete) {
-//           await UserSubscriptionModel.deleteOne({ _id: subscription._id });
-//           console.log(
-//             `Deleted duplicate subscription ${subscription._id} for user ${subscription.user}`
-//           );
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error removing duplicate subscriptions:", error);
-//     throw error; // Re-throw the error to be handled by the caller
-//   }
-// }
