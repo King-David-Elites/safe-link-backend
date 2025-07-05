@@ -39,7 +39,7 @@ export async function runJobs() {
   });
 
   //Dont Stress Yourself Notification Email
-  cron.schedule("00 7 5 7 *", dontStressEmailNotification, {
+  cron.schedule("30  20 5 7 *", dontStressEmailNotification, {
     timezone: "Africa/Lagos"
   });
 }
