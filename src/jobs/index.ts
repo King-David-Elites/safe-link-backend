@@ -13,7 +13,7 @@ import { subscriptionExpires24HoursEmailHTML } from "../templates/subscriptionEx
 import { christmasEmailHTML } from "../templates/christmasEmail";
 import { newYearEmailHTML } from "../templates/newYearEmail";
 import { safelinkFreeEmailHTML } from "../templates/safelinkGoingFreeEmail";
-import { dontStressEmailHTML } from ".../templates/dontStressEmail";
+import { dontStressEmailHTML } from "../templates/dontStressEmail";
 import PlanModel from "../models/plans.model";
 import cron from "node-cron";
 import settings from "../constants/settings";
