@@ -118,7 +118,7 @@ export const fridayNotificationEmailHTML = (user: IUser) => {
   <div class="email-container">
     <!-- Header -->
     <div class="email-header">
-      <img src="https://cdn.templates.unlayer.com/assets/1597218650916-xxxxc.png" alt="Safelink Logo" title="Safelink Logo" />
+      <img src="https://res.cloudinary.com/dvs8hrjsk/image/upload/v1752452916/logo_fgxd4u.png" alt="Safelink Logo" title="Safelink Logo" />
       <h1>Stay Consistent. Stay Visible. Let Safelink Help You Win.</h1>
     </div>
 
