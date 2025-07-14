@@ -148,7 +148,7 @@ export const fridayNotificationEmailHTML = (user: IUser) => {
       <p class="closing">Enjoy your weekend, ${user.username}.<br>
       Reflect. Recharge. And get ready to show up again!</p>
 
-      <p class="signature">The Safelink Team</p>
+      <p class="signature"><strong>The Safelink Team</strong></p>
       <p><a href="https://www.joinsafelink.com" class="website">www.joinsafelink.com</a></p>
 
       <p class="footer-note">📩 Need anything? Get in touch using the contact info at the bottom of this email.</p>
