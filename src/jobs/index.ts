@@ -22,6 +22,8 @@ import Influencer from "../models/influencer.model";
 import BackupUserSubscriptionModel from "../models/backup.user.subscription.model";
 import mongoose from "mongoose";
 import { julyGreetingsEmailHTML } from "../templates/julygreetingsEmail";
+import { mondayNotificationEmailHTML } from "../templates/mondayNotificationEmail";
+import { fridayNotificationEmailHTML } from "../templates/fridayNotificationEmail"
 
 const serverUrl = process.env.SERVER_BASE_URL ?? "";
 
@@ -40,6 +42,16 @@ export async function runJobs() {
 
   //Dont Stress Yourself Notification Email
   cron.schedule("30  20 5 7 *", dontStressEmailNotification, {
+    timezone: "Africa/Lagos"
+  });
+
+  //Monday 14/07/25 Notification Mail
+  cron.schedule("0  8 14 7 *", mondayEmailNotification, {
+    timezone: "Africa/Lagos"
+  });
+
+  //Friday 18/07/25 Notification Mail
+  cron.schedule("0  8 18 7 *", fridayEmailNotification, {
     timezone: "Africa/Lagos"
   });
 }
@@ -274,3 +286,58 @@ async function dontStressEmailNotification() {
   }
 }
 
+async function mondayEmailNotification() {
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Africa/Lagos",
+  }); // format: YYYY-MM-DD
+
+  if (today !== "2025-07-14") return;
+
+  try {
+    const users = await User.find({}); // Retrieve all users
+
+    for (const user of users) {
+      try {
+        await sendMail({
+          to: user.email,
+          subject: `3 Problems You Shouldn’t Still Be Facing in 2025`,
+          html: mondayNotificationEmailHTML(user),
+        });
+
+        console.log(`Notification email sent to ${user.email}`);
+      } catch (error) {
+        console.error(`Failed to send Notification to ${user.email}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending  notifications:", error);
+  }
+}
+
+async function fridayEmailNotification() {
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Africa/Lagos",
+  }); // format: YYYY-MM-DD
+
+  if (today !== "2025-07-18") return;
+
+  try {
+    const users = await User.find({}); // Retrieve all users
+
+    for (const user of users) {
+      try {
+        await sendMail({
+          to: user.email,
+          subject: `💪 Keep Going, ${user.username} — Your Dream Still Matters`,
+          html: fridayNotificationEmailHTML(user),
+        });
+
+        console.log(`Notification email sent to ${user.email}`);
+      } catch (error) {
+        console.error(`Failed to send Notification to ${user.email}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending  notifications:", error);
+  }
+}
